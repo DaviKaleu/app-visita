@@ -1,9 +1,13 @@
-# Top Visita Técnica V13 - Múltiplas fotos por ambiente
+# Top Visita Técnica V14 - Login por usuário
 
-- Cada ambiente aceita várias fotos.
-- Cada foto tem marcações, linhas de medida, croqui e escala próprios.
-- Galeria de fotos dentro do editor.
-- Botão para excluir a foto atual.
-- Continua com login e sincronização online do Supabase.
+Atualização:
+- Login usando `admin` ou `funcionario`, sem precisar digitar e-mail.
+- `admin` entra como davikaleu1537@gmail.com.
+- `funcionario` entra como bobao1537@gmail.com.
+- Mantém múltiplas fotos por ambiente.
+- Mantém sincronização online Supabase.
+- Evita baixar nuvem vazia por cima dos dados locais.
 
-Para publicar: envie os arquivos no GitHub Pages e abra com ?v=16.
+Publicação:
+- Envie os arquivos para o GitHub Pages.
+- Abra com ?v=17 para forçar atualização.
