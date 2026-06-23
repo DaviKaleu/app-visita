@@ -10,16 +10,6 @@ const MAX_IMAGE_SIDE = 1200;
 const SUPABASE_URL = 'https://nimvbaxuhzijtegtfgel.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_nHb8xD5wI-mWM1CGQcSqmg_YcQY2pSJ';
 const EMPRESA_ID = '2cf985a7-7c8b-49ad-b9ed-0d7da620c3b3';
-
-// Login por apelido. O usuário digita admin/funcionario, mas o Supabase recebe e-mail.
-const LOGIN_ALIASES = {
-  admin: 'davikaleu1537@gmail.com',
-  funcionario: 'bobao1537@gmail.com',
-  funcionaria: 'bobao1537@gmail.com',
-  funcionário: 'bobao1537@gmail.com',
-  funcionária: 'bobao1537@gmail.com',
-};
-
 const CLOUD_TABLE = 'app_state';
 const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -293,8 +283,6 @@ async function loadStateFromCloud({ preferCloud = true } = {}) {
       const localCount = state.clients?.length || 0;
       const cloudCount = cloudState.clients?.length || 0;
 
-      // Segurança contra apagar dados locais: se a nuvem estiver vazia e o celular tiver dados,
-      // enviamos os dados locais para a nuvem em vez de baixar vazio por cima.
       if (!cloudCount && localCount) {
         await saveStateToCloud();
         showToast('Nuvem vazia. Enviei os dados deste aparelho para a nuvem.');
@@ -357,19 +345,16 @@ async function handleLoggedIn(user) {
   await loadStateFromCloud({ preferCloud: true });
 }
 
-function normalizeLoginIdentifier(value = '') {
-  const raw = String(value).trim();
-  const key = raw.toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
-  return LOGIN_ALIASES[key] || raw;
-}
-
 async function loginWithSupabase(email, password) {
   if (!supabaseClient) return showToast('Supabase não carregou.');
+  email = String(email || '').trim().toLowerCase();
+  if (email !== 'davikaleu1537@gmail.com') {
+    els.loginStatus.textContent = 'Use somente o primeiro usuário cadastrado.';
+    showToast('Use o e-mail principal: davikaleu1537@gmail.com');
+    return;
+  }
   els.loginStatus.textContent = 'Entrando...';
-  const loginEmail = normalizeLoginIdentifier(email);
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email: loginEmail, password });
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error) {
     els.loginStatus.textContent = 'Erro: ' + error.message;
     showToast('E-mail ou senha incorretos.');
@@ -2106,7 +2091,7 @@ function safeFileName(text) {
 function wireEvents() {
   els.loginForm?.addEventListener('submit', (e) => {
     e.preventDefault();
-    loginWithSupabase(els.loginEmail.value.trim().toLowerCase(), els.loginPassword.value);
+    loginWithSupabase(els.loginEmail.value.trim(), els.loginPassword.value);
   });
   els.logoutBtn?.addEventListener('click', logoutSupabase);
   els.syncNowBtn?.addEventListener('click', () => loadStateFromCloud({ preferCloud: true }));
