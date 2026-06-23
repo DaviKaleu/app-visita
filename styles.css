@@ -394,3 +394,34 @@ textarea { resize: vertical; }
 
 .toolbar .tool-btn.danger { background: #5c1515; color: #fff; }
 .toolbar .tool-btn.danger.active { background: #cf2626; }
+
+#workCanvas.dragging { cursor: grabbing !important; }
+
+
+/* V11 - modo fácil para visita */
+.easy-panel { border: 1px solid rgba(207,38,38,.45); border-radius: 14px; padding: 8px; background: rgba(207,38,38,.08); }
+.wide-modal { width: min(96vw, 980px); }
+.report-modal { width: min(96vw, 850px); }
+.list-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.manage-list { display: grid; gap: 10px; }
+.manage-row { border: 1px solid var(--line); border-radius: 14px; padding: 12px; display: grid; gap: 10px; background: #fff; }
+.manage-row strong { display: block; margin-bottom: 3px; }
+.manage-row small { color: var(--muted); line-height: 1.35; }
+.manage-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.checklist-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; margin: 12px 0; }
+.check-item { display: flex; grid-template-columns: none; align-items: center; gap: 9px; margin: 0; padding: 11px; border: 1px solid var(--line); border-radius: 13px; background: #fafafa; font-weight: 800; }
+.check-item input { width: 20px; height: 20px; flex: 0 0 auto; }
+.report-content { background: #fafafa; border: 1px solid var(--line); border-radius: 14px; padding: 14px; max-height: 58vh; overflow: auto; }
+.report-content .report-head { display: flex; justify-content: space-between; gap: 12px; border-bottom: 2px solid #222; padding-bottom: 10px; margin-bottom: 12px; }
+.report-content h3, .report-content h4 { margin: 12px 0 6px; }
+.report-content p { margin-bottom: 6px; color: #333; }
+.report-content pre { white-space: pre-wrap; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+.report-actions { flex-wrap: wrap; }
+@media (max-width: 760px) {
+  .list-tabs, .checklist-grid { grid-template-columns: 1fr; }
+  .wide-modal, .report-modal { width: 96vw; }
+  .report-content { max-height: 52vh; }
+}
+@media (max-width: 900px) {
+  .easy-panel { min-width: 205px; }
+}

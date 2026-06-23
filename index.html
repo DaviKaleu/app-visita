@@ -151,6 +151,13 @@
             📷 Tirar / trocar foto
           </label>
 
+          <div class="tool-group easy-panel">
+            <p>Modo fácil</p>
+            <button id="openListsBtn" class="tool-btn" type="button">📋 Itens e medidas</button>
+            <button id="openChecklistBtn" class="tool-btn" type="button">✅ Checklist</button>
+            <button id="openReportBtn" class="tool-btn" type="button">🧾 Relatório</button>
+          </div>
+
           <div class="tool-group">
             <button id="sketchToggle" class="tool-btn">Croqui branco</button>
             <button id="calibrateBtn" class="tool-btn">Calibrar medida</button>
@@ -290,6 +297,62 @@ Rodapé: 7 cm"></textarea>
       </div>
     </form>
   </dialog>
+
+
+
+  <dialog id="listsDialog" class="modal wide-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Itens e medidas</h2>
+        <button type="button" class="icon-btn" data-close="listsDialog">×</button>
+      </div>
+      <p class="muted">Edite ou exclua tudo sem precisar acertar o toque na foto.</p>
+      <div class="list-tabs">
+        <section>
+          <h3>Itens marcados</h3>
+          <div id="markerListPanel" class="manage-list"></div>
+        </section>
+        <section>
+          <h3>Linhas de medida</h3>
+          <div id="measureListPanel" class="manage-list"></div>
+        </section>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="checklistDialog" class="modal wide-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Checklist da visita</h2>
+        <button type="button" class="icon-btn" data-close="checklistDialog">×</button>
+      </div>
+      <p id="checklistProgress" class="muted"></p>
+      <div id="checklistPanel" class="checklist-grid"></div>
+      <label>Observação final da visita
+        <textarea id="checklistNotes" rows="4" placeholder="Ex: confirmar pedra antes da produção, parede fora de esquadro, cliente pediu alteração..."></textarea>
+      </label>
+      <div class="modal-actions">
+        <button type="button" class="ghost" data-close="checklistDialog">Fechar</button>
+        <button id="saveChecklistBtn" type="button" class="primary">Salvar checklist</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="reportDialog" class="modal report-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2>Relatório da visita</h2>
+        <button type="button" class="icon-btn" data-close="reportDialog">×</button>
+      </div>
+      <div id="reportContent" class="report-content"></div>
+      <div class="modal-actions report-actions">
+        <button id="copyReportBtn" type="button" class="ghost">Copiar resumo</button>
+        <button id="reportWhatsAppBtn" type="button" class="primary">Enviar WhatsApp</button>
+        <button id="printReportBtn" type="button" class="ghost">Imprimir / PDF</button>
+      </div>
+    </div>
+  </dialog>
+
 
   <script src="app.js"></script>
 

@@ -70,3 +70,10 @@ A foto sozinha não dá medida 100% real. Para aproximar a escala, use o botão 
 - Agora, depois de salvar uma linha, o aplicativo continua no modo Linha de medida.
 - Para criar outra linha, basta tocar em mais 2 pontos na foto.
 - Os pontos pendentes são limpos automaticamente ao fechar a janela de medida.
+
+
+## V11 - Modo fácil
+- Botão Itens e medidas para editar/excluir sem tocar exatamente na foto.
+- Checklist da visita para não esquecer informações importantes.
+- Relatório simples para copiar, enviar no WhatsApp ou imprimir/salvar PDF.
+- Resumo do WhatsApp com mais detalhes dos itens e medidas.

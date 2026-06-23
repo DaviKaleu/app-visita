@@ -81,6 +81,22 @@ const els = {
   measureValue: $('measureValue'),
   measureUnit: $('measureUnit'),
   deleteMeasureLineBtn: $('deleteMeasureLineBtn'),
+  openListsBtn: $('openListsBtn'),
+  listsDialog: $('listsDialog'),
+  markerListPanel: $('markerListPanel'),
+  measureListPanel: $('measureListPanel'),
+  openChecklistBtn: $('openChecklistBtn'),
+  checklistDialog: $('checklistDialog'),
+  checklistPanel: $('checklistPanel'),
+  checklistProgress: $('checklistProgress'),
+  checklistNotes: $('checklistNotes'),
+  saveChecklistBtn: $('saveChecklistBtn'),
+  openReportBtn: $('openReportBtn'),
+  reportDialog: $('reportDialog'),
+  reportContent: $('reportContent'),
+  copyReportBtn: $('copyReportBtn'),
+  reportWhatsAppBtn: $('reportWhatsAppBtn'),
+  printReportBtn: $('printReportBtn'),
 };
 
 let state = loadState();
@@ -199,6 +215,15 @@ function findClient(id = selectedClientId) {
 function findRoom(clientId, roomId) {
   const client = findClient(clientId);
   return client?.rooms?.find(r => r.id === roomId) || null;
+}
+
+function ensureRoomDefaults(room) {
+  if (!room) return;
+  room.markers = Array.isArray(room.markers) ? room.markers : [];
+  room.measures = Array.isArray(room.measures) ? room.measures : [];
+  room.checklist = room.checklist && typeof room.checklist === 'object' ? room.checklist : {};
+  room.checklistNotes = room.checklistNotes || '';
+  room.measureNotes = room.measureNotes || '';
 }
 
 function escapeHtml(value = '') {
@@ -364,7 +389,7 @@ function saveRoomFromForm() {
   } else {
     const room = {
       id: uid('room'), ...payload, createdAt: nowIso(), photoData: '', sketchMode: false,
-      markers: [], measures: [], calibration: null, measureNotes: '',
+      markers: [], measures: [], calibration: null, measureNotes: '', checklist: {}, checklistNotes: '',
     };
     client.rooms = client.rooms || [];
     client.rooms.push(room);
@@ -422,6 +447,7 @@ function openEditor(clientId, roomId) {
   editor.clientId = clientId;
   editor.roomId = roomId;
   editor.room = findRoom(clientId, roomId);
+  ensureRoomDefaults(editor.room);
   editor.img = null;
   editor.sketchImg = null;
   editor.pendingPoints = [];
@@ -456,6 +482,9 @@ function saveEditorRoom() {
   if (!editor.room) return;
   if (els.measureNotesInput && els.editorDialog.open) {
     editor.room.measureNotes = els.measureNotesInput.value;
+  }
+  if (els.checklistNotes && els.checklistDialog?.open) {
+    editor.room.checklistNotes = els.checklistNotes.value.trim();
   }
   editor.room.updatedAt = nowIso();
   const client = findClient(editor.clientId);
@@ -905,6 +934,22 @@ function getCanvasPoint(evt) {
   };
 }
 
+function updateCanvasCursor(evt) {
+  if (!evt || !editor.room?.photoData) return;
+  if (editor.mode !== 'move' && editor.mode !== 'delete-marker' && editor.mode !== 'delete-measure') {
+    els.workCanvas.style.cursor = '';
+    return;
+  }
+  const p = getCanvasPoint(evt);
+  const overMarker = !!hitMarker(p.x, p.y);
+  const overMeasure = !!hitMeasure(p.x, p.y);
+  if (editor.mode === 'move') {
+    els.workCanvas.style.cursor = (overMarker || overMeasure) ? 'grab' : 'default';
+  } else {
+    els.workCanvas.style.cursor = (overMarker || overMeasure) ? 'not-allowed' : 'default';
+  }
+}
+
 function handleCanvasDown(evt) {
   if (!editor.room?.photoData) return;
   const p = getCanvasPoint(evt);
@@ -968,12 +1013,20 @@ function handleCanvasDown(evt) {
   }
 
   evt.preventDefault();
+  if (evt.pointerId != null && els.workCanvas.setPointerCapture) {
+    try { els.workCanvas.setPointerCapture(evt.pointerId); } catch {}
+  }
+
   if (hit) {
+    pushHistorySnapshot();
     editor.drag = { type: 'marker', id: hit.id, dx: hit.x - p.x, dy: hit.y - p.y, moved: false, startX: p.x, startY: p.y };
+    els.workCanvas.classList.add('dragging');
   } else {
     const hitLine = hitMeasure(p.x, p.y);
     if (hitLine) {
+      pushHistorySnapshot();
       editor.drag = { type: 'measure', kind: hitLine.kind, id: hitLine.id, moved: false, startX: p.x, startY: p.y, lastX: p.x, lastY: p.y };
+      els.workCanvas.classList.add('dragging');
       showToast('Linha selecionada. Arraste para mover.', 1800);
     } else {
       editor.drag = null;
@@ -986,7 +1039,10 @@ function handleCanvasDown(evt) {
 }
 
 function handleCanvasMove(evt) {
-  if (!editor.drag || !editor.room) return;
+  if (!editor.drag || !editor.room) {
+    updateCanvasCursor(evt);
+    return;
+  }
   evt.preventDefault();
   const p = getCanvasPoint(evt);
 
@@ -1024,6 +1080,10 @@ function handleCanvasMove(evt) {
 }
 
 function handleCanvasUp(evt) {
+  if (evt?.pointerId != null && els.workCanvas.releasePointerCapture) {
+    try { els.workCanvas.releasePointerCapture(evt.pointerId); } catch {}
+  }
+  els.workCanvas.classList.remove('dragging');
   if (!editor.drag) return;
   const drag = editor.drag;
   editor.drag = null;
@@ -1344,16 +1404,35 @@ async function downloadImage() {
 function buildShareSummary() {
   const client = findClient(editor.clientId);
   const room = editor.room || {};
+  const markers = room.markers || [];
+  const measures = room.measures || [];
+  const checklist = getChecklistSummary(room);
+  const markerLines = markers.slice(0, 12).map((m, i) => {
+    const parts = [
+      `${i + 1}. ${m.icon || ''} ${m.name || m.type || 'Item'}`,
+      m.leftDistance ? `esq ${m.leftDistance}` : '',
+      m.rightDistance ? `dir ${m.rightDistance}` : '',
+      m.floorDistance ? `chão ${m.floorDistance}` : '',
+      m.ceilingDistance ? `teto ${m.ceilingDistance}` : '',
+      m.notes ? `obs: ${m.notes}` : '',
+    ].filter(Boolean);
+    return parts.join(' • ');
+  });
+  const measureLines = measures.slice(0, 12).map((m, i) => `${i + 1}. ${m.name ? `${m.name}: ` : ''}${m.realLabel || m.label || formatCm(m.cm || 0)}`);
   const lines = [
     `*Top Visita Técnica*`,
     client?.name ? `Cliente: ${client.name}` : '',
+    client?.phone ? `Telefone: ${client.phone}` : '',
+    client?.address ? `Endereço: ${client.address}` : '',
     room.name ? `Ambiente: ${room.name}` : '',
     room.status ? `Status: ${room.status}` : '',
     room.deadline ? `Prazo/data: ${formatDate(room.deadline)}` : '',
     room.notes ? `Obs. ambiente: ${room.notes}` : '',
     room.measureNotes ? `Anotações de medidas: ${room.measureNotes}` : '',
-    `Marcações: ${(room.markers || []).length}`,
-    `Linhas de medida: ${(room.measures || []).length}`,
+    markerLines.length ? `\n*Itens marcados*\n${markerLines.join('\n')}` : '',
+    measureLines.length ? `\n*Linhas de medida*\n${measureLines.join('\n')}` : '',
+    checklist.done || checklist.total ? `\n*Checklist:* ${checklist.done}/${checklist.total} concluído` : '',
+    room.checklistNotes ? `Obs. final: ${room.checklistNotes}` : '',
   ].filter(Boolean);
   return lines.join('\n');
 }
@@ -1394,12 +1473,204 @@ async function shareWhatsApp() {
   showToast('Imagem baixada e WhatsApp aberto com o resumo.');
 }
 
+
+const CHECKLIST_ITEMS = [
+  ['photo', 'Foto do ambiente tirada'],
+  ['mainMeasures', 'Medidas principais anotadas'],
+  ['wallHeight', 'Pé-direito / altura conferida'],
+  ['outlets', 'Tomadas e interruptores marcados'],
+  ['hydraulic', 'Água/esgoto/gás conferidos'],
+  ['doorsWindows', 'Portas e janelas conferidas'],
+  ['obstacles', 'Colunas, rodapés e obstáculos marcados'],
+  ['level', 'Parede, piso e teto observados'],
+  ['clientApproval', 'Cliente confirmou informações importantes'],
+  ['shareReady', 'Pronto para enviar ao projetista'],
+];
+
+function getChecklistSummary(room = editor.room) {
+  ensureRoomDefaults(room);
+  const total = CHECKLIST_ITEMS.length;
+  const done = CHECKLIST_ITEMS.filter(([key]) => !!room?.checklist?.[key]).length;
+  return { total, done, missing: total - done };
+}
+
+function openChecklistDialog() {
+  if (!editor.room) return showToast('Abra um ambiente primeiro.');
+  ensureRoomDefaults(editor.room);
+  els.checklistPanel.innerHTML = CHECKLIST_ITEMS.map(([key, label]) => `
+    <label class="check-item">
+      <input type="checkbox" data-check-key="${key}" ${editor.room.checklist[key] ? 'checked' : ''} />
+      <span>${escapeHtml(label)}</span>
+    </label>
+  `).join('');
+  els.checklistNotes.value = editor.room.checklistNotes || '';
+  updateChecklistProgress();
+  els.checklistDialog.showModal();
+}
+
+function updateChecklistProgress() {
+  if (!editor.room) return;
+  const boxes = [...els.checklistPanel.querySelectorAll('[data-check-key]')];
+  const done = boxes.filter(b => b.checked).length;
+  const total = boxes.length || CHECKLIST_ITEMS.length;
+  els.checklistProgress.textContent = done === total
+    ? `Checklist completo: ${done}/${total}. Visita pronta para enviar.`
+    : `Faltam ${total - done} item(ns). Progresso: ${done}/${total}.`;
+}
+
+function saveChecklist() {
+  if (!editor.room) return;
+  ensureRoomDefaults(editor.room);
+  els.checklistPanel.querySelectorAll('[data-check-key]').forEach(input => {
+    editor.room.checklist[input.dataset.checkKey] = input.checked;
+  });
+  editor.room.checklistNotes = els.checklistNotes.value.trim();
+  saveEditorRoom();
+  updateChecklistProgress();
+  showToast('Checklist salvo.');
+}
+
+function openListsDialog() {
+  if (!editor.room) return showToast('Abra um ambiente primeiro.');
+  renderManageLists();
+  els.listsDialog.showModal();
+}
+
+function renderManageLists() {
+  ensureRoomDefaults(editor.room);
+  const markers = editor.room.markers || [];
+  const measures = editor.room.measures || [];
+  els.markerListPanel.innerHTML = markers.length ? markers.map(m => `
+    <article class="manage-row">
+      <div>
+        <strong>${escapeHtml(m.icon || '')} ${escapeHtml(m.name || m.type || 'Item')}</strong>
+        <small>${[
+          m.leftDistance ? `Esq: ${escapeHtml(m.leftDistance)}` : '',
+          m.rightDistance ? `Dir: ${escapeHtml(m.rightDistance)}` : '',
+          m.floorDistance ? `Chão: ${escapeHtml(m.floorDistance)}` : '',
+          m.ceilingDistance ? `Teto: ${escapeHtml(m.ceilingDistance)}` : '',
+          m.notes ? `Obs: ${escapeHtml(m.notes)}` : '',
+        ].filter(Boolean).join(' • ') || 'Sem medidas preenchidas'}</small>
+      </div>
+      <div class="manage-actions">
+        <button type="button" data-edit-marker="${m.id}" class="ghost small">Editar</button>
+        <button type="button" data-delete-marker="${m.id}" class="danger ghost small">Excluir</button>
+      </div>
+    </article>
+  `).join('') : `<p class="muted">Nenhum item marcado ainda.</p>`;
+
+  const calibration = editor.room.calibration ? [{ ...editor.room.calibration, id: 'calibration', isCalibration: true }] : [];
+  const allMeasures = [...calibration, ...measures];
+  els.measureListPanel.innerHTML = allMeasures.length ? allMeasures.map(m => `
+    <article class="manage-row">
+      <div>
+        <strong>${m.isCalibration ? 'Escala/calibração' : 'Medida'}: ${escapeHtml(m.realLabel || m.label || formatCm(m.cm || 0))}</strong>
+        <small>${m.isCalibration ? 'Linha usada para escala da foto' : 'Linha de medida do ambiente'}</small>
+      </div>
+      <div class="manage-actions">
+        <button type="button" data-edit-measure="${m.id}" data-kind="${m.isCalibration ? 'calibration' : 'measure'}" class="ghost small">Editar</button>
+        <button type="button" data-delete-measure="${m.id}" data-kind="${m.isCalibration ? 'calibration' : 'measure'}" class="danger ghost small">Excluir</button>
+      </div>
+    </article>
+  `).join('') : `<p class="muted">Nenhuma linha de medida ainda.</p>`;
+}
+
+function handleManageListsClick(e) {
+  const editMarker = e.target.closest('[data-edit-marker]');
+  const deleteMarker = e.target.closest('[data-delete-marker]');
+  const editMeasure = e.target.closest('[data-edit-measure]');
+  const deleteMeasure = e.target.closest('[data-delete-measure]');
+  if (editMarker) {
+    els.listsDialog.close();
+    openObjectDialog(editMarker.dataset.editMarker);
+    return;
+  }
+  if (deleteMarker) {
+    deleteMarkerById(deleteMarker.dataset.deleteMarker, true);
+    renderManageLists();
+    return;
+  }
+  if (editMeasure) {
+    els.listsDialog.close();
+    openExistingMeasureDialog(editMeasure.dataset.kind, editMeasure.dataset.editMeasure);
+    return;
+  }
+  if (deleteMeasure) {
+    if (deleteMeasure.dataset.kind === 'calibration') deleteCalibration(true);
+    else deleteMeasureById(deleteMeasure.dataset.deleteMeasure, true);
+    renderManageLists();
+  }
+}
+
+function openReportDialog() {
+  if (!editor.room) return showToast('Abra um ambiente primeiro.');
+  els.reportContent.innerHTML = buildReportHtml();
+  els.reportDialog.showModal();
+}
+
+function buildReportHtml() {
+  const client = findClient(editor.clientId) || {};
+  const room = editor.room || {};
+  const markers = room.markers || [];
+  const measures = room.measures || [];
+  const checklist = getChecklistSummary(room);
+  return `
+    <div class="report-head">
+      <strong>Top Visita Técnica</strong>
+      <span>${escapeHtml(new Date().toLocaleDateString('pt-BR'))}</span>
+    </div>
+    <h3>${escapeHtml(client.name || 'Cliente')}</h3>
+    <p>${escapeHtml([client.phone, client.address].filter(Boolean).join(' • ') || 'Sem telefone/endereço')}</p>
+    <h3>Ambiente: ${escapeHtml(room.name || '')}</h3>
+    <p>Status: ${escapeHtml(room.status || '')}${room.deadline ? ` • Prazo/data: ${escapeHtml(formatDate(room.deadline))}` : ''}</p>
+    ${room.notes ? `<h4>Observações do ambiente</h4><p>${escapeHtml(room.notes)}</p>` : ''}
+    ${room.measureNotes ? `<h4>Anotações de medidas</h4><pre>${escapeHtml(room.measureNotes)}</pre>` : ''}
+    <h4>Itens marcados (${markers.length})</h4>
+    ${markers.length ? `<ul>${markers.map(m => `<li><b>${escapeHtml(m.icon || '')} ${escapeHtml(m.name || m.type || 'Item')}</b> ${escapeHtml([
+      m.leftDistance ? `Esq: ${m.leftDistance}` : '',
+      m.rightDistance ? `Dir: ${m.rightDistance}` : '',
+      m.floorDistance ? `Chão: ${m.floorDistance}` : '',
+      m.ceilingDistance ? `Teto: ${m.ceilingDistance}` : '',
+      m.notes ? `Obs: ${m.notes}` : '',
+    ].filter(Boolean).join(' • '))}</li>`).join('')}</ul>` : '<p>Nenhum item marcado.</p>'}
+    <h4>Linhas de medida (${measures.length})</h4>
+    ${measures.length ? `<ul>${measures.map((m, i) => `<li>${i + 1}. ${escapeHtml(m.realLabel || m.label || '')}</li>`).join('')}</ul>` : '<p>Nenhuma linha cadastrada.</p>'}
+    <h4>Checklist</h4>
+    <p>${checklist.done}/${checklist.total} concluído.</p>
+    ${room.checklistNotes ? `<h4>Observação final</h4><p>${escapeHtml(room.checklistNotes)}</p>` : ''}
+  `;
+}
+
+async function copyReportSummary() {
+  try {
+    await navigator.clipboard.writeText(buildShareSummary());
+    showToast('Resumo copiado.');
+  } catch {
+    showToast('Não consegui copiar.');
+  }
+}
+
+function sendReportWhatsApp() {
+  window.open(`https://wa.me/?text=${encodeURIComponent(buildShareSummary())}`, '_blank');
+  showToast('WhatsApp aberto com o resumo.');
+}
+
+function printReport() {
+  const html = buildReportHtml();
+  const w = window.open('', '_blank');
+  if (!w) return showToast('O navegador bloqueou a impressão.');
+  w.document.write(`<!doctype html><html><head><title>Relatório Top Visita</title><style>body{font-family:Arial,sans-serif;padding:24px;color:#111}h3{margin-bottom:4px}p{line-height:1.4}pre{white-space:pre-wrap;background:#f5f5f5;padding:12px;border-radius:8px}li{margin:7px 0}.report-head{display:flex;justify-content:space-between;border-bottom:2px solid #111;padding-bottom:10px;margin-bottom:18px}</style></head><body>${html}</body></html>`);
+  w.document.close();
+  w.focus();
+  w.print();
+}
+
 function buildProjectPayload() {
   const client = findClient(editor.clientId);
   const room = editor.room || {};
   return {
     app: 'Top Visita Técnica',
-    version: 5,
+    version: 11,
     exportedAt: nowIso(),
     clientName: client?.name || '',
     room: {
@@ -1531,6 +1802,16 @@ function wireEvents() {
   if (els.fitBtn) els.fitBtn.addEventListener('click', toggleCanvasFit);
   els.whatsAppBtn.addEventListener('click', shareWhatsApp);
   els.shareBtn.addEventListener('click', shareImage);
+  els.openListsBtn.addEventListener('click', openListsDialog);
+  els.markerListPanel.addEventListener('click', handleManageListsClick);
+  els.measureListPanel.addEventListener('click', handleManageListsClick);
+  els.openChecklistBtn.addEventListener('click', openChecklistDialog);
+  els.checklistPanel.addEventListener('change', updateChecklistProgress);
+  els.saveChecklistBtn.addEventListener('click', saveChecklist);
+  els.openReportBtn.addEventListener('click', openReportDialog);
+  els.copyReportBtn.addEventListener('click', copyReportSummary);
+  els.reportWhatsAppBtn.addEventListener('click', sendReportWhatsApp);
+  els.printReportBtn.addEventListener('click', printReport);
   els.exportProjectBtn.addEventListener('click', exportProjectJson);
   els.importProjectBtn.addEventListener('click', () => els.importProjectInput.click());
   els.importProjectInput.addEventListener('change', (e) => importProjectJson(e.target.files?.[0]));
@@ -1584,6 +1865,14 @@ function wireEvents() {
   els.workCanvas.addEventListener('pointermove', handleCanvasMove);
   els.workCanvas.addEventListener('pointerup', handleCanvasUp);
   els.workCanvas.addEventListener('pointercancel', handleCanvasUp);
+  els.workCanvas.addEventListener('lostpointercapture', () => {
+    els.workCanvas.classList.remove('dragging');
+    if (editor.drag) {
+      editor.drag = null;
+      saveEditorRoom();
+      drawCanvas();
+    }
+  });
   els.workCanvas.addEventListener('dblclick', (e) => {
     const p = getCanvasPoint(e);
     const hit = hitMarker(p.x, p.y);
