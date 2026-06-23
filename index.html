@@ -157,6 +157,8 @@
             <button id="measureBtn" class="tool-btn">Linha de medida</button>
             <button id="viewBtn" class="tool-btn active">Visualizar medidas</button>
             <button id="moveBtn" class="tool-btn">Mover / editar</button>
+            <button id="deleteMarkerBtn" class="tool-btn danger">Remover item</button>
+            <button id="deleteMeasureBtn" class="tool-btn danger">Remover medida</button>
           </div>
 
           <div class="tool-group objects">
@@ -201,6 +203,7 @@ Rodapé: 7 cm"></textarea>
             <button id="fitBtn" class="tool-btn">Ajustar foto</button>
             <button id="exportBtn" class="tool-btn">Salvar imagem</button>
             <button id="shareBtn" class="primary tool-btn">Compartilhar</button>
+            <small class="share-help">No celular, use o botão compartilhar e escolha o WhatsApp.</small>
           </div>
 
           <div class="hint-box">
@@ -274,5 +277,25 @@ Rodapé: 7 cm"></textarea>
   </dialog>
 
   <script src="app.js"></script>
+
+
+  <dialog id="shareDialog" class="modal">
+    <div class="modal-card small-card">
+      <div class="modal-header">
+        <h2>Compartilhar</h2>
+        <button type="button" class="icon-btn" data-close="shareDialog">×</button>
+      </div>
+      <p class="muted">Escolha a forma de compartilhar este ambiente.</p>
+      <div class="tool-group" style="border-bottom:0;padding:0;">
+        <button id="shareImageBtn" type="button" class="tool-btn">📤 Compartilhar imagem</button>
+        <button id="shareWhatsAppBtn" type="button" class="tool-btn">🟢 WhatsApp com imagem</button>
+        <button id="shareWhatsAppTextBtn" type="button" class="tool-btn">💬 WhatsApp com resumo</button>
+        <button id="copySummaryBtn" type="button" class="tool-btn">📋 Copiar resumo</button>
+        <button id="downloadFromShareBtn" type="button" class="tool-btn">💾 Baixar imagem</button>
+      </div>
+      <p class="muted" style="margin-top:10px;">No WhatsApp com imagem, o celular vai abrir a tela de compartilhamento para você escolher o WhatsApp.</p>
+    </div>
+  </dialog>
+
 </body>
 </html>

@@ -45,10 +45,18 @@ const els = {
   measureBtn: $('measureBtn'),
   viewBtn: $('viewBtn'),
   moveBtn: $('moveBtn'),
+  deleteMarkerBtn: $('deleteMarkerBtn'),
+  deleteMeasureBtn: $('deleteMeasureBtn'),
   undoBtn: $('undoBtn'),
   exportBtn: $('exportBtn'),
   fitBtn: $('fitBtn'),
   shareBtn: $('shareBtn'),
+  shareDialog: $('shareDialog'),
+  shareImageBtn: $('shareImageBtn'),
+  shareWhatsAppBtn: $('shareWhatsAppBtn'),
+  shareWhatsAppTextBtn: $('shareWhatsAppTextBtn'),
+  copySummaryBtn: $('copySummaryBtn'),
+  downloadFromShareBtn: $('downloadFromShareBtn'),
   exportProjectBtn: $('exportProjectBtn'),
   importProjectBtn: $('importProjectBtn'),
   importProjectInput: $('importProjectInput'),
@@ -385,6 +393,8 @@ function setMode(mode, selectedType = null, selectedIcon = null) {
   document.querySelectorAll('.tool-btn, .object-btn').forEach(b => b.classList.remove('active'));
   if (mode === 'view') els.viewBtn.classList.add('active');
   if (mode === 'move') els.moveBtn.classList.add('active');
+  if (mode === 'delete-marker') els.deleteMarkerBtn.classList.add('active');
+  if (mode === 'delete-measure') els.deleteMeasureBtn.classList.add('active');
   if (mode === 'calibrate') els.calibrateBtn.classList.add('active');
   if (mode === 'measure') els.measureBtn.classList.add('active');
   if (mode === 'object') {
@@ -395,6 +405,8 @@ function setMode(mode, selectedType = null, selectedIcon = null) {
   const label = {
     view: 'Visualizar: toque na marcação para ver as medidas sem abrir edição.',
     move: 'Mover / editar: toque e arraste; toque rápido para abrir edição.',
+    'delete-marker': 'Remover item: toque em uma tomada, interruptor ou outro item para excluir.',
+    'delete-measure': 'Remover medida: toque em uma linha de medida para excluir.',
     calibrate: 'Calibrar: toque em 2 pontos de uma medida conhecida.',
     measure: 'Medida: toque em 2 pontos para criar uma linha.',
     object: `Adicionar: toque na foto para inserir ${selectedType}.`,
@@ -898,6 +910,26 @@ function handleCanvasDown(evt) {
     return;
   }
 
+  if (editor.mode === 'delete-marker') {
+    evt.preventDefault();
+    const hit = hitMarker(p.x, p.y);
+    if (!hit) return showToast('Toque em um item para remover.');
+    deleteMarkerById(hit.id, true);
+    return;
+  }
+
+  if (editor.mode === 'delete-measure') {
+    evt.preventDefault();
+    const hitLine = hitMeasure(p.x, p.y);
+    if (!hitLine) return showToast('Toque em uma linha de medida para remover.');
+    if (hitLine.kind === 'calibration') {
+      deleteCalibration(true);
+    } else {
+      deleteMeasureById(hitLine.id, true);
+    }
+    return;
+  }
+
   const hit = hitMarker(p.x, p.y);
   selectedObjectId = hit?.id || null;
 
@@ -952,6 +984,65 @@ function hitMarker(x, y) {
   const markers = [...(editor.room.markers || [])].reverse();
   return markers.find(m => Math.hypot(m.x - x, m.y - y) <= 35) || null;
 }
+function pointToSegmentDistance(px, py, x1, y1, x2, y2) {
+  const dx = x2 - x1;
+  const dy = y2 - y1;
+  if (!dx && !dy) return Math.hypot(px - x1, py - y1);
+  const t = Math.max(0, Math.min(1, ((px - x1) * dx + (py - y1) * dy) / (dx * dx + dy * dy)));
+  const cx = x1 + t * dx;
+  const cy = y1 + t * dy;
+  return Math.hypot(px - cx, py - cy);
+}
+
+function hitMeasure(x, y) {
+  const measures = [...(editor.room.measures || [])].reverse();
+  for (const line of measures) {
+    const d = pointToSegmentDistance(x, y, line.p1.x, line.p1.y, line.p2.x, line.p2.y);
+    if (d <= 18) return { kind: 'measure', id: line.id, line };
+  }
+  const cal = editor.room.calibration;
+  if (cal?.p1 && cal?.p2) {
+    const d = pointToSegmentDistance(x, y, cal.p1.x, cal.p1.y, cal.p2.x, cal.p2.y);
+    if (d <= 18) return { kind: 'calibration', id: 'calibration', line: cal };
+  }
+  return null;
+}
+
+function deleteMarkerById(id, askConfirm = false) {
+  const marker = editor.room.markers.find(m => m.id === id);
+  if (!marker) return;
+  if (askConfirm && !confirm(`Remover "${marker.name || marker.type}"?`)) return;
+  pushHistorySnapshot();
+  editor.room.markers = editor.room.markers.filter(m => m.id !== id);
+  if (selectedObjectId === id) selectedObjectId = null;
+  saveEditorRoom();
+  drawCanvas();
+  updateViewInfoPanel();
+  if (els.objectDialog.open) els.objectDialog.close();
+  showToast('Item removido.');
+}
+
+function deleteMeasureById(id, askConfirm = false) {
+  const measure = (editor.room.measures || []).find(m => m.id === id);
+  if (!measure) return;
+  if (askConfirm && !confirm(`Remover a linha de medida ${measure.realLabel || measure.label || ''}?`)) return;
+  pushHistorySnapshot();
+  editor.room.measures = (editor.room.measures || []).filter(m => m.id !== id);
+  saveEditorRoom();
+  drawCanvas();
+  showToast('Linha de medida removida.');
+}
+
+function deleteCalibration(askConfirm = false) {
+  if (!editor.room.calibration) return;
+  if (askConfirm && !confirm('Remover a escala calibrada?')) return;
+  pushHistorySnapshot();
+  editor.room.calibration = null;
+  saveEditorRoom();
+  drawCanvas();
+  updateViewInfoPanel();
+  showToast('Escala calibrada removida.');
+}
 
 function pushHistorySnapshot() {
   editor.room._lastSnapshot = JSON.stringify({
@@ -1000,14 +1091,7 @@ function saveObjectFromForm() {
 
 function deleteSelectedObject() {
   if (!selectedObjectId) return;
-  pushHistorySnapshot();
-  editor.room.markers = editor.room.markers.filter(m => m.id !== selectedObjectId);
-  selectedObjectId = null;
-  saveEditorRoom();
-  drawCanvas();
-  updateViewInfoPanel();
-  els.objectDialog.close();
-  showToast('Marcação excluída.');
+  deleteMarkerById(selectedObjectId, false);
 }
 
 function openMeasureDialog(kind) {
@@ -1116,22 +1200,63 @@ async function downloadImage() {
   showToast('Imagem salva/baixada.');
 }
 
-async function shareImage() {
+function buildShareSummary() {
+  const client = findClient(editor.clientId);
+  const room = editor.room || {};
+  const lines = [
+    `*Top Visita Técnica*`,
+    client?.name ? `Cliente: ${client.name}` : '',
+    room.name ? `Ambiente: ${room.name}` : '',
+    room.status ? `Status: ${room.status}` : '',
+    room.deadline ? `Prazo/data: ${formatDate(room.deadline)}` : '',
+    room.notes ? `Obs. ambiente: ${room.notes}` : '',
+    room.measureNotes ? `Anotações de medidas: ${room.measureNotes}` : '',
+    `Marcações: ${(room.markers || []).length}`,
+    `Linhas de medida: ${(room.measures || []).length}`,
+  ].filter(Boolean);
+  return lines.join('\n');
+}
+
+function openShareDialog() {
+  if (!editor.room?.photoData) return showToast('Adicione uma foto primeiro.');
+  els.shareDialog.showModal();
+}
+
+async function shareImageGeneric(preferWhatsApp = false) {
   if (!editor.room?.photoData) return showToast('Adicione uma foto primeiro.');
   drawCanvas();
   const blob = await exportImageBlob();
   const client = findClient(editor.clientId);
   const file = new File([blob], `${safeFileName(client?.name || 'cliente')}-${safeFileName(editor.room.name)}.png`, { type: 'image/png' });
-  const text = `Visita técnica - ${client?.name || ''} - ${editor.room.name}`;
+  const text = buildShareSummary();
 
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+  if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
     await navigator.share({ title: 'Top Visita Técnica', text, files: [file] });
-    showToast('Compartilhamento aberto.');
-  } else if (navigator.share) {
+    showToast(preferWhatsApp ? 'Escolha o WhatsApp na tela de compartilhamento.' : 'Compartilhamento aberto.');
+    return;
+  }
+  if (navigator.share) {
     await navigator.share({ title: 'Top Visita Técnica', text });
-  } else {
-    await downloadImage();
-    showToast('Seu navegador não compartilha direto. A imagem foi baixada.');
+    showToast(preferWhatsApp ? 'Escolha o WhatsApp na tela de compartilhamento.' : 'Compartilhamento aberto.');
+    return;
+  }
+  await downloadImage();
+  showToast('Seu navegador não compartilha direto. A imagem foi baixada.');
+}
+
+function shareTextToWhatsApp() {
+  const text = encodeURIComponent(buildShareSummary());
+  window.open(`https://wa.me/?text=${text}`, '_blank');
+  showToast('WhatsApp aberto com o resumo do ambiente.');
+}
+
+async function copySummary() {
+  const text = buildShareSummary();
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('Resumo copiado.');
+  } catch {
+    showToast('Não consegui copiar o resumo.');
   }
 }
 
@@ -1263,10 +1388,17 @@ function wireEvents() {
   els.measureBtn.addEventListener('click', () => setMode('measure'));
   els.viewBtn.addEventListener('click', () => setMode('view'));
   els.moveBtn.addEventListener('click', () => setMode('move'));
+  els.deleteMarkerBtn.addEventListener('click', () => setMode('delete-marker'));
+  els.deleteMeasureBtn.addEventListener('click', () => setMode('delete-measure'));
   els.undoBtn.addEventListener('click', undo);
   els.exportBtn.addEventListener('click', downloadImage);
   if (els.fitBtn) els.fitBtn.addEventListener('click', toggleCanvasFit);
-  els.shareBtn.addEventListener('click', shareImage);
+  els.shareBtn.addEventListener('click', openShareDialog);
+  els.shareImageBtn?.addEventListener('click', async () => { try { await shareImageGeneric(false); } finally { els.shareDialog.close(); } });
+  els.shareWhatsAppBtn?.addEventListener('click', async () => { try { await shareImageGeneric(true); } finally { els.shareDialog.close(); } });
+  els.shareWhatsAppTextBtn?.addEventListener('click', () => { shareTextToWhatsApp(); els.shareDialog.close(); });
+  els.copySummaryBtn?.addEventListener('click', async () => { await copySummary(); els.shareDialog.close(); });
+  els.downloadFromShareBtn?.addEventListener('click', async () => { await downloadImage(); els.shareDialog.close(); });
   els.exportProjectBtn.addEventListener('click', exportProjectJson);
   els.importProjectBtn.addEventListener('click', () => els.importProjectInput.click());
   els.importProjectInput.addEventListener('change', (e) => importProjectJson(e.target.files?.[0]));

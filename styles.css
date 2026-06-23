@@ -386,3 +386,5 @@ textarea { resize: vertical; }
   .objects { min-width: 220px; }
   .notes-tab { min-width: 240px; }
 }
+
+.share-help { display:block; color:#cfcfcf; font-size:.78rem; line-height:1.35; margin-top:6px; }
