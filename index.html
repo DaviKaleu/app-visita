@@ -175,6 +175,19 @@
             <button class="object-btn" data-type="Obstáculo" data-icon="⚠️">⚠️ Obstáculo</button>
           </div>
 
+          <div class="tool-group notes-tab">
+            <details open>
+              <summary>📏 Anotações de medidas</summary>
+              <textarea id="measureNotesInput" rows="6" placeholder="Ex:
+Parede principal: 250 cm
+Pé direito: 260 cm
+Tomada esquerda: 45 cm do canto
+Rodapé: 7 cm"></textarea>
+              <button id="saveMeasureNotesBtn" type="button" class="tool-btn">Salvar anotações</button>
+              <p id="measureNotesStatus">As anotações ficam salvas nesse ambiente.</p>
+            </details>
+          </div>
+
           <div class="tool-group">
             <button id="undoBtn" class="tool-btn">Desfazer</button>
             <button id="exportBtn" class="tool-btn">Salvar imagem</button>
@@ -213,6 +226,7 @@
       <label>Distância / medida
         <input id="objectDistance" placeholder="Ex: 45 cm da parede esquerda" />
       </label>
+      <div id="objectAutoDistances" class="auto-distance-box"></div>
       <label>Observação
         <textarea id="objectNotes" rows="3" placeholder="Ex: não cobrir com armário"></textarea>
       </label>

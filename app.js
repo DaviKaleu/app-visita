@@ -50,8 +50,12 @@ const els = {
   objectName: $('objectName'),
   objectHeight: $('objectHeight'),
   objectDistance: $('objectDistance'),
+  objectAutoDistances: $('objectAutoDistances'),
   objectNotes: $('objectNotes'),
   deleteObjectBtn: $('deleteObjectBtn'),
+  measureNotesInput: $('measureNotesInput'),
+  saveMeasureNotesBtn: $('saveMeasureNotesBtn'),
+  measureNotesStatus: $('measureNotesStatus'),
   measureDialog: $('measureDialog'),
   measureForm: $('measureForm'),
   measureDialogTitle: $('measureDialogTitle'),
@@ -283,7 +287,7 @@ function saveRoomFromForm() {
   } else {
     const room = {
       id: uid('room'), ...payload, createdAt: nowIso(), photoData: '', sketchMode: false,
-      markers: [], measures: [], calibration: null,
+      markers: [], measures: [], calibration: null, measureNotes: '',
     };
     client.rooms = client.rooms || [];
     client.rooms.push(room);
@@ -319,7 +323,7 @@ function setMode(mode, selectedType = null, selectedIcon = null) {
     document.querySelectorAll(`.object-btn[data-type="${CSS.escape(selectedType)}"]`).forEach(b => b.classList.add('active'));
   }
   const label = {
-    move: 'Mover / editar: toque na marcação para alterar.',
+    move: 'Mover / editar: toque na marcação para ver setas de distância e alterar.',
     calibrate: 'Calibrar: toque em 2 pontos de uma medida conhecida.',
     measure: 'Medida: toque em 2 pontos para criar uma linha.',
     object: `Adicionar: toque na foto para inserir ${selectedType}.`,
@@ -343,6 +347,10 @@ function openEditor(clientId, roomId) {
   els.sketchToggle.classList.toggle('active', !!editor.room.sketchMode);
   els.editorDialog.showModal();
   setMode('move');
+  if (els.measureNotesInput) {
+    els.measureNotesInput.value = editor.room.measureNotes || '';
+    els.measureNotesStatus.textContent = 'As anotações ficam salvas nesse ambiente.';
+  }
   loadEditorImage();
 }
 
@@ -354,6 +362,9 @@ function closeEditor() {
 
 function saveEditorRoom() {
   if (!editor.room) return;
+  if (els.measureNotesInput && els.editorDialog.open) {
+    editor.room.measureNotes = els.measureNotesInput.value;
+  }
   editor.room.updatedAt = nowIso();
   const client = findClient(editor.clientId);
   if (client) client.updatedAt = nowIso();
@@ -401,6 +412,7 @@ function drawCanvas() {
   }
 
   drawMeasures(ctx);
+  drawSelectedMarkerGuides(ctx);
   drawMarkers(ctx);
   drawPending(ctx);
 }
@@ -433,6 +445,109 @@ function drawMarkers(ctx) {
     ctx.fillText(text, m.x, m.y + r + 25);
     ctx.restore();
   });
+}
+
+
+function drawSelectedMarkerGuides(ctx) {
+  if (!selectedObjectId || !editor.room?.photoData) return;
+  const marker = (editor.room.markers || []).find(m => m.id === selectedObjectId);
+  if (!marker) return;
+
+  const c = els.workCanvas;
+  const leftPx = Math.max(0, marker.x);
+  const rightPx = Math.max(0, c.width - marker.x);
+  const floorPx = Math.max(0, c.height - marker.y);
+
+  const topY = clamp(marker.y - 82, 42, c.height - 80);
+  const bottomY = clamp(marker.y + 82, 72, c.height - 35);
+  const sideX = clamp(marker.x + 78, 42, c.width - 42);
+
+  ctx.save();
+  ctx.lineWidth = 4;
+  ctx.strokeStyle = '#cf2626';
+  ctx.fillStyle = '#cf2626';
+  ctx.setLineDash([12, 8]);
+
+  drawDoubleArrow(ctx, 0, topY, marker.x, topY);
+  drawDistanceLabel(ctx, marker.x / 2, topY - 18, `Parede esq: ${formatPxDistance(leftPx)}`);
+
+  drawDoubleArrow(ctx, marker.x, bottomY, c.width, bottomY);
+  drawDistanceLabel(ctx, (marker.x + c.width) / 2, bottomY + 22, `Parede dir: ${formatPxDistance(rightPx)}`);
+
+  drawDoubleArrow(ctx, sideX, marker.y, sideX, c.height);
+  drawDistanceLabel(ctx, sideX + 7, (marker.y + c.height) / 2, `Chão: ${formatPxDistance(floorPx)}`, 'left');
+
+  ctx.setLineDash([]);
+  ctx.strokeStyle = 'rgba(207, 38, 38, .35)';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(marker.x, 0);
+  ctx.lineTo(marker.x, c.height);
+  ctx.moveTo(0, marker.y);
+  ctx.lineTo(c.width, marker.y);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawDoubleArrow(ctx, x1, y1, x2, y2) {
+  ctx.beginPath();
+  ctx.moveTo(x1, y1);
+  ctx.lineTo(x2, y2);
+  ctx.stroke();
+  drawArrowHead(ctx, x1, y1, x2, y2);
+  drawArrowHead(ctx, x2, y2, x1, y1);
+}
+
+function drawArrowHead(ctx, x, y, towardX, towardY) {
+  const angle = Math.atan2(y - towardY, x - towardX);
+  const size = 14;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+  ctx.lineTo(x - size * Math.cos(angle - Math.PI / 6), y - size * Math.sin(angle - Math.PI / 6));
+  ctx.lineTo(x - size * Math.cos(angle + Math.PI / 6), y - size * Math.sin(angle + Math.PI / 6));
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawDistanceLabel(ctx, x, y, text, align = 'center') {
+  ctx.save();
+  ctx.font = 'bold 18px system-ui, sans-serif';
+  const padX = 10;
+  const width = ctx.measureText(text).width + padX * 2;
+  const height = 30;
+  let boxX = align === 'left' ? x : x - width / 2;
+  boxX = clamp(boxX, 6, els.workCanvas.width - width - 6);
+  let boxY = clamp(y - height / 2, 6, els.workCanvas.height - height - 6);
+  ctx.fillStyle = 'rgba(255,255,255,.96)';
+  roundRect(ctx, boxX, boxY, width, height, 9, true, false);
+  ctx.strokeStyle = '#cf2626';
+  ctx.lineWidth = 2;
+  roundRect(ctx, boxX, boxY, width, height, 9, false, true);
+  ctx.fillStyle = '#cf2626';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, boxX + width / 2, boxY + height / 2 + 1);
+  ctx.restore();
+}
+
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function formatPxDistance(px) {
+  const cal = editor.room?.calibration;
+  if (cal?.pxPerCm) return formatCm(px / cal.pxPerCm);
+  return `${Math.round(px)}px`;
+}
+
+function getMarkerAutoDistanceText(marker) {
+  if (!marker) return '';
+  const c = els.workCanvas;
+  const left = formatPxDistance(Math.max(0, marker.x));
+  const right = formatPxDistance(Math.max(0, c.width - marker.x));
+  const floor = formatPxDistance(Math.max(0, c.height - marker.y));
+  const scaleText = editor.room?.calibration?.pxPerCm ? '' : '<br><small>Calibre uma medida para aparecer em cm/m em vez de pixel.</small>';
+  return `Parede esquerda: ${left}<br>Parede direita: ${right}<br>Altura do chão: ${floor}${scaleText}`;
 }
 
 function drawMeasures(ctx) {
@@ -632,6 +747,9 @@ function handleCanvasDown(evt) {
     editor.drag = null;
   }
   drawCanvas();
+  if (hit && !editor.room?.calibration?.pxPerCm) {
+    showToast('Setas em pixel. Use Calibrar medida para aparecer em cm/m.', 2300);
+  }
 }
 
 function handleCanvasMove(evt) {
@@ -688,6 +806,7 @@ function openObjectDialog(id) {
   els.objectName.value = marker.name || marker.type || '';
   els.objectHeight.value = marker.height || '';
   els.objectDistance.value = marker.distance || '';
+  els.objectAutoDistances.innerHTML = getMarkerAutoDistanceText(marker);
   els.objectNotes.value = marker.notes || '';
   drawCanvas();
   els.objectDialog.showModal();
@@ -872,6 +991,28 @@ function wireEvents() {
   els.undoBtn.addEventListener('click', undo);
   els.exportBtn.addEventListener('click', downloadImage);
   els.shareBtn.addEventListener('click', shareImage);
+  if (els.saveMeasureNotesBtn) {
+    els.saveMeasureNotesBtn.addEventListener('click', () => {
+      saveEditorRoom();
+      els.measureNotesStatus.textContent = 'Anotações salvas agora.';
+      showToast('Anotações de medidas salvas.');
+    });
+  }
+  if (els.measureNotesInput) {
+    els.measureNotesInput.addEventListener('input', () => {
+      if (!editor.room) return;
+      editor.room.measureNotes = els.measureNotesInput.value;
+      editor.room.updatedAt = nowIso();
+      const client = findClient(editor.clientId);
+      if (client) client.updatedAt = nowIso();
+      saveState();
+      els.measureNotesStatus.textContent = 'Salvando automaticamente...';
+      clearTimeout(els.measureNotesInput._timer);
+      els.measureNotesInput._timer = setTimeout(() => {
+        els.measureNotesStatus.textContent = 'Anotações salvas automaticamente.';
+      }, 500);
+    });
+  }
 
   document.querySelectorAll('.object-btn').forEach(btn => {
     btn.addEventListener('click', () => setMode('object', btn.dataset.type, btn.dataset.icon));

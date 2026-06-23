@@ -11,8 +11,10 @@ Aplicativo PWA para visitas técnicas de móveis planejados.
 - Modo croqui branco com contorno da foto
 - Marcação de tomadas, interruptores, portas, janelas, colunas, rodapés, bancada, cuba e outros obstáculos
 - Edição das marcações com altura, distância e observação
+- Setas automáticas ao selecionar uma marcação, mostrando distância da parede esquerda, parede direita e altura do chão
 - Calibração usando uma medida conhecida
 - Linhas de medida
+- Aba de anotações de medidas dentro do editor do ambiente
 - Salvar/baixar imagem PNG marcada
 - Compartilhar imagem pelo celular quando o navegador permitir
 - Funciona offline depois de abrir a primeira vez
@@ -41,7 +43,7 @@ http://localhost:8000
 
 ## Observação importante
 
-A foto sozinha não dá medida 100% real. Para aproximar a escala, use o botão “Calibrar medida” e marque uma distância conhecida, como largura de parede, altura da porta ou medida de uma bancada.
+A foto sozinha não dá medida 100% real. Para aproximar a escala, use o botão “Calibrar medida” e marque uma distância conhecida, como largura de parede, altura da porta ou medida de uma bancada. Sem calibrar, as setas aparecem em pixels; depois de calibrar, aparecem em cm/m.
 
 ## Próximos upgrades recomendados
 
