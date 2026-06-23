@@ -39,11 +39,16 @@ const els = {
   sketchToggle: $('sketchToggle'),
   calibrateBtn: $('calibrateBtn'),
   measureBtn: $('measureBtn'),
+  viewBtn: $('viewBtn'),
   moveBtn: $('moveBtn'),
   undoBtn: $('undoBtn'),
   exportBtn: $('exportBtn'),
   shareBtn: $('shareBtn'),
+  exportProjectBtn: $('exportProjectBtn'),
+  importProjectBtn: $('importProjectBtn'),
+  importProjectInput: $('importProjectInput'),
   workCanvas: $('workCanvas'),
+  viewInfoPanel: $('viewInfoPanel'),
   canvasEmpty: $('canvasEmpty'),
   objectDialog: $('objectDialog'),
   objectForm: $('objectForm'),
@@ -77,7 +82,7 @@ let editor = {
   ctx: els.workCanvas.getContext('2d'),
   img: null,
   sketchImg: null,
-  mode: 'move',
+  mode: 'view',
   pendingPoints: [],
   drag: null,
   selectedType: null,
@@ -316,6 +321,7 @@ function setMode(mode, selectedType = null, selectedIcon = null) {
   editor.selectedIcon = selectedIcon;
   editor.pendingPoints = [];
   document.querySelectorAll('.tool-btn, .object-btn').forEach(b => b.classList.remove('active'));
+  if (mode === 'view') els.viewBtn.classList.add('active');
   if (mode === 'move') els.moveBtn.classList.add('active');
   if (mode === 'calibrate') els.calibrateBtn.classList.add('active');
   if (mode === 'measure') els.measureBtn.classList.add('active');
@@ -323,11 +329,14 @@ function setMode(mode, selectedType = null, selectedIcon = null) {
     document.querySelectorAll(`.object-btn[data-type="${CSS.escape(selectedType)}"]`).forEach(b => b.classList.add('active'));
   }
   const label = {
-    move: 'Mover / editar: toque na marcação para ver setas de distância e alterar.',
+    view: 'Visualizar: toque na marcação para ver as medidas sem abrir edição.',
+    move: 'Mover / editar: toque e arraste; toque rápido para abrir edição.',
     calibrate: 'Calibrar: toque em 2 pontos de uma medida conhecida.',
     measure: 'Medida: toque em 2 pontos para criar uma linha.',
     object: `Adicionar: toque na foto para inserir ${selectedType}.`,
   }[mode];
+  updateViewInfoPanel();
+  drawCanvas();
   showToast(label, 2200);
 }
 
@@ -346,7 +355,7 @@ function openEditor(clientId, roomId) {
   els.editorSubtitle.textContent = client ? client.name : 'Foto técnica';
   els.sketchToggle.classList.toggle('active', !!editor.room.sketchMode);
   els.editorDialog.showModal();
-  setMode('move');
+  setMode('view');
   if (els.measureNotesInput) {
     els.measureNotesInput.value = editor.room.measureNotes || '';
     els.measureNotesStatus.textContent = 'As anotações ficam salvas nesse ambiente.';
@@ -356,6 +365,7 @@ function openEditor(clientId, roomId) {
 
 function closeEditor() {
   saveEditorRoom();
+  if (els.viewInfoPanel) els.viewInfoPanel.classList.add('hidden');
   els.editorDialog.close();
   render();
 }
@@ -540,14 +550,50 @@ function formatPxDistance(px) {
   return `${Math.round(px)}px`;
 }
 
-function getMarkerAutoDistanceText(marker) {
-  if (!marker) return '';
+function getMarkerAutoDistanceData(marker) {
+  if (!marker) return null;
   const c = els.workCanvas;
-  const left = formatPxDistance(Math.max(0, marker.x));
-  const right = formatPxDistance(Math.max(0, c.width - marker.x));
-  const floor = formatPxDistance(Math.max(0, c.height - marker.y));
-  const scaleText = editor.room?.calibration?.pxPerCm ? '' : '<br><small>Calibre uma medida para aparecer em cm/m em vez de pixel.</small>';
-  return `Parede esquerda: ${left}<br>Parede direita: ${right}<br>Altura do chão: ${floor}${scaleText}`;
+  return {
+    left: formatPxDistance(Math.max(0, marker.x)),
+    right: formatPxDistance(Math.max(0, c.width - marker.x)),
+    floor: formatPxDistance(Math.max(0, c.height - marker.y)),
+    hasScale: !!editor.room?.calibration?.pxPerCm,
+  };
+}
+
+function getMarkerAutoDistanceText(marker) {
+  const d = getMarkerAutoDistanceData(marker);
+  if (!d) return '';
+  const scaleText = d.hasScale ? '' : '<br><small>Calibre uma medida para aparecer em cm/m em vez de pixel.</small>';
+  return `Parede esquerda: ${d.left}<br>Parede direita: ${d.right}<br>Altura do chão: ${d.floor}${scaleText}`;
+}
+
+function updateViewInfoPanel() {
+  const panel = els.viewInfoPanel;
+  if (!panel) return;
+  if (editor.mode !== 'view' || !editor.room?.photoData) {
+    panel.classList.add('hidden');
+    panel.innerHTML = '';
+    return;
+  }
+  const marker = (editor.room.markers || []).find(m => m.id === selectedObjectId);
+  if (!marker) {
+    panel.classList.remove('hidden');
+    panel.innerHTML = `<strong>Modo visualização</strong><span>Toque em uma marcação para ver as setas e medidas sem abrir edição.</span>`;
+    return;
+  }
+  const d = getMarkerAutoDistanceData(marker);
+  panel.classList.remove('hidden');
+  panel.innerHTML = `
+    <strong>${escapeHtml(marker.icon || '')} ${escapeHtml(marker.name || marker.type || 'Marcação')}</strong>
+    <div class="view-measure-grid">
+      <span>Esq: ${escapeHtml(d.left)}</span>
+      <span>Dir: ${escapeHtml(d.right)}</span>
+      <span>Chão: ${escapeHtml(d.floor)}</span>
+    </div>
+    ${(marker.height || marker.distance || marker.notes) ? `<small>${[marker.height ? `Altura: ${escapeHtml(marker.height)}` : '', marker.distance ? `Distância: ${escapeHtml(marker.distance)}` : '', marker.notes ? `Obs: ${escapeHtml(marker.notes)}` : ''].filter(Boolean).join(' • ')}</small>` : ''}
+    ${d.hasScale ? '' : '<small>Sem escala calibrada: medidas em pixel.</small>'}
+  `;
 }
 
 function drawMeasures(ctx) {
@@ -741,6 +787,19 @@ function handleCanvasDown(evt) {
 
   const hit = hitMarker(p.x, p.y);
   selectedObjectId = hit?.id || null;
+
+  if (editor.mode === 'view') {
+    editor.drag = null;
+    drawCanvas();
+    updateViewInfoPanel();
+    if (hit && !editor.room?.calibration?.pxPerCm) {
+      showToast('Setas em pixel. Use Calibrar medida para aparecer em cm/m.', 2300);
+    } else if (hit) {
+      showToast('Medidas exibidas. Nenhuma edição foi aberta.', 1700);
+    }
+    return;
+  }
+
   if (hit) {
     editor.drag = { id: hit.id, dx: hit.x - p.x, dy: hit.y - p.y, moved: false, startX: p.x, startY: p.y };
   } else {
@@ -796,6 +855,7 @@ function addMarker(x, y, type, icon) {
   selectedObjectId = marker.id;
   saveEditorRoom();
   drawCanvas();
+  updateViewInfoPanel();
   showToast(`${type} adicionado.`);
 }
 
@@ -820,6 +880,7 @@ function saveObjectFromForm() {
   marker.distance = els.objectDistance.value.trim();
   marker.notes = els.objectNotes.value.trim();
   saveEditorRoom();
+  updateViewInfoPanel();
   drawCanvas();
 }
 
@@ -830,6 +891,7 @@ function deleteSelectedObject() {
   selectedObjectId = null;
   saveEditorRoom();
   drawCanvas();
+  updateViewInfoPanel();
   els.objectDialog.close();
   showToast('Marcação excluída.');
 }
@@ -883,6 +945,7 @@ function saveMeasureFromForm() {
   editor.pendingPoints = [];
   saveEditorRoom();
   drawCanvas();
+  updateViewInfoPanel();
 }
 
 function estimateRealDistanceCm(p1, p2) {
@@ -957,6 +1020,102 @@ async function shareImage() {
   }
 }
 
+function buildProjectPayload() {
+  const client = findClient(editor.clientId);
+  const room = editor.room || {};
+  return {
+    app: 'Top Visita Técnica',
+    version: 3,
+    exportedAt: nowIso(),
+    clientName: client?.name || '',
+    room: {
+      name: room.name || 'Ambiente importado',
+      status: room.status || 'Visita feita',
+      deadline: room.deadline || '',
+      notes: room.notes || '',
+      photoData: room.photoData || '',
+      sketchMode: !!room.sketchMode,
+      markers: room.markers || [],
+      measures: room.measures || [],
+      calibration: room.calibration || null,
+      measureNotes: room.measureNotes || '',
+    },
+  };
+}
+
+function exportProjectJson() {
+  if (!editor.room) return showToast('Abra um ambiente primeiro.');
+  const payload = buildProjectPayload();
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const client = findClient(editor.clientId);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${safeFileName(client?.name || 'cliente')}-${safeFileName(editor.room.name)}-projeto.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  showToast('Projeto exportado com foto, medidas e marcações.');
+}
+
+function readJsonFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = reject;
+    reader.onload = () => {
+      try { resolve(JSON.parse(reader.result)); }
+      catch (err) { reject(err); }
+    };
+    reader.readAsText(file);
+  });
+}
+
+function normalizeImportedRoom(data) {
+  const room = data?.room || data;
+  if (!room || typeof room !== 'object') return null;
+  return {
+    name: room.name || editor.room?.name || 'Ambiente importado',
+    status: room.status || editor.room?.status || 'Visita feita',
+    deadline: room.deadline || '',
+    notes: room.notes || '',
+    photoData: room.photoData || '',
+    sketchMode: !!room.sketchMode,
+    markers: Array.isArray(room.markers) ? room.markers : [],
+    measures: Array.isArray(room.measures) ? room.measures : [],
+    calibration: room.calibration || null,
+    measureNotes: room.measureNotes || '',
+  };
+}
+
+async function importProjectJson(file) {
+  if (!file || !editor.room) return;
+  try {
+    const data = await readJsonFile(file);
+    const imported = normalizeImportedRoom(data);
+    if (!imported) {
+      showToast('Arquivo inválido para importar projeto.');
+      return;
+    }
+    const ok = confirm('Importar este projeto para o ambiente atual? Ele vai substituir foto, marcações, linhas de medida, escala e anotações deste ambiente.');
+    if (!ok) return;
+    pushHistorySnapshot();
+    Object.assign(editor.room, imported, { id: editor.room.id, updatedAt: nowIso() });
+    if (els.measureNotesInput) els.measureNotesInput.value = editor.room.measureNotes || '';
+    els.sketchToggle.classList.toggle('active', !!editor.room.sketchMode);
+    selectedObjectId = null;
+    saveEditorRoom();
+    setMode('view');
+    loadEditorImage();
+    showToast('Projeto importado. As medidas e marcações foram carregadas.');
+  } catch (err) {
+    console.error(err);
+    showToast('Não consegui importar esse arquivo JSON.');
+  } finally {
+    if (els.importProjectInput) els.importProjectInput.value = '';
+  }
+}
+
 function safeFileName(text) {
   return String(text).normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase() || 'arquivo';
 }
@@ -987,10 +1146,14 @@ function wireEvents() {
   });
   els.calibrateBtn.addEventListener('click', () => setMode('calibrate'));
   els.measureBtn.addEventListener('click', () => setMode('measure'));
+  els.viewBtn.addEventListener('click', () => setMode('view'));
   els.moveBtn.addEventListener('click', () => setMode('move'));
   els.undoBtn.addEventListener('click', undo);
   els.exportBtn.addEventListener('click', downloadImage);
   els.shareBtn.addEventListener('click', shareImage);
+  els.exportProjectBtn.addEventListener('click', exportProjectJson);
+  els.importProjectBtn.addEventListener('click', () => els.importProjectInput.click());
+  els.importProjectInput.addEventListener('change', (e) => importProjectJson(e.target.files?.[0]));
   if (els.saveMeasureNotesBtn) {
     els.saveMeasureNotesBtn.addEventListener('click', () => {
       saveEditorRoom();

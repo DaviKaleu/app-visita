@@ -187,3 +187,61 @@ textarea { resize: vertical; }
   .modal-actions, .modal-actions.split { display: flex; flex-wrap: wrap; }
   .modal-actions button { flex: 1 1 auto; }
 }
+
+.view-info-panel {
+  position: absolute;
+  left: 24px;
+  right: 24px;
+  bottom: 24px;
+  z-index: 4;
+  background: rgba(255, 255, 255, .96);
+  color: #111;
+  border: 2px solid var(--accent);
+  border-radius: 16px;
+  box-shadow: 0 12px 35px rgba(0,0,0,.28);
+  padding: 12px 14px;
+  max-width: 720px;
+  margin: 0 auto;
+  pointer-events: none;
+}
+.view-info-panel strong {
+  display: block;
+  font-size: 1rem;
+  margin-bottom: 5px;
+  color: var(--accent);
+}
+.view-info-panel span,
+.view-info-panel small {
+  display: block;
+  color: #333;
+  line-height: 1.35;
+}
+.view-measure-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin: 8px 0;
+}
+.view-measure-grid span {
+  background: #f3f3f3;
+  border-radius: 10px;
+  padding: 8px;
+  font-weight: 900;
+  text-align: center;
+}
+.import-tab small {
+  display: block;
+  color: #cfcfcf;
+  line-height: 1.35;
+  margin-top: 6px;
+}
+
+@media (max-width: 700px) {
+  .view-info-panel {
+    left: 10px;
+    right: 10px;
+    bottom: 10px;
+    padding: 10px;
+  }
+  .view-measure-grid { grid-template-columns: 1fr; }
+}

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'top-visita-tecnica-v2';
+const CACHE_NAME = 'top-visita-tecnica-v3';
 const ASSETS = ['./', './index.html', './styles.css', './app.js', './manifest.webmanifest'];
 
 self.addEventListener('install', (event) => {

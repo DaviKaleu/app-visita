@@ -11,10 +11,12 @@ Aplicativo PWA para visitas técnicas de móveis planejados.
 - Modo croqui branco com contorno da foto
 - Marcação de tomadas, interruptores, portas, janelas, colunas, rodapés, bancada, cuba e outros obstáculos
 - Edição das marcações com altura, distância e observação
+- Modo visualização: ao clicar em uma marcação aparecem as setas e medidas sem abrir a aba de edição
 - Setas automáticas ao selecionar uma marcação, mostrando distância da parede esquerda, parede direita e altura do chão
 - Calibração usando uma medida conhecida
 - Linhas de medida
 - Aba de anotações de medidas dentro do editor do ambiente
+- Exportação e importação de projeto em JSON, mantendo foto, marcações, medidas, escala e anotações
 - Salvar/baixar imagem PNG marcada
 - Compartilhar imagem pelo celular quando o navegador permitir
 - Funciona offline depois de abrir a primeira vez

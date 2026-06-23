@@ -155,7 +155,8 @@
             <button id="sketchToggle" class="tool-btn">Croqui branco</button>
             <button id="calibrateBtn" class="tool-btn">Calibrar medida</button>
             <button id="measureBtn" class="tool-btn">Linha de medida</button>
-            <button id="moveBtn" class="tool-btn active">Mover / editar</button>
+            <button id="viewBtn" class="tool-btn active">Visualizar medidas</button>
+            <button id="moveBtn" class="tool-btn">Mover / editar</button>
           </div>
 
           <div class="tool-group objects">
@@ -194,6 +195,14 @@ Rodapé: 7 cm"></textarea>
             <button id="shareBtn" class="primary tool-btn">Compartilhar</button>
           </div>
 
+          <div class="tool-group import-tab">
+            <p>Importação / backup</p>
+            <button id="exportProjectBtn" class="tool-btn" type="button">Exportar projeto (.json)</button>
+            <button id="importProjectBtn" class="tool-btn" type="button">Importar projeto (.json)</button>
+            <input id="importProjectInput" type="file" accept="application/json,.json" hidden />
+            <small>Importa foto, marcações, linhas de medida, escala e anotações.</small>
+          </div>
+
           <div class="hint-box">
             <strong>Como usar</strong>
             <p>1. Tire a foto do ambiente.<br>2. Use “Calibrar” e marque uma medida conhecida.<br>3. Adicione tomadas, portas, colunas e obstáculos.<br>4. Compartilhe a imagem marcada.</p>
@@ -202,6 +211,7 @@ Rodapé: 7 cm"></textarea>
 
         <section class="canvas-area">
           <canvas id="workCanvas"></canvas>
+          <div id="viewInfoPanel" class="view-info-panel hidden"></div>
           <div id="canvasEmpty" class="canvas-empty">
             <h3>Nenhuma foto ainda</h3>
             <p>Toque em “Tirar / trocar foto” para começar.</p>
