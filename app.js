@@ -5,9 +5,25 @@ const DB_KEY = 'main';
 // Menor para salvar melhor no celular e evitar travar o navegador com fotos grandes.
 const MAX_IMAGE_SIDE = 1200;
 
+// V12: Supabase login + sincronização online simples.
+// Esta chave é pública/publishable. Nunca coloque service_role no app.
+const SUPABASE_URL = 'https://nimvbaxuhzijtegtfgel.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_nHb8xD5wI-mWM1CGQcSqmg_YcQY2pSJ';
+const EMPRESA_ID = '2cf985a7-7c8b-49ad-b9ed-0d7da620c3b3';
+const CLOUD_TABLE = 'app_state';
+const supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 const $ = (id) => document.getElementById(id);
 const els = {
   toast: $('toast'),
+  authScreen: $('authScreen'),
+  loginForm: $('loginForm'),
+  loginEmail: $('loginEmail'),
+  loginPassword: $('loginPassword'),
+  loginStatus: $('loginStatus'),
+  cloudStatus: $('cloudStatus'),
+  syncNowBtn: $('syncNowBtn'),
+  logoutBtn: $('logoutBtn'),
   installBtn: $('installBtn'),
   addClientBtn: $('addClientBtn'),
   clientSearch: $('clientSearch'),
@@ -105,6 +121,16 @@ let editingClientId = null;
 let editingRoomId = null;
 let selectedObjectId = null;
 
+let cloud = {
+  ready: false,
+  user: null,
+  saving: false,
+  loading: false,
+  timer: null,
+  lastSavedAt: null,
+  lastLoadedAt: null,
+};
+
 let editor = {
   clientId: null,
   roomId: null,
@@ -178,7 +204,7 @@ function loadStateFromDb() {
   }));
 }
 
-function saveState() {
+function saveState(options = {}) {
   const snapshot = JSON.parse(JSON.stringify(state));
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
@@ -189,6 +215,148 @@ function saveState() {
     console.warn('Falha ao salvar no IndexedDB', err);
     showToast('Não consegui salvar no armazenamento do celular. Exporte o projeto para backup.', 4500);
   });
+
+  if (!options.skipCloud) scheduleCloudSave();
+}
+
+function setCloudStatus(text, mode = '') {
+  if (!els.cloudStatus) return;
+  els.cloudStatus.textContent = text;
+  document.body.classList.toggle('online-mode', mode === 'online');
+  document.body.classList.toggle('offline-mode', mode === 'offline');
+}
+
+function showAuthScreen(show) {
+  els.authScreen?.classList.toggle('hidden', !show);
+}
+
+function scheduleCloudSave() {
+  if (!cloud.ready || !supabaseClient) return;
+  clearTimeout(cloud.timer);
+  cloud.timer = setTimeout(() => saveStateToCloud(), 1200);
+}
+
+async function saveStateToCloud() {
+  if (!cloud.ready || !supabaseClient || cloud.saving) return;
+  cloud.saving = true;
+  setCloudStatus('Salvando online...', 'online');
+  try {
+    const snapshot = JSON.parse(JSON.stringify(state));
+    const { error } = await supabaseClient
+      .from(CLOUD_TABLE)
+      .upsert({
+        empresa_id: EMPRESA_ID,
+        data: snapshot,
+        updated_at: new Date().toISOString(),
+        updated_by: cloud.user?.id || null,
+      }, { onConflict: 'empresa_id' });
+
+    if (error) throw error;
+    cloud.lastSavedAt = new Date();
+    setCloudStatus(`Online • salvo ${cloud.lastSavedAt.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`, 'online');
+  } catch (err) {
+    console.error('Falha ao salvar online', err);
+    setCloudStatus('Erro ao salvar online', 'offline');
+    showToast('Não consegui salvar online. Verifique se criou a tabela app_state.', 4500);
+  } finally {
+    cloud.saving = false;
+  }
+}
+
+async function loadStateFromCloud({ preferCloud = true } = {}) {
+  if (!supabaseClient || !cloud.user) return;
+  cloud.loading = true;
+  setCloudStatus('Carregando nuvem...', 'online');
+  try {
+    const { data, error } = await supabaseClient
+      .from(CLOUD_TABLE)
+      .select('data, updated_at')
+      .eq('empresa_id', EMPRESA_ID)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (data?.data?.clients && Array.isArray(data.data.clients)) {
+      const cloudState = data.data;
+      const localCount = state.clients?.length || 0;
+      const cloudCount = cloudState.clients?.length || 0;
+
+      if (preferCloud || cloudCount >= localCount || !localCount) {
+        state = cloudState;
+        selectedClientId = state.clients[0]?.id || null;
+        saveState({ skipCloud: true });
+        render();
+        cloud.lastLoadedAt = new Date();
+        setCloudStatus('Online • dados carregados', 'online');
+        showToast('Dados carregados da nuvem.');
+      }
+    } else {
+      await saveStateToCloud();
+      showToast('Primeiro backup online criado.');
+    }
+  } catch (err) {
+    console.error('Falha ao carregar online', err);
+    setCloudStatus('Online com erro', 'offline');
+    showToast('Não consegui carregar da nuvem. Confira o SQL app_state.', 5200);
+  } finally {
+    cloud.loading = false;
+  }
+}
+
+async function initAuth() {
+  if (!supabaseClient) {
+    setCloudStatus('Supabase não carregou', 'offline');
+    showAuthScreen(false);
+    return;
+  }
+
+  const { data } = await supabaseClient.auth.getSession();
+  if (data?.session?.user) {
+    await handleLoggedIn(data.session.user);
+  } else {
+    setCloudStatus('Faça login', 'offline');
+    showAuthScreen(true);
+  }
+
+  supabaseClient.auth.onAuthStateChange(async (event, session) => {
+    if (event === 'SIGNED_OUT') {
+      cloud.ready = false;
+      cloud.user = null;
+      setCloudStatus('Desconectado', 'offline');
+      showAuthScreen(true);
+      return;
+    }
+    if (session?.user && !cloud.ready) {
+      await handleLoggedIn(session.user);
+    }
+  });
+}
+
+async function handleLoggedIn(user) {
+  cloud.user = user;
+  cloud.ready = true;
+  showAuthScreen(false);
+  setCloudStatus(`Online • ${user.email || 'logado'}`, 'online');
+  await loadStateFromCloud({ preferCloud: true });
+}
+
+async function loginWithSupabase(email, password) {
+  if (!supabaseClient) return showToast('Supabase não carregou.');
+  els.loginStatus.textContent = 'Entrando...';
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) {
+    els.loginStatus.textContent = 'Erro: ' + error.message;
+    showToast('E-mail ou senha incorretos.');
+    return;
+  }
+  els.loginStatus.textContent = 'Login feito.';
+  await handleLoggedIn(data.user);
+}
+
+async function logoutSupabase() {
+  if (!supabaseClient) return;
+  await saveStateToCloud();
+  await supabaseClient.auth.signOut();
 }
 
 async function hydrateStateFromDb() {
@@ -1768,6 +1936,13 @@ function safeFileName(text) {
 }
 
 function wireEvents() {
+  els.loginForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    loginWithSupabase(els.loginEmail.value.trim(), els.loginPassword.value);
+  });
+  els.logoutBtn?.addEventListener('click', logoutSupabase);
+  els.syncNowBtn?.addEventListener('click', () => loadStateFromCloud({ preferCloud: true }));
+
   els.addClientBtn.addEventListener('click', () => openClientDialog());
   els.editClientBtn.addEventListener('click', () => openClientDialog(selectedClientId));
   els.deleteClientBtn.addEventListener('click', deleteClient);
@@ -1923,3 +2098,4 @@ if ('serviceWorker' in navigator) {
 wireEvents();
 render();
 hydrateStateFromDb();
+initAuth();

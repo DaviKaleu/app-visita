@@ -11,6 +11,29 @@
 <body>
   <div id="toast" class="toast hidden"></div>
 
+  <section id="authScreen" class="auth-screen">
+    <form id="loginForm" class="auth-card">
+      <div class="brand big">
+        <div class="brand-mark">TOP</div>
+        <div>
+          <strong>Top Visita Técnica</strong>
+          <span>Acesso privado da empresa</span>
+        </div>
+      </div>
+      <h1>Entrar no app</h1>
+      <p>Use o e-mail e senha único da empresa para acessar clientes, fotos, medidas e anotações online.</p>
+      <label>E-mail
+        <input id="loginEmail" type="email" autocomplete="email" required placeholder="email da empresa" />
+      </label>
+      <label>Senha
+        <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="senha" />
+      </label>
+      <button class="primary" type="submit">Entrar</button>
+      <small id="loginStatus">Aguardando login...</small>
+    </form>
+  </section>
+
+
   <header class="app-header">
     <div class="brand">
       <div class="brand-mark">TOP</div>
@@ -19,7 +42,12 @@
         <span>Clientes • Fotos • Marcações</span>
       </div>
     </div>
-    <button id="installBtn" class="ghost small hidden">Instalar</button>
+    <div class="cloud-actions">
+      <span id="cloudStatus">Offline</span>
+      <button id="syncNowBtn" class="ghost small" type="button">Sincronizar</button>
+      <button id="logoutBtn" class="ghost small" type="button">Sair</button>
+      <button id="installBtn" class="ghost small hidden">Instalar</button>
+    </div>
   </header>
 
   <main class="layout">
@@ -354,6 +382,7 @@ Rodapé: 7 cm"></textarea>
   </dialog>
 
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="app.js"></script>
 
 
