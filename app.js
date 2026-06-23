@@ -51,12 +51,7 @@ const els = {
   exportBtn: $('exportBtn'),
   fitBtn: $('fitBtn'),
   shareBtn: $('shareBtn'),
-  shareDialog: $('shareDialog'),
-  shareImageBtn: $('shareImageBtn'),
-  shareWhatsAppBtn: $('shareWhatsAppBtn'),
-  shareWhatsAppTextBtn: $('shareWhatsAppTextBtn'),
-  copySummaryBtn: $('copySummaryBtn'),
-  downloadFromShareBtn: $('downloadFromShareBtn'),
+  whatsAppBtn: $('whatsAppBtn'),
   exportProjectBtn: $('exportProjectBtn'),
   importProjectBtn: $('importProjectBtn'),
   importProjectInput: $('importProjectInput'),
@@ -69,6 +64,10 @@ const els = {
   objectName: $('objectName'),
   objectHeight: $('objectHeight'),
   objectDistance: $('objectDistance'),
+  objectLeftDistance: $('objectLeftDistance'),
+  objectRightDistance: $('objectRightDistance'),
+  objectFloorDistance: $('objectFloorDistance'),
+  objectCeilingDistance: $('objectCeilingDistance'),
   objectAutoDistances: $('objectAutoDistances'),
   objectNotes: $('objectNotes'),
   deleteObjectBtn: $('deleteObjectBtn'),
@@ -575,10 +574,12 @@ function drawSelectedMarkerGuides(ctx) {
   const leftPx = Math.max(0, marker.x);
   const rightPx = Math.max(0, c.width - marker.x);
   const floorPx = Math.max(0, c.height - marker.y);
+  const ceilingPx = Math.max(0, marker.y);
 
   const topY = clamp(marker.y - 82, 42, c.height - 80);
   const bottomY = clamp(marker.y + 82, 72, c.height - 35);
   const sideX = clamp(marker.x + 78, 42, c.width - 42);
+  const sideXLeft = clamp(marker.x - 78, 42, c.width - 42);
 
   ctx.save();
   ctx.lineWidth = 4;
@@ -594,6 +595,9 @@ function drawSelectedMarkerGuides(ctx) {
 
   drawDoubleArrow(ctx, sideX, marker.y, sideX, c.height);
   drawDistanceLabel(ctx, sideX + 7, (marker.y + c.height) / 2, `Chão: ${formatPxDistance(floorPx)}`, 'left');
+
+  drawDoubleArrow(ctx, sideXLeft, 0, sideXLeft, marker.y);
+  drawDistanceLabel(ctx, sideXLeft + 7, marker.y / 2, `Teto: ${formatPxDistance(ceilingPx)}`, 'left');
 
   ctx.setLineDash([]);
   ctx.strokeStyle = 'rgba(207, 38, 38, .35)';
@@ -665,7 +669,19 @@ function getMarkerAutoDistanceData(marker) {
     left: formatPxDistance(Math.max(0, marker.x)),
     right: formatPxDistance(Math.max(0, c.width - marker.x)),
     floor: formatPxDistance(Math.max(0, c.height - marker.y)),
+    ceiling: formatPxDistance(Math.max(0, marker.y)),
     hasScale: !!editor.room?.calibration?.pxPerCm,
+  };
+}
+
+function getMarkerDisplayDistances(marker) {
+  const auto = getMarkerAutoDistanceData(marker) || {};
+  return {
+    left: marker?.leftDistance || auto.left || '',
+    right: marker?.rightDistance || auto.right || '',
+    floor: marker?.floorDistance || auto.floor || '',
+    ceiling: marker?.ceilingDistance || auto.ceiling || '',
+    hasScale: auto.hasScale,
   };
 }
 
@@ -673,7 +689,7 @@ function getMarkerAutoDistanceText(marker) {
   const d = getMarkerAutoDistanceData(marker);
   if (!d) return '';
   const scaleText = d.hasScale ? '' : '<br><small>Calibre uma medida para aparecer em cm/m em vez de pixel.</small>';
-  return `Parede esquerda: ${d.left}<br>Parede direita: ${d.right}<br>Altura do chão: ${d.floor}${scaleText}`;
+  return `Automático pela posição na foto:<br>Parede esquerda: ${d.left}<br>Parede direita: ${d.right}<br>Chão: ${d.floor}<br>Teto: ${d.ceiling}${scaleText}`;
 }
 
 function updateViewInfoPanel() {
@@ -692,17 +708,18 @@ function updateViewInfoPanel() {
     updateCanvasFit();
     return;
   }
-  const d = getMarkerAutoDistanceData(marker);
+  const d = getMarkerDisplayDistances(marker);
   panel.classList.remove('hidden');
   panel.innerHTML = `
     <div class="view-panel-head">
       <strong>${escapeHtml(marker.icon || '')} ${escapeHtml(marker.name || marker.type || 'Marcação')}</strong>
       <button type="button" class="mini-icon" data-action="close-view-panel" aria-label="Fechar painel">×</button>
     </div>
-    <div class="view-measure-grid">
+    <div class="view-measure-grid four-cols">
       <span>Esq:<b>${escapeHtml(d.left)}</b></span>
       <span>Dir:<b>${escapeHtml(d.right)}</b></span>
       <span>Chão:<b>${escapeHtml(d.floor)}</b></span>
+      <span>Teto:<b>${escapeHtml(d.ceiling)}</b></span>
     </div>
     ${(marker.height || marker.distance || marker.notes) ? `<small>${[marker.height ? `Altura: ${escapeHtml(marker.height)}` : '', marker.distance ? `Distância: ${escapeHtml(marker.distance)}` : '', marker.notes ? `Obs: ${escapeHtml(marker.notes)}` : ''].filter(Boolean).join(' • ')}</small>` : ''}
     ${d.hasScale ? '' : '<small>Sem escala calibrada: medidas em pixel.</small>'}
@@ -947,9 +964,15 @@ function handleCanvasDown(evt) {
 
   evt.preventDefault();
   if (hit) {
-    editor.drag = { id: hit.id, dx: hit.x - p.x, dy: hit.y - p.y, moved: false, startX: p.x, startY: p.y };
+    editor.drag = { type: 'marker', id: hit.id, dx: hit.x - p.x, dy: hit.y - p.y, moved: false, startX: p.x, startY: p.y };
   } else {
-    editor.drag = null;
+    const hitLine = hitMeasure(p.x, p.y);
+    if (hitLine) {
+      editor.drag = { type: 'measure', kind: hitLine.kind, id: hitLine.id, moved: false, startX: p.x, startY: p.y, lastX: p.x, lastY: p.y };
+      showToast('Linha selecionada. Arraste para mover.', 1800);
+    } else {
+      editor.drag = null;
+    }
   }
   drawCanvas();
   if (hit && !editor.room?.calibration?.pxPerCm) {
@@ -961,12 +984,38 @@ function handleCanvasMove(evt) {
   if (!editor.drag || !editor.room) return;
   evt.preventDefault();
   const p = getCanvasPoint(evt);
-  const marker = editor.room.markers.find(m => m.id === editor.drag.id);
-  if (!marker) return;
-  marker.x = p.x + editor.drag.dx;
-  marker.y = p.y + editor.drag.dy;
-  if (Math.hypot(p.x - editor.drag.startX, p.y - editor.drag.startY) > 5) editor.drag.moved = true;
-  drawCanvas();
+
+  if (editor.drag.type === 'marker') {
+    const marker = editor.room.markers.find(m => m.id === editor.drag.id);
+    if (!marker) return;
+    marker.x = p.x + editor.drag.dx;
+    marker.y = p.y + editor.drag.dy;
+    if (Math.hypot(p.x - editor.drag.startX, p.y - editor.drag.startY) > 5) editor.drag.moved = true;
+    drawCanvas();
+    return;
+  }
+
+  if (editor.drag.type === 'measure') {
+    const dx = p.x - editor.drag.lastX;
+    const dy = p.y - editor.drag.lastY;
+    if (editor.drag.kind === 'calibration' && editor.room.calibration?.p1 && editor.room.calibration?.p2) {
+      editor.room.calibration.p1.x += dx;
+      editor.room.calibration.p1.y += dy;
+      editor.room.calibration.p2.x += dx;
+      editor.room.calibration.p2.y += dy;
+    } else {
+      const line = (editor.room.measures || []).find(m => m.id === editor.drag.id);
+      if (!line) return;
+      line.p1.x += dx;
+      line.p1.y += dy;
+      line.p2.x += dx;
+      line.p2.y += dy;
+    }
+    editor.drag.lastX = p.x;
+    editor.drag.lastY = p.y;
+    if (Math.hypot(p.x - editor.drag.startX, p.y - editor.drag.startY) > 5) editor.drag.moved = true;
+    drawCanvas();
+  }
 }
 
 function handleCanvasUp(evt) {
@@ -974,7 +1023,7 @@ function handleCanvasUp(evt) {
   const drag = editor.drag;
   editor.drag = null;
   saveEditorRoom();
-  if (!drag.moved) {
+  if (!drag.moved && drag.type === 'marker') {
     const marker = editor.room.markers.find(m => m.id === drag.id);
     if (marker) openObjectDialog(marker.id);
   }
@@ -1054,7 +1103,7 @@ function pushHistorySnapshot() {
 
 function addMarker(x, y, type, icon) {
   pushHistorySnapshot();
-  const marker = { id: uid('mark'), type, icon, name: type, x, y, height: '', distance: '', notes: '' };
+  const marker = { id: uid('mark'), type, icon, name: type, x, y, height: '', distance: '', leftDistance: '', rightDistance: '', floorDistance: '', ceilingDistance: '', notes: '' };
   editor.room.markers = editor.room.markers || [];
   editor.room.markers.push(marker);
   selectedObjectId = marker.id;
@@ -1068,9 +1117,14 @@ function openObjectDialog(id) {
   const marker = editor.room.markers.find(m => m.id === id);
   if (!marker) return;
   selectedObjectId = id;
+  const auto = getMarkerAutoDistanceData(marker) || {};
   els.objectName.value = marker.name || marker.type || '';
   els.objectHeight.value = marker.height || '';
   els.objectDistance.value = marker.distance || '';
+  els.objectLeftDistance.value = marker.leftDistance || auto.left || '';
+  els.objectRightDistance.value = marker.rightDistance || auto.right || '';
+  els.objectFloorDistance.value = marker.floorDistance || auto.floor || '';
+  els.objectCeilingDistance.value = marker.ceilingDistance || auto.ceiling || '';
   els.objectAutoDistances.innerHTML = getMarkerAutoDistanceText(marker);
   els.objectNotes.value = marker.notes || '';
   drawCanvas();
@@ -1083,6 +1137,10 @@ function saveObjectFromForm() {
   marker.name = els.objectName.value.trim() || marker.type;
   marker.height = els.objectHeight.value.trim();
   marker.distance = els.objectDistance.value.trim();
+  marker.leftDistance = els.objectLeftDistance.value.trim();
+  marker.rightDistance = els.objectRightDistance.value.trim();
+  marker.floorDistance = els.objectFloorDistance.value.trim();
+  marker.ceilingDistance = els.objectCeilingDistance.value.trim();
   marker.notes = els.objectNotes.value.trim();
   saveEditorRoom();
   updateViewInfoPanel();
@@ -1217,12 +1275,7 @@ function buildShareSummary() {
   return lines.join('\n');
 }
 
-function openShareDialog() {
-  if (!editor.room?.photoData) return showToast('Adicione uma foto primeiro.');
-  els.shareDialog.showModal();
-}
-
-async function shareImageGeneric(preferWhatsApp = false) {
+async function shareImage() {
   if (!editor.room?.photoData) return showToast('Adicione uma foto primeiro.');
   drawCanvas();
   const blob = await exportImageBlob();
@@ -1232,32 +1285,30 @@ async function shareImageGeneric(preferWhatsApp = false) {
 
   if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
     await navigator.share({ title: 'Top Visita Técnica', text, files: [file] });
-    showToast(preferWhatsApp ? 'Escolha o WhatsApp na tela de compartilhamento.' : 'Compartilhamento aberto.');
-    return;
-  }
-  if (navigator.share) {
-    await navigator.share({ title: 'Top Visita Técnica', text });
-    showToast(preferWhatsApp ? 'Escolha o WhatsApp na tela de compartilhamento.' : 'Compartilhamento aberto.');
+    showToast('Compartilhamento aberto.');
     return;
   }
   await downloadImage();
-  showToast('Seu navegador não compartilha direto. A imagem foi baixada.');
+  showToast('A imagem foi baixada para você compartilhar.');
 }
 
-function shareTextToWhatsApp() {
-  const text = encodeURIComponent(buildShareSummary());
-  window.open(`https://wa.me/?text=${text}`, '_blank');
-  showToast('WhatsApp aberto com o resumo do ambiente.');
-}
-
-async function copySummary() {
+async function shareWhatsApp() {
+  if (!editor.room?.photoData) return showToast('Adicione uma foto primeiro.');
+  drawCanvas();
+  const blob = await exportImageBlob();
+  const client = findClient(editor.clientId);
+  const file = new File([blob], `${safeFileName(client?.name || 'cliente')}-${safeFileName(editor.room.name)}.png`, { type: 'image/png' });
   const text = buildShareSummary();
-  try {
-    await navigator.clipboard.writeText(text);
-    showToast('Resumo copiado.');
-  } catch {
-    showToast('Não consegui copiar o resumo.');
+
+  if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+    await navigator.share({ title: 'Top Visita Técnica', text, files: [file] });
+    showToast('Escolha o WhatsApp para enviar a imagem.');
+    return;
   }
+
+  await downloadImage();
+  window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  showToast('Imagem baixada e WhatsApp aberto com o resumo.');
 }
 
 function buildProjectPayload() {
@@ -1393,12 +1444,8 @@ function wireEvents() {
   els.undoBtn.addEventListener('click', undo);
   els.exportBtn.addEventListener('click', downloadImage);
   if (els.fitBtn) els.fitBtn.addEventListener('click', toggleCanvasFit);
-  els.shareBtn.addEventListener('click', openShareDialog);
-  els.shareImageBtn?.addEventListener('click', async () => { try { await shareImageGeneric(false); } finally { els.shareDialog.close(); } });
-  els.shareWhatsAppBtn?.addEventListener('click', async () => { try { await shareImageGeneric(true); } finally { els.shareDialog.close(); } });
-  els.shareWhatsAppTextBtn?.addEventListener('click', () => { shareTextToWhatsApp(); els.shareDialog.close(); });
-  els.copySummaryBtn?.addEventListener('click', async () => { await copySummary(); els.shareDialog.close(); });
-  els.downloadFromShareBtn?.addEventListener('click', async () => { await downloadImage(); els.shareDialog.close(); });
+  els.whatsAppBtn.addEventListener('click', shareWhatsApp);
+  els.shareBtn.addEventListener('click', shareImage);
   els.exportProjectBtn.addEventListener('click', exportProjectJson);
   els.importProjectBtn.addEventListener('click', () => els.importProjectInput.click());
   els.importProjectInput.addEventListener('change', (e) => importProjectJson(e.target.files?.[0]));

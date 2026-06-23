@@ -202,8 +202,9 @@ Rodapé: 7 cm"></textarea>
             <button id="undoBtn" class="tool-btn">Desfazer</button>
             <button id="fitBtn" class="tool-btn">Ajustar foto</button>
             <button id="exportBtn" class="tool-btn">Salvar imagem</button>
-            <button id="shareBtn" class="primary tool-btn">Compartilhar</button>
-            <small class="share-help">No celular, use o botão compartilhar e escolha o WhatsApp.</small>
+            <button id="whatsAppBtn" class="primary tool-btn">WhatsApp</button>
+            <button id="shareBtn" class="tool-btn">Compartilhar</button>
+            <small class="share-help">WhatsApp: abre direto o compartilhamento da imagem para você escolher o contato.</small>
           </div>
 
           <div class="hint-box">
@@ -238,6 +239,18 @@ Rodapé: 7 cm"></textarea>
       </label>
       <label>Distância / medida
         <input id="objectDistance" placeholder="Ex: 45 cm da parede esquerda" />
+      </label>
+      <label>Distância parede esquerda
+        <input id="objectLeftDistance" placeholder="Ex: 45 cm" />
+      </label>
+      <label>Distância parede direita
+        <input id="objectRightDistance" placeholder="Ex: 180 cm" />
+      </label>
+      <label>Distância do chão
+        <input id="objectFloorDistance" placeholder="Ex: 110 cm" />
+      </label>
+      <label>Distância do teto
+        <input id="objectCeilingDistance" placeholder="Ex: 150 cm" />
       </label>
       <div id="objectAutoDistances" class="auto-distance-box"></div>
       <label>Observação
@@ -278,24 +291,6 @@ Rodapé: 7 cm"></textarea>
 
   <script src="app.js"></script>
 
-
-  <dialog id="shareDialog" class="modal">
-    <div class="modal-card small-card">
-      <div class="modal-header">
-        <h2>Compartilhar</h2>
-        <button type="button" class="icon-btn" data-close="shareDialog">×</button>
-      </div>
-      <p class="muted">Escolha a forma de compartilhar este ambiente.</p>
-      <div class="tool-group" style="border-bottom:0;padding:0;">
-        <button id="shareImageBtn" type="button" class="tool-btn">📤 Compartilhar imagem</button>
-        <button id="shareWhatsAppBtn" type="button" class="tool-btn">🟢 WhatsApp com imagem</button>
-        <button id="shareWhatsAppTextBtn" type="button" class="tool-btn">💬 WhatsApp com resumo</button>
-        <button id="copySummaryBtn" type="button" class="tool-btn">📋 Copiar resumo</button>
-        <button id="downloadFromShareBtn" type="button" class="tool-btn">💾 Baixar imagem</button>
-      </div>
-      <p class="muted" style="margin-top:10px;">No WhatsApp com imagem, o celular vai abrir a tela de compartilhamento para você escolher o WhatsApp.</p>
-    </div>
-  </dialog>
 
 </body>
 </html>

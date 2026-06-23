@@ -388,3 +388,9 @@ textarea { resize: vertical; }
 }
 
 .share-help { display:block; color:#cfcfcf; font-size:.78rem; line-height:1.35; margin-top:6px; }
+
+.view-measure-grid.four-cols { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 700px) { .view-measure-grid.four-cols { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+
+.toolbar .tool-btn.danger { background: #5c1515; color: #fff; }
+.toolbar .tool-btn.danger.active { background: #cf2626; }
