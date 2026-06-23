@@ -80,6 +80,7 @@ const els = {
   measureHelp: $('measureHelp'),
   measureValue: $('measureValue'),
   measureUnit: $('measureUnit'),
+  deleteMeasureLineBtn: $('deleteMeasureLineBtn'),
 };
 
 let state = loadState();
@@ -101,6 +102,8 @@ let editor = {
   selectedType: null,
   selectedIcon: null,
   fitToScreen: true,
+  selectedMeasureId: null,
+  selectedMeasureKind: null,
 };
 
 function uid(prefix = 'id') {
@@ -403,7 +406,7 @@ function setMode(mode, selectedType = null, selectedIcon = null) {
   els.canvasArea?.classList.toggle('view-mode', mode === 'view');
   const label = {
     view: 'Visualizar: toque na marcação para ver as medidas sem abrir edição.',
-    move: 'Mover / editar: toque e arraste; toque rápido para abrir edição.',
+    move: 'Mover / editar: toque e arraste; toque rápido em item ou linha para abrir edição.',
     'delete-marker': 'Remover item: toque em uma tomada, interruptor ou outro item para excluir.',
     'delete-measure': 'Remover medida: toque em uma linha de medida para excluir.',
     calibrate: 'Calibrar: toque em 2 pontos de uma medida conhecida.',
@@ -424,6 +427,8 @@ function openEditor(clientId, roomId) {
   editor.pendingPoints = [];
   editor.drag = null;
   selectedObjectId = null;
+  editor.selectedMeasureId = null;
+  editor.selectedMeasureKind = null;
 
   const client = findClient(clientId);
   els.editorTitle.textContent = editor.room.name;
@@ -1026,6 +1031,10 @@ function handleCanvasUp(evt) {
   if (!drag.moved && drag.type === 'marker') {
     const marker = editor.room.markers.find(m => m.id === drag.id);
     if (marker) openObjectDialog(marker.id);
+    return;
+  }
+  if (!drag.moved && drag.type === 'measure') {
+    openExistingMeasureDialog(drag.kind, drag.id);
   }
 }
 
@@ -1093,6 +1102,22 @@ function deleteCalibration(askConfirm = false) {
   showToast('Escala calibrada removida.');
 }
 
+
+function deleteCurrentMeasureLine() {
+  const action = els.measureDialog.dataset.action || 'create';
+  const kind = els.measureDialog.dataset.kind;
+  const measureId = els.measureDialog.dataset.measureId;
+  if (action !== 'edit') return;
+  if (kind === 'calibrate') {
+    deleteCalibration(false);
+    els.measureDialog.close();
+    return;
+  }
+  if (!measureId) return;
+  deleteMeasureById(measureId, false);
+  els.measureDialog.close();
+}
+
 function pushHistorySnapshot() {
   editor.room._lastSnapshot = JSON.stringify({
     markers: editor.room.markers || [],
@@ -1157,14 +1182,16 @@ function openMeasureDialog(kind) {
   if (!p1 || !p2) return;
   if (els.measureDialog.open) return;
   const px = Math.round(Math.hypot(p2.x - p1.x, p2.y - p1.y));
+  els.measureDialog.dataset.kind = kind;
+  els.measureDialog.dataset.action = 'create';
+  els.measureDialog.dataset.measureId = '';
   els.measureValue.value = '';
   els.measureUnit.value = 'cm';
+  els.deleteMeasureLineBtn.classList.add('hidden');
   if (kind === 'calibrate') {
-    els.measureDialog.dataset.kind = 'calibrate';
     els.measureDialogTitle.textContent = 'Calibrar escala';
     els.measureHelp.textContent = `A linha marcada tem ${px}px na foto. Digite o tamanho real dessa distância.`;
   } else {
-    els.measureDialog.dataset.kind = 'measure';
     els.measureDialogTitle.textContent = 'Adicionar medida';
     const auto = estimateRealDistanceCm(p1, p2);
     els.measureHelp.textContent = auto ? `Estimativa pela escala atual: ${formatCm(auto)}. Pode confirmar ou corrigir.` : `Digite a medida real dessa linha. Dica: calibre a escala primeiro para estimar automático.`;
@@ -1176,28 +1203,82 @@ function openMeasureDialog(kind) {
   els.measureDialog.showModal();
 }
 
+function splitMeasureForForm(line) {
+  if (!line) return { value: '', unit: 'cm' };
+  if (line.value && line.unit) return { value: String(line.value), unit: line.unit };
+  if (line.realLabel) {
+    const m = String(line.realLabel).trim().match(/^([\d.,]+)\s*(mm|cm|m)$/i);
+    if (m) return { value: m[1].replace(',', '.'), unit: m[2].toLowerCase() };
+  }
+  if (line.cm != null) return { value: String(Math.round(line.cm)), unit: 'cm' };
+  return { value: '', unit: 'cm' };
+}
+
+function openExistingMeasureDialog(kind, id) {
+  if (els.measureDialog.open) return;
+  let line = null;
+  if (kind === 'calibration') {
+    line = editor.room.calibration;
+    if (!line) return;
+    els.measureDialogTitle.textContent = 'Editar escala';
+    els.measureHelp.textContent = 'Altere o valor da escala calibrada ou exclua a linha.';
+    els.measureDialog.dataset.kind = 'calibrate';
+  } else {
+    line = (editor.room.measures || []).find(m => m.id === id);
+    if (!line) return;
+    els.measureDialogTitle.textContent = 'Editar linha de medida';
+    els.measureHelp.textContent = 'Altere o valor da medida ou exclua a linha.';
+    els.measureDialog.dataset.kind = 'measure';
+  }
+  const formData = splitMeasureForForm(line);
+  els.measureValue.value = formData.value;
+  els.measureUnit.value = formData.unit || 'cm';
+  els.measureDialog.dataset.action = 'edit';
+  els.measureDialog.dataset.measureId = id || '';
+  els.deleteMeasureLineBtn.classList.remove('hidden');
+  els.measureDialog.showModal();
+}
+
 function saveMeasureFromForm() {
-  const [p1, p2] = editor.pendingPoints;
-  if (!p1 || !p2) return;
-  const value = Number(String(els.measureValue.value).replace(',', '.'));
+  const action = els.measureDialog.dataset.action || 'create';
+  const valueRaw = String(els.measureValue.value).replace(',', '.');
+  const value = Number(valueRaw);
   if (!Number.isFinite(value) || value <= 0) {
     showToast('Digite uma medida válida.');
     return;
   }
   const unit = els.measureUnit.value;
   const cm = unit === 'm' ? value * 100 : unit === 'mm' ? value / 10 : value;
-  const realLabel = `${value}${unit}`;
-  const px = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+  const realLabel = `${String(els.measureValue.value).trim()}${unit}`;
   const kind = els.measureDialog.dataset.kind;
   pushHistorySnapshot();
 
-  if (kind === 'calibrate') {
-    editor.room.calibration = { p1, p2, pixels: px, cm, realLabel, pxPerCm: px / cm };
-    showToast('Escala calibrada.');
+  if (action === 'edit') {
+    const measureId = els.measureDialog.dataset.measureId;
+    if (kind === 'calibrate') {
+      const cal = editor.room.calibration;
+      if (!cal?.p1 || !cal?.p2) return;
+      const px = Math.hypot(cal.p2.x - cal.p1.x, cal.p2.y - cal.p1.y);
+      Object.assign(cal, { pixels: px, cm, realLabel, pxPerCm: px / cm, value: String(els.measureValue.value).trim(), unit });
+      showToast('Escala atualizada.');
+    } else {
+      const line = (editor.room.measures || []).find(m => m.id === measureId);
+      if (!line?.p1 || !line?.p2) return;
+      Object.assign(line, { cm, realLabel, label: realLabel, value: String(els.measureValue.value).trim(), unit });
+      showToast('Linha de medida atualizada.');
+    }
   } else {
-    editor.room.measures = editor.room.measures || [];
-    editor.room.measures.push({ id: uid('measure'), p1, p2, cm, realLabel, label: realLabel });
-    showToast('Medida adicionada. Toque em mais 2 pontos para criar outra linha.', 3200);
+    const [p1, p2] = editor.pendingPoints;
+    if (!p1 || !p2) return;
+    const px = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+    if (kind === 'calibrate') {
+      editor.room.calibration = { p1, p2, pixels: px, cm, realLabel, pxPerCm: px / cm, value: String(els.measureValue.value).trim(), unit };
+      showToast('Escala calibrada.');
+    } else {
+      editor.room.measures = editor.room.measures || [];
+      editor.room.measures.push({ id: uid('measure'), p1, p2, cm, realLabel, label: realLabel, value: String(els.measureValue.value).trim(), unit });
+      showToast('Medida adicionada. Toque em mais 2 pontos para criar outra linha.', 3200);
+    }
   }
   editor.pendingPoints = [];
   saveEditorRoom();
@@ -1230,6 +1311,8 @@ function undo() {
     editor.room.calibration = data.calibration || null;
     editor.room._lastSnapshot = null;
     selectedObjectId = null;
+  editor.selectedMeasureId = null;
+  editor.selectedMeasureKind = null;
     saveEditorRoom();
     drawCanvas();
     showToast('Última ação desfeita.');
@@ -1395,6 +1478,8 @@ async function importProjectJson(file) {
     if (els.measureNotesInput) els.measureNotesInput.value = editor.room.measureNotes || '';
     els.sketchToggle.classList.toggle('active', !!editor.room.sketchMode);
     selectedObjectId = null;
+  editor.selectedMeasureId = null;
+  editor.selectedMeasureKind = null;
     saveEditorRoom();
     setMode('view');
     loadEditorImage();
@@ -1456,6 +1541,8 @@ function wireEvents() {
       const action = btn.dataset.action;
       if (action === 'close-view-panel') {
         selectedObjectId = null;
+  editor.selectedMeasureId = null;
+  editor.selectedMeasureKind = null;
         updateViewInfoPanel();
         drawCanvas();
         return;
@@ -1506,12 +1593,14 @@ function wireEvents() {
   els.objectForm.addEventListener('submit', saveObjectFromForm);
   els.deleteObjectBtn.addEventListener('click', deleteSelectedObject);
   els.measureForm.addEventListener('submit', (e) => {
-    // Salva e libera imediatamente para a próxima linha de medida.
     saveMeasureFromForm();
   });
+  els.deleteMeasureLineBtn?.addEventListener('click', deleteCurrentMeasureLine);
   els.measureDialog.addEventListener('close', () => {
-    // Sempre limpa pontos pendentes ao fechar, para não impedir criar a próxima linha.
     editor.pendingPoints = [];
+    els.measureDialog.dataset.action = '';
+    els.measureDialog.dataset.measureId = '';
+    els.deleteMeasureLineBtn?.classList.add('hidden');
     drawCanvas();
   });
 
