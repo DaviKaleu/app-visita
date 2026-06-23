@@ -481,3 +481,57 @@ body.online-mode #cloudStatus { background: #174d27; }
   .cloud-actions { justify-content: flex-start; }
   #cloudStatus { max-width: 160px; }
 }
+
+/* V13: múltiplas fotos por ambiente */
+.photo-strip {
+  width: min(100%, 980px);
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 8px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  flex: 0 0 auto;
+}
+.photo-thumb {
+  min-width: 88px;
+  max-width: 88px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #222;
+  border: 2px solid transparent;
+  color: #fff;
+  padding: 0;
+  text-align: center;
+  cursor: pointer;
+}
+.photo-thumb.active { border-color: var(--accent); }
+.photo-thumb img {
+  width: 100%;
+  height: 58px;
+  object-fit: cover;
+  display: block;
+}
+.photo-thumb span {
+  display: block;
+  font-size: .75rem;
+  padding: 5px 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.photo-tools small {
+  display: block;
+  color: #cfcfcf;
+  line-height: 1.35;
+  margin-top: 6px;
+}
+@media (max-width: 900px) {
+  .photo-strip {
+    max-height: 92px;
+    align-self: stretch;
+  }
+  .photo-thumb { min-width: 76px; max-width: 76px; }
+  .photo-thumb img { height: 50px; }
+}

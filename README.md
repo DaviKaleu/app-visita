@@ -1,18 +1,9 @@
-# Top Visita Técnica V12 - Login Online
+# Top Visita Técnica V13 - Múltiplas fotos por ambiente
 
-Versão com login único pelo Supabase e sincronização online simples.
+- Cada ambiente aceita várias fotos.
+- Cada foto tem marcações, linhas de medida, croqui e escala próprios.
+- Galeria de fotos dentro do editor.
+- Botão para excluir a foto atual.
+- Continua com login e sincronização online do Supabase.
 
-## Antes de usar
-
-Rode no Supabase o SQL da tabela `app_state` informado no ChatGPT.
-
-## Login
-
-Use o e-mail e senha criados em Authentication > Users.
-
-## Observação importante
-
-Esta versão salva o estado completo do app na nuvem, incluindo as imagens compactadas.
-Para uma empresa de família e poucas fotos funciona bem. Para muito volume de fotos,
-o ideal depois é migrar as imagens para Supabase Storage.
-
+Para publicar: envie os arquivos no GitHub Pages e abra com ?v=16.

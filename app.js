@@ -56,6 +56,8 @@ const els = {
   editorSubtitle: $('editorSubtitle'),
   closeEditorBtn: $('closeEditorBtn'),
   photoInput: $('photoInput'),
+  deletePhotoBtn: $('deletePhotoBtn'),
+  photoStrip: $('photoStrip'),
   sketchToggle: $('sketchToggle'),
   calibrateBtn: $('calibrateBtn'),
   measureBtn: $('measureBtn'),
@@ -392,6 +394,122 @@ function ensureRoomDefaults(room) {
   room.checklist = room.checklist && typeof room.checklist === 'object' ? room.checklist : {};
   room.checklistNotes = room.checklistNotes || '';
   room.measureNotes = room.measureNotes || '';
+  room.photos = Array.isArray(room.photos) ? room.photos : [];
+
+  if (!room.photos.length && room.photoData) {
+    room.photos.push({
+      id: uid('photo'),
+      name: 'Foto 1',
+      photoData: room.photoData,
+      markers: Array.isArray(room.markers) ? JSON.parse(JSON.stringify(room.markers)) : [],
+      measures: Array.isArray(room.measures) ? JSON.parse(JSON.stringify(room.measures)) : [],
+      calibration: room.calibration || null,
+      sketchMode: !!room.sketchMode,
+      measureNotes: room.measureNotes || '',
+      createdAt: room.createdAt || nowIso(),
+    });
+    room.activePhotoId = room.photos[0].id;
+  }
+
+  if (room.photos.length && !room.activePhotoId) {
+    room.activePhotoId = room.photos[0].id;
+  }
+
+  applyActivePhotoToRoom(room);
+}
+
+function getActivePhoto(room = editor.room) {
+  if (!room) return null;
+  room.photos = Array.isArray(room.photos) ? room.photos : [];
+  return room.photos.find(p => p.id === room.activePhotoId) || room.photos[0] || null;
+}
+
+function syncRoomToActivePhoto(room = editor.room) {
+  if (!room) return;
+  const photo = getActivePhoto(room);
+  if (!photo) return;
+  photo.photoData = room.photoData || photo.photoData || '';
+  photo.markers = JSON.parse(JSON.stringify(room.markers || []));
+  photo.measures = JSON.parse(JSON.stringify(room.measures || []));
+  photo.calibration = room.calibration || null;
+  photo.sketchMode = !!room.sketchMode;
+  photo.measureNotes = room.measureNotes || '';
+}
+
+function applyActivePhotoToRoom(room = editor.room) {
+  if (!room) return;
+  const photo = getActivePhoto(room);
+  if (!photo) {
+    room.photoData = '';
+    room.markers = [];
+    room.measures = [];
+    room.calibration = null;
+    room.sketchMode = false;
+    return;
+  }
+  room.activePhotoId = photo.id;
+  room.photoData = photo.photoData || '';
+  room.markers = Array.isArray(photo.markers) ? JSON.parse(JSON.stringify(photo.markers)) : [];
+  room.measures = Array.isArray(photo.measures) ? JSON.parse(JSON.stringify(photo.measures)) : [];
+  room.calibration = photo.calibration || null;
+  room.sketchMode = !!photo.sketchMode;
+  room.measureNotes = photo.measureNotes || room.measureNotes || '';
+}
+
+function renderPhotoStrip() {
+  if (!els.photoStrip || !editor.room) return;
+  const photos = editor.room.photos || [];
+  els.photoStrip.classList.toggle('hidden', !photos.length);
+  if (!photos.length) {
+    els.photoStrip.innerHTML = '';
+    return;
+  }
+  els.photoStrip.innerHTML = photos.map((p, i) => `
+    <button type="button" class="photo-thumb ${p.id === editor.room.activePhotoId ? 'active' : ''}" data-photo-id="${p.id}">
+      <img src="${p.photoData}" alt="Foto ${i + 1}">
+      <span>${escapeHtml(p.name || `Foto ${i + 1}`)}</span>
+    </button>
+  `).join('');
+  els.photoStrip.querySelectorAll('[data-photo-id]').forEach(btn => {
+    btn.addEventListener('click', () => switchPhoto(btn.dataset.photoId));
+  });
+}
+
+function switchPhoto(photoId) {
+  if (!editor.room || editor.room.activePhotoId === photoId) return;
+  saveEditorRoom({ keepDialog: true, skipCloud: true });
+  editor.room.activePhotoId = photoId;
+  applyActivePhotoToRoom(editor.room);
+  selectedObjectId = null;
+  editor.selectedMeasureId = null;
+  editor.selectedMeasureKind = null;
+  editor.pendingPoints = [];
+  editor.drag = null;
+  editor.sketchImg = null;
+  els.sketchToggle.classList.toggle('active', !!editor.room.sketchMode);
+  if (els.measureNotesInput) els.measureNotesInput.value = editor.room.measureNotes || '';
+  saveEditorRoom({ keepDialog: true });
+  renderPhotoStrip();
+  loadEditorImage();
+  updateViewInfoPanel();
+  showToast('Foto trocada.');
+}
+
+function deleteCurrentPhoto() {
+  if (!editor.room?.photos?.length) return showToast('Nenhuma foto para excluir.');
+  const photo = getActivePhoto(editor.room);
+  if (!photo) return;
+  if (!confirm(`Excluir ${photo.name || 'esta foto'} e todas as marcações dela?`)) return;
+
+  editor.room.photos = editor.room.photos.filter(p => p.id !== photo.id);
+  editor.room.activePhotoId = editor.room.photos[0]?.id || null;
+  applyActivePhotoToRoom(editor.room);
+  selectedObjectId = null;
+  editor.sketchImg = null;
+  saveEditorRoom({ keepDialog: true });
+  renderPhotoStrip();
+  loadEditorImage();
+  showToast('Foto excluída.');
 }
 
 function escapeHtml(value = '') {
@@ -461,7 +579,7 @@ function renderDetail() {
         <span class="status">${escapeHtml(r.status || 'Visita feita')}</span>
       </div>
       <div>
-        <span>${r.deadline ? `Prazo/data: ${formatDate(r.deadline)} • ` : ''}${r.photoData ? 'Foto adicionada' : 'Sem foto'} • ${(r.markers?.length || 0)} marcações • ${(r.measures?.length || 0)} medidas</span>
+        <span>${r.deadline ? `Prazo/data: ${formatDate(r.deadline)} • ` : ''}${(r.photos?.length || (r.photoData ? 1 : 0)) ? `${r.photos?.length || 1} foto(s)` : 'Sem foto'} • ${(r.markers?.length || 0)} marcações na foto atual • ${(r.measures?.length || 0)} medidas na foto atual</span>
       </div>
       <div class="room-actions">
         <button class="primary open-editor">Abrir foto técnica</button>
@@ -556,7 +674,7 @@ function saveRoomFromForm() {
     showToast('Ambiente atualizado.');
   } else {
     const room = {
-      id: uid('room'), ...payload, createdAt: nowIso(), photoData: '', sketchMode: false,
+      id: uid('room'), ...payload, createdAt: nowIso(), photoData: '', photos: [], activePhotoId: null, sketchMode: false,
       markers: [], measures: [], calibration: null, measureNotes: '', checklist: {}, checklistNotes: '',
     };
     client.rooms = client.rooms || [];
@@ -627,7 +745,9 @@ function openEditor(clientId, roomId) {
   const client = findClient(clientId);
   els.editorTitle.textContent = editor.room.name;
   els.editorSubtitle.textContent = client ? client.name : 'Foto técnica';
+  applyActivePhotoToRoom(editor.room);
   els.sketchToggle.classList.toggle('active', !!editor.room.sketchMode);
+  renderPhotoStrip();
   editor.fitToScreen = true;
   if (els.fitBtn) els.fitBtn.textContent = 'Foto ajustada';
   els.editorDialog.showModal();
@@ -646,22 +766,24 @@ function closeEditor() {
   render();
 }
 
-function saveEditorRoom() {
+function saveEditorRoom(options = {}) {
   if (!editor.room) return;
-  if (els.measureNotesInput && els.editorDialog.open) {
+  if (els.measureNotesInput && (options.keepDialog || els.editorDialog.open)) {
     editor.room.measureNotes = els.measureNotesInput.value;
   }
   if (els.checklistNotes && els.checklistDialog?.open) {
     editor.room.checklistNotes = els.checklistNotes.value.trim();
   }
+  syncRoomToActivePhoto(editor.room);
   editor.room.updatedAt = nowIso();
   const client = findClient(editor.clientId);
   if (client) client.updatedAt = nowIso();
-  saveState();
+  saveState({ skipCloud: !!options.skipCloud });
 }
 
 function loadEditorImage() {
   const room = editor.room;
+  renderPhotoStrip();
   els.canvasEmpty.classList.toggle('hidden', !!room.photoData);
   if (!room.photoData) {
     els.workCanvas.width = 1000;
@@ -1045,19 +1167,37 @@ function createSketchCanvas(img) {
   return temp;
 }
 
-async function handlePhoto(file) {
-  if (!file) return;
+async function handlePhoto(files) {
+  const list = Array.from(files || []).filter(Boolean);
+  if (!list.length) return;
   try {
-    const dataUrl = await resizeImage(file);
-    editor.room.photoData = dataUrl;
-    editor.room.markers = editor.room.markers || [];
-    editor.room.measures = editor.room.measures || [];
-    editor.room.calibration = editor.room.calibration || null;
-    editor.room.sketchMode = false;
+    syncRoomToActivePhoto(editor.room);
+    editor.room.photos = Array.isArray(editor.room.photos) ? editor.room.photos : [];
+
+    for (const file of list) {
+      const dataUrl = await resizeImage(file);
+      const index = editor.room.photos.length + 1;
+      const photo = {
+        id: uid('photo'),
+        name: file.name ? file.name.replace(/\.[^.]+$/, '').slice(0, 28) || `Foto ${index}` : `Foto ${index}`,
+        photoData: dataUrl,
+        markers: [],
+        measures: [],
+        calibration: null,
+        sketchMode: false,
+        measureNotes: '',
+        createdAt: nowIso(),
+      };
+      editor.room.photos.push(photo);
+      editor.room.activePhotoId = photo.id;
+    }
+
+    applyActivePhotoToRoom(editor.room);
     els.sketchToggle.classList.remove('active');
-    saveEditorRoom();
+    saveEditorRoom({ keepDialog: true });
+    renderPhotoStrip();
     loadEditorImage();
-    showToast('Foto adicionada.');
+    showToast(list.length > 1 ? `${list.length} fotos adicionadas.` : 'Foto adicionada.');
   } catch (err) {
     console.error(err);
     showToast('Não consegui carregar essa imagem.');
@@ -1847,6 +1987,8 @@ function buildProjectPayload() {
       deadline: room.deadline || '',
       notes: room.notes || '',
       photoData: room.photoData || '',
+      photos: room.photos || [],
+      activePhotoId: room.activePhotoId || null,
       sketchMode: !!room.sketchMode,
       markers: room.markers || [],
       measures: room.measures || [],
@@ -1893,6 +2035,8 @@ function normalizeImportedRoom(data) {
     deadline: room.deadline || '',
     notes: room.notes || '',
     photoData: room.photoData || '',
+    photos: Array.isArray(room.photos) ? room.photos : [],
+    activePhotoId: room.activePhotoId || null,
     sketchMode: !!room.sketchMode,
     markers: Array.isArray(room.markers) ? room.markers : [],
     measures: Array.isArray(room.measures) ? room.measures : [],
@@ -1957,7 +2101,8 @@ function wireEvents() {
   });
 
   els.closeEditorBtn.addEventListener('click', closeEditor);
-  els.photoInput.addEventListener('change', (e) => handlePhoto(e.target.files[0]));
+  els.photoInput.addEventListener('change', (e) => handlePhoto(e.target.files));
+  els.deletePhotoBtn?.addEventListener('click', deleteCurrentPhoto);
   els.sketchToggle.addEventListener('click', () => {
     if (!editor.room?.photoData) return showToast('Adicione uma foto primeiro.');
     editor.room.sketchMode = !editor.room.sketchMode;

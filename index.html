@@ -175,9 +175,13 @@
       <div class="editor-body">
         <aside class="toolbar">
           <label class="tool-upload">
-            <input id="photoInput" type="file" accept="image/*" capture="environment" />
-            📷 Tirar / trocar foto
+            <input id="photoInput" type="file" accept="image/*" capture="environment" multiple />
+            📷 Adicionar foto
           </label>
+          <div class="tool-group photo-tools">
+            <button id="deletePhotoBtn" class="tool-btn danger" type="button">🗑️ Excluir foto atual</button>
+            <small>Você pode salvar várias fotos no mesmo ambiente. Cada foto tem suas próprias marcações e medidas.</small>
+          </div>
 
           <div class="tool-group easy-panel">
             <p>Modo fácil</p>
@@ -249,6 +253,7 @@ Rodapé: 7 cm"></textarea>
         </aside>
 
         <section class="canvas-area">
+          <div id="photoStrip" class="photo-strip hidden"></div>
           <div id="viewInfoPanel" class="view-info-panel hidden"></div>
           <canvas id="workCanvas"></canvas>
           <div id="canvasEmpty" class="canvas-empty">
