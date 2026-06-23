@@ -48,6 +48,7 @@ const els = {
   importProjectBtn: $('importProjectBtn'),
   importProjectInput: $('importProjectInput'),
   workCanvas: $('workCanvas'),
+  canvasArea: document.querySelector('.canvas-area'),
   viewInfoPanel: $('viewInfoPanel'),
   canvasEmpty: $('canvasEmpty'),
   objectDialog: $('objectDialog'),
@@ -328,6 +329,8 @@ function setMode(mode, selectedType = null, selectedIcon = null) {
   if (mode === 'object') {
     document.querySelectorAll(`.object-btn[data-type="${CSS.escape(selectedType)}"]`).forEach(b => b.classList.add('active'));
   }
+  els.workCanvas.classList.toggle('canvas-view-mode', mode === 'view');
+  els.canvasArea?.classList.toggle('view-mode', mode === 'view');
   const label = {
     view: 'Visualizar: toque na marcação para ver as medidas sem abrir edição.',
     move: 'Mover / editar: toque e arraste; toque rápido para abrir edição.',
@@ -578,21 +581,28 @@ function updateViewInfoPanel() {
   }
   const marker = (editor.room.markers || []).find(m => m.id === selectedObjectId);
   if (!marker) {
-    panel.classList.remove('hidden');
-    panel.innerHTML = `<strong>Modo visualização</strong><span>Toque em uma marcação para ver as setas e medidas sem abrir edição.</span>`;
+    panel.classList.add('hidden');
+    panel.innerHTML = '';
     return;
   }
   const d = getMarkerAutoDistanceData(marker);
   panel.classList.remove('hidden');
   panel.innerHTML = `
-    <strong>${escapeHtml(marker.icon || '')} ${escapeHtml(marker.name || marker.type || 'Marcação')}</strong>
+    <div class="view-panel-head">
+      <strong>${escapeHtml(marker.icon || '')} ${escapeHtml(marker.name || marker.type || 'Marcação')}</strong>
+      <button type="button" class="mini-icon" data-action="close-view-panel" aria-label="Fechar painel">×</button>
+    </div>
     <div class="view-measure-grid">
-      <span>Esq: ${escapeHtml(d.left)}</span>
-      <span>Dir: ${escapeHtml(d.right)}</span>
-      <span>Chão: ${escapeHtml(d.floor)}</span>
+      <span>Esq:<b>${escapeHtml(d.left)}</b></span>
+      <span>Dir:<b>${escapeHtml(d.right)}</b></span>
+      <span>Chão:<b>${escapeHtml(d.floor)}</b></span>
     </div>
     ${(marker.height || marker.distance || marker.notes) ? `<small>${[marker.height ? `Altura: ${escapeHtml(marker.height)}` : '', marker.distance ? `Distância: ${escapeHtml(marker.distance)}` : '', marker.notes ? `Obs: ${escapeHtml(marker.notes)}` : ''].filter(Boolean).join(' • ')}</small>` : ''}
     ${d.hasScale ? '' : '<small>Sem escala calibrada: medidas em pixel.</small>'}
+    <div class="view-panel-actions">
+      <button type="button" class="panel-edit-btn" data-action="edit-selected-marker">Atualizar medidas</button>
+      <button type="button" class="panel-close-btn" data-action="close-view-panel">Fechar</button>
+    </div>
   `;
 }
 
@@ -767,15 +777,22 @@ function getCanvasPoint(evt) {
 
 function handleCanvasDown(evt) {
   if (!editor.room?.photoData) return;
-  evt.preventDefault();
   const p = getCanvasPoint(evt);
 
   if (editor.mode === 'object') {
+    evt.preventDefault();
     addMarker(p.x, p.y, editor.selectedType, editor.selectedIcon);
     return;
   }
 
   if (editor.mode === 'calibrate' || editor.mode === 'measure') {
+    evt.preventDefault();
+
+    // Evita travar a criação de novas linhas quando já existem 2 pontos aguardando
+    // ou quando o usuário toca de novo enquanto a janela de medida está aberta.
+    if (els.measureDialog.open) return;
+    if (editor.pendingPoints.length >= 2) editor.pendingPoints = [];
+
     editor.pendingPoints.push(p);
     if (editor.pendingPoints.length === 2) {
       if (editor.mode === 'calibrate') openMeasureDialog('calibrate');
@@ -795,11 +812,12 @@ function handleCanvasDown(evt) {
     if (hit && !editor.room?.calibration?.pxPerCm) {
       showToast('Setas em pixel. Use Calibrar medida para aparecer em cm/m.', 2300);
     } else if (hit) {
-      showToast('Medidas exibidas. Nenhuma edição foi aberta.', 1700);
+      showToast('Medidas exibidas. Use Atualizar medidas só se quiser editar.', 1900);
     }
     return;
   }
 
+  evt.preventDefault();
   if (hit) {
     editor.drag = { id: hit.id, dx: hit.x - p.x, dy: hit.y - p.y, moved: false, startX: p.x, startY: p.y };
   } else {
@@ -899,6 +917,7 @@ function deleteSelectedObject() {
 function openMeasureDialog(kind) {
   const [p1, p2] = editor.pendingPoints;
   if (!p1 || !p2) return;
+  if (els.measureDialog.open) return;
   const px = Math.round(Math.hypot(p2.x - p1.x, p2.y - p1.y));
   els.measureValue.value = '';
   els.measureUnit.value = 'cm';
@@ -940,7 +959,7 @@ function saveMeasureFromForm() {
   } else {
     editor.room.measures = editor.room.measures || [];
     editor.room.measures.push({ id: uid('measure'), p1, p2, cm, realLabel, label: realLabel });
-    showToast('Medida adicionada.');
+    showToast('Medida adicionada. Toque em mais 2 pontos para criar outra linha.', 3200);
   }
   editor.pendingPoints = [];
   saveEditorRoom();
@@ -1025,7 +1044,7 @@ function buildProjectPayload() {
   const room = editor.room || {};
   return {
     app: 'Top Visita Técnica',
-    version: 3,
+    version: 5,
     exportedAt: nowIso(),
     clientName: client?.name || '',
     room: {
@@ -1154,6 +1173,23 @@ function wireEvents() {
   els.exportProjectBtn.addEventListener('click', exportProjectJson);
   els.importProjectBtn.addEventListener('click', () => els.importProjectInput.click());
   els.importProjectInput.addEventListener('change', (e) => importProjectJson(e.target.files?.[0]));
+  if (els.viewInfoPanel) {
+    els.viewInfoPanel.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-action]');
+      if (!btn) return;
+      const action = btn.dataset.action;
+      if (action === 'close-view-panel') {
+        selectedObjectId = null;
+        updateViewInfoPanel();
+        drawCanvas();
+        return;
+      }
+      if (action === 'edit-selected-marker') {
+        if (!selectedObjectId) return;
+        openObjectDialog(selectedObjectId);
+      }
+    });
+  }
   if (els.saveMeasureNotesBtn) {
     els.saveMeasureNotesBtn.addEventListener('click', () => {
       saveEditorRoom();
@@ -1193,12 +1229,14 @@ function wireEvents() {
 
   els.objectForm.addEventListener('submit', saveObjectFromForm);
   els.deleteObjectBtn.addEventListener('click', deleteSelectedObject);
-  els.measureForm.addEventListener('submit', saveMeasureFromForm);
+  els.measureForm.addEventListener('submit', (e) => {
+    // Salva e libera imediatamente para a próxima linha de medida.
+    saveMeasureFromForm();
+  });
   els.measureDialog.addEventListener('close', () => {
-    if (!els.measureValue.value) {
-      editor.pendingPoints = [];
-      drawCanvas();
-    }
+    // Sempre limpa pontos pendentes ao fechar, para não impedir criar a próxima linha.
+    editor.pendingPoints = [];
+    drawCanvas();
   });
 
   els.editorDialog.addEventListener('cancel', (e) => {

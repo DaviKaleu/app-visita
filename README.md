@@ -11,12 +11,10 @@ Aplicativo PWA para visitas técnicas de móveis planejados.
 - Modo croqui branco com contorno da foto
 - Marcação de tomadas, interruptores, portas, janelas, colunas, rodapés, bancada, cuba e outros obstáculos
 - Edição das marcações com altura, distância e observação
-- Modo visualização: ao clicar em uma marcação aparecem as setas e medidas sem abrir a aba de edição
 - Setas automáticas ao selecionar uma marcação, mostrando distância da parede esquerda, parede direita e altura do chão
 - Calibração usando uma medida conhecida
 - Linhas de medida
 - Aba de anotações de medidas dentro do editor do ambiente
-- Exportação e importação de projeto em JSON, mantendo foto, marcações, medidas, escala e anotações
 - Salvar/baixar imagem PNG marcada
 - Compartilhar imagem pelo celular quando o navegador permitir
 - Funciona offline depois de abrir a primeira vez
@@ -55,3 +53,20 @@ A foto sozinha não dá medida 100% real. Para aproximar a escala, use o botão 
 - Sincronização entre celular e computador
 - Biblioteca de objetos com medidas padrão
 - Assinatura do cliente na visita
+
+
+## Atualização v4
+
+- Painel de visualização de medidas ficou compacto no celular.
+- Agora o painel aparece acima da foto no celular, sem tampar a parte de baixo da imagem.
+- A foto pode ser rolada no modo Visualizar medidas.
+- Botão 'Atualizar medidas' no painel abre a edição somente quando o usuário pedir.
+- Janelas de edição têm rolagem para não cortar campos em telas pequenas.
+
+
+## Atualização v5
+
+- Corrigido o problema que impedia criar mais de uma linha de medida em sequência.
+- Agora, depois de salvar uma linha, o aplicativo continua no modo Linha de medida.
+- Para criar outra linha, basta tocar em mais 2 pontos na foto.
+- Os pontos pendentes são limpos automaticamente ao fechar a janela de medida.
