@@ -1,5 +1,9 @@
 const STORAGE_KEY = 'top-visita-tecnica-v1';
-const MAX_IMAGE_SIDE = 1600;
+const DB_NAME = 'top-visita-tecnica-db';
+const DB_STORE = 'state';
+const DB_KEY = 'main';
+// Menor para salvar melhor no celular e evitar travar o navegador com fotos grandes.
+const MAX_IMAGE_SIDE = 1200;
 
 const $ = (id) => document.getElementById(id);
 const els = {
@@ -43,6 +47,7 @@ const els = {
   moveBtn: $('moveBtn'),
   undoBtn: $('undoBtn'),
   exportBtn: $('exportBtn'),
+  fitBtn: $('fitBtn'),
   shareBtn: $('shareBtn'),
   exportProjectBtn: $('exportProjectBtn'),
   importProjectBtn: $('importProjectBtn'),
@@ -88,6 +93,7 @@ let editor = {
   drag: null,
   selectedType: null,
   selectedIcon: null,
+  fitToScreen: true,
 };
 
 function uid(prefix = 'id') {
@@ -117,8 +123,63 @@ function loadState() {
   }
 }
 
+function openStateDb() {
+  return new Promise((resolve, reject) => {
+    if (!('indexedDB' in window)) return reject(new Error('IndexedDB indisponível'));
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = () => req.result.createObjectStore(DB_STORE, { keyPath: 'key' });
+    req.onerror = () => reject(req.error);
+    req.onsuccess = () => resolve(req.result);
+  });
+}
+
+function saveStateToDb(data) {
+  return openStateDb().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readwrite');
+    tx.objectStore(DB_STORE).put({ key: DB_KEY, value: data, savedAt: nowIso() });
+    tx.oncomplete = () => { db.close(); resolve(); };
+    tx.onerror = () => { db.close(); reject(tx.error); };
+  }));
+}
+
+function loadStateFromDb() {
+  return openStateDb().then(db => new Promise((resolve, reject) => {
+    const tx = db.transaction(DB_STORE, 'readonly');
+    const req = tx.objectStore(DB_STORE).get(DB_KEY);
+    req.onsuccess = () => resolve(req.result?.value || null);
+    req.onerror = () => reject(req.error);
+    tx.oncomplete = () => db.close();
+  }));
+}
+
 function saveState() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  const snapshot = JSON.parse(JSON.stringify(state));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+  } catch (err) {
+    console.warn('LocalStorage cheio ou bloqueado. Salvando no banco interno.', err);
+  }
+  saveStateToDb(snapshot).catch(err => {
+    console.warn('Falha ao salvar no IndexedDB', err);
+    showToast('Não consegui salvar no armazenamento do celular. Exporte o projeto para backup.', 4500);
+  });
+}
+
+async function hydrateStateFromDb() {
+  try {
+    const dbState = await loadStateFromDb();
+    if (dbState?.clients && Array.isArray(dbState.clients)) {
+      const localCount = state.clients?.length || 0;
+      const dbCount = dbState.clients.length || 0;
+      if (dbCount > localCount || !localCount) {
+        state = dbState;
+        selectedClientId = state.clients[0]?.id || null;
+        render();
+      }
+    }
+  } catch (err) {
+    console.warn('Sem dados no banco interno ainda.', err);
+  }
 }
 
 function findClient(id = selectedClientId) {
@@ -357,6 +418,8 @@ function openEditor(clientId, roomId) {
   els.editorTitle.textContent = editor.room.name;
   els.editorSubtitle.textContent = client ? client.name : 'Foto técnica';
   els.sketchToggle.classList.toggle('active', !!editor.room.sketchMode);
+  editor.fitToScreen = true;
+  if (els.fitBtn) els.fitBtn.textContent = 'Foto ajustada';
   els.editorDialog.showModal();
   setMode('view');
   if (els.measureNotesInput) {
@@ -391,6 +454,7 @@ function loadEditorImage() {
     els.workCanvas.width = 1000;
     els.workCanvas.height = 700;
     editor.ctx.clearRect(0, 0, els.workCanvas.width, els.workCanvas.height);
+    updateCanvasFit();
     return;
   }
 
@@ -401,8 +465,37 @@ function loadEditorImage() {
     els.workCanvas.height = img.naturalHeight;
     editor.sketchImg = null;
     drawCanvas();
+    updateCanvasFit();
   };
   img.src = room.photoData;
+}
+
+function updateCanvasFit() {
+  const c = els.workCanvas;
+  if (!c) return;
+  if (!editor.fitToScreen || !editor.room?.photoData) {
+    c.style.width = c.width ? `${c.width}px` : '';
+    c.style.height = c.height ? `${c.height}px` : '';
+    return;
+  }
+  const area = els.canvasArea;
+  if (!area || !c.width || !c.height) return;
+  requestAnimationFrame(() => {
+    const panelVisible = els.viewInfoPanel && !els.viewInfoPanel.classList.contains('hidden');
+    const panelH = panelVisible ? els.viewInfoPanel.offsetHeight + 12 : 0;
+    const usableW = Math.max(260, area.clientWidth - 28);
+    const usableH = Math.max(260, area.clientHeight - 28 - panelH);
+    const scale = Math.min(1, usableW / c.width, usableH / c.height);
+    c.style.width = `${Math.max(180, Math.round(c.width * scale))}px`;
+    c.style.height = 'auto';
+  });
+}
+
+function toggleCanvasFit() {
+  editor.fitToScreen = !editor.fitToScreen;
+  if (els.fitBtn) els.fitBtn.textContent = editor.fitToScreen ? 'Foto ajustada' : 'Foto tamanho real';
+  updateCanvasFit();
+  showToast(editor.fitToScreen ? 'Foto ajustada para caber na tela.' : 'Foto em tamanho real. Role a tela para ver tudo.', 2400);
 }
 
 function drawCanvas() {
@@ -577,12 +670,14 @@ function updateViewInfoPanel() {
   if (editor.mode !== 'view' || !editor.room?.photoData) {
     panel.classList.add('hidden');
     panel.innerHTML = '';
+    updateCanvasFit();
     return;
   }
   const marker = (editor.room.markers || []).find(m => m.id === selectedObjectId);
   if (!marker) {
     panel.classList.add('hidden');
     panel.innerHTML = '';
+    updateCanvasFit();
     return;
   }
   const d = getMarkerAutoDistanceData(marker);
@@ -604,6 +699,7 @@ function updateViewInfoPanel() {
       <button type="button" class="panel-close-btn" data-action="close-view-panel">Fechar</button>
     </div>
   `;
+  updateCanvasFit();
 }
 
 function drawMeasures(ctx) {
@@ -756,7 +852,7 @@ function resizeImage(file) {
         canvas.height = h;
         const ctx = canvas.getContext('2d');
         ctx.drawImage(img, 0, 0, w, h);
-        resolve(canvas.toDataURL('image/jpeg', 0.82));
+        resolve(canvas.toDataURL('image/jpeg', 0.70));
       };
       img.onerror = reject;
       img.src = reader.result;
@@ -1169,6 +1265,7 @@ function wireEvents() {
   els.moveBtn.addEventListener('click', () => setMode('move'));
   els.undoBtn.addEventListener('click', undo);
   els.exportBtn.addEventListener('click', downloadImage);
+  if (els.fitBtn) els.fitBtn.addEventListener('click', toggleCanvasFit);
   els.shareBtn.addEventListener('click', shareImage);
   els.exportProjectBtn.addEventListener('click', exportProjectJson);
   els.importProjectBtn.addEventListener('click', () => els.importProjectInput.click());
@@ -1246,6 +1343,9 @@ function wireEvents() {
 }
 
 let deferredInstallPrompt = null;
+window.addEventListener('resize', () => updateCanvasFit());
+window.addEventListener('orientationchange', () => setTimeout(updateCanvasFit, 300));
+
 window.addEventListener('beforeinstallprompt', (e) => {
   e.preventDefault();
   deferredInstallPrompt = e;
@@ -1265,3 +1365,4 @@ if ('serviceWorker' in navigator) {
 
 wireEvents();
 render();
+hydrateStateFromDb();

@@ -155,7 +155,8 @@
             <button id="sketchToggle" class="tool-btn">Croqui branco</button>
             <button id="calibrateBtn" class="tool-btn">Calibrar medida</button>
             <button id="measureBtn" class="tool-btn">Linha de medida</button>
-            <button id="moveBtn" class="tool-btn active">Mover / editar</button>
+            <button id="viewBtn" class="tool-btn active">Visualizar medidas</button>
+            <button id="moveBtn" class="tool-btn">Mover / editar</button>
           </div>
 
           <div class="tool-group objects">
@@ -188,8 +189,16 @@ Rodapé: 7 cm"></textarea>
             </details>
           </div>
 
+          <div class="tool-group import-tab">
+            <button id="exportProjectBtn" class="tool-btn" type="button">Exportar projeto (.json)</button>
+            <button id="importProjectBtn" class="tool-btn" type="button">Importar projeto (.json)</button>
+            <input id="importProjectInput" type="file" accept="application/json,.json" hidden />
+            <small>Use para levar o projeto para outro celular ou recuperar depois.</small>
+          </div>
+
           <div class="tool-group">
             <button id="undoBtn" class="tool-btn">Desfazer</button>
+            <button id="fitBtn" class="tool-btn">Ajustar foto</button>
             <button id="exportBtn" class="tool-btn">Salvar imagem</button>
             <button id="shareBtn" class="primary tool-btn">Compartilhar</button>
           </div>
@@ -201,6 +210,7 @@ Rodapé: 7 cm"></textarea>
         </aside>
 
         <section class="canvas-area">
+          <div id="viewInfoPanel" class="view-info-panel hidden"></div>
           <canvas id="workCanvas"></canvas>
           <div id="canvasEmpty" class="canvas-empty">
             <h3>Nenhuma foto ainda</h3>

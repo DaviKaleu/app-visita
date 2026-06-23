@@ -312,3 +312,77 @@ textarea { resize: vertical; }
 @media (max-width: 520px) {
   .modal-card { max-height: 88dvh; }
 }
+
+/* V6: correções para celular */
+#workCanvas {
+  width: auto;
+  max-width: none;
+  max-height: none;
+  height: auto;
+  flex: 0 0 auto;
+}
+.canvas-area {
+  align-items: center;
+  justify-content: flex-start;
+  gap: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+.canvas-area.view-mode { touch-action: pan-x pan-y pinch-zoom; }
+.tool-group.import-tab { min-width: 230px; }
+@media (max-width: 900px) {
+  .editor-modal, .editor-shell { height: 100dvh; }
+  .editor-body {
+    height: calc(100dvh - 68px);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  .toolbar {
+    max-height: 178px;
+    align-items: stretch;
+    overscroll-behavior-x: contain;
+  }
+  .tool-group, .hint-box, .tool-upload {
+    min-width: 190px;
+  }
+  .tool-group {
+    max-height: 156px;
+    overflow-y: auto;
+    background: rgba(255,255,255,.03);
+    border-radius: 12px;
+    padding: 7px;
+  }
+  .tool-upload {
+    display: flex;
+    align-items: center;
+    min-height: 52px;
+    max-height: 52px;
+  }
+  .objects {
+    min-width: 250px;
+    grid-template-columns: 1fr;
+  }
+  .notes-tab { min-width: 260px; }
+  .notes-tab textarea { min-height: 84px; }
+  .hint-box { display: none; }
+  .canvas-area {
+    min-height: 0;
+    height: 100%;
+    padding: 10px;
+  }
+}
+@media (max-width: 700px) {
+  .view-info-panel {
+    flex: 0 0 auto;
+    position: sticky;
+    top: 0;
+    max-height: 30vh;
+  }
+}
+@media (max-width: 520px) {
+  .editor-topbar { padding: 9px 12px; }
+  .toolbar { max-height: 156px; }
+  .editor-body { height: calc(100dvh - 58px); }
+  .tool-upload, .tool-btn, .object-btn { padding: 10px; font-size: .92rem; }
+  .tool-group { max-height: 136px; min-width: 178px; }
+  .objects { min-width: 220px; }
+  .notes-tab { min-width: 240px; }
+}
