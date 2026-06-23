@@ -12,7 +12,7 @@
   <div id="toast" class="toast hidden"></div>
 
   <section id="authScreen" class="auth-screen">
-    <form id="loginForm" class="auth-card">
+    <form id="loginForm" class="auth-card" novalidate>
       <div class="brand big">
         <div class="brand-mark">TOP</div>
         <div>
@@ -21,9 +21,9 @@
         </div>
       </div>
       <h1>Entrar no app</h1>
-      <p>Use o e-mail e senha único da empresa para acessar clientes, fotos, medidas e anotações online.</p>
-      <label>E-mail
-        <input id="loginEmail" type="email" autocomplete="email" required placeholder="email da empresa" />
+      <p>Entre com <strong>admin</strong> ou <strong>funcionario</strong>. O app converte isso para o login do Supabase automaticamente.</p>
+      <label>Usuário
+        <input id="loginEmail" type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" required placeholder="admin ou funcionario" />
       </label>
       <label>Senha
         <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="senha" />

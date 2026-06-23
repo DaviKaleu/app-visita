@@ -1,13 +1,9 @@
-# Top Visita Técnica V14 - Login por usuário
+# Top Visita Técnica V15 - Login sem exigir e-mail
 
-Atualização:
-- Login usando `admin` ou `funcionario`, sem precisar digitar e-mail.
-- `admin` entra como davikaleu1537@gmail.com.
-- `funcionario` entra como bobao1537@gmail.com.
-- Mantém múltiplas fotos por ambiente.
-- Mantém sincronização online Supabase.
-- Evita baixar nuvem vazia por cima dos dados locais.
+Correção:
+- O campo de login agora é texto comum.
+- Não pede mais @.
+- Pode entrar com `admin` ou `funcionario`.
+- Mantém múltiplas fotos por ambiente e sincronização online.
 
-Publicação:
-- Envie os arquivos para o GitHub Pages.
-- Abra com ?v=17 para forçar atualização.
+Abra com ?v=18 após publicar.
