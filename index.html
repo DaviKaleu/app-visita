@@ -2,394 +2,119 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#1f1f1f" />
-  <title>Top Visita Técnica</title>
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="styles.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Top Planejados V104.1 Recibo e Admin Online</title>
+  <link rel="stylesheet" href="assets/app.css" />
 </head>
 <body>
-  <div id="toast" class="toast hidden"></div>
+  <noscript>Ative o JavaScript para usar o Top Planejados V104.1 Recibo e Admin Online.</noscript>
 
-  <section id="authScreen" class="auth-screen">
-    <form id="loginForm" class="auth-card" novalidate>
-      <div class="brand big">
-        <div class="brand-mark">TOP</div>
-        <div>
-          <strong>Top Visita Técnica</strong>
-          <span>Acesso privado da empresa</span>
-        </div>
+
+  <section id="bootScreen" class="screen">
+    <div class="auth-card">
+      <div class="logo-badge">TP</div>
+      <h1>Carregando</h1>
+      <p>Iniciando o Top Planejados. Se ficar parado, verifique o arquivo <b>src/config.js</b> ou limpe o login salvo.</p>
+      <div class="row-actions" style="justify-content:center;margin-top:14px">
+        <button class="ghost" onclick="localStorage.removeItem('tp_session'); location.reload()">Limpar login salvo</button>
+        <button class="ghost" onclick="location.reload()">Recarregar</button>
       </div>
-      <h1>Entrar no app</h1>
-      <p>Entre com <strong>admin</strong> ou <strong>funcionario</strong>. O app converte isso para o login do Supabase automaticamente.</p>
-      <label>Usuário
-        <input id="loginEmail" type="text" inputmode="text" autocomplete="off" autocapitalize="none" spellcheck="false" required placeholder="admin ou funcionario" />
-      </label>
-      <label>Senha
-        <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="senha" />
-      </label>
-      <button class="primary" type="submit">Entrar</button>
-      <small id="loginStatus">Aguardando login...</small>
-    </form>
+    </div>
   </section>
 
+  <section id="setupScreen" class="screen hidden">
+    <div class="auth-card wide">
+      <div class="logo-badge">TP</div>
+      <h1>Configuração necessária</h1>
+      <p>Edite o arquivo <b>src/config.js</b> com a URL e a chave pública do seu projeto Supabase.</p>
+      <pre>window.TOP_CONFIG = {
+  SUPABASE_URL: "https://SEU-PROJETO.supabase.co",
+  SUPABASE_ANON_KEY: "SUA_CHAVE_PUBLICA_ANON_OU_PUBLISHABLE"
+};</pre>
+      <p class="muted">Depois rode o SQL em <b>supabase/schema.sql</b> no Supabase.</p>
+      <button class="ghost" onclick="location.reload()">Tentar novamente</button>
+    </div>
+  </section>
 
-  <header class="app-header">
-    <div class="brand">
-      <div class="brand-mark">TOP</div>
-      <div>
-        <strong>Top Visita Técnica</strong>
-        <span>Clientes • Fotos • Marcações</span>
+  <section id="authScreen" class="screen hidden">
+    <div class="auth-card">
+      <div class="logo-badge">TP</div>
+      <h1>Top Planejados</h1>
+      <p>Sistema online com banco de dados em nuvem.</p>
+      <div class="tabs auth-tabs">
+        <button id="loginTab" class="active" data-auth-tab="login">Entrar</button>
+        <button id="signupTab" data-auth-tab="signup">Criar acesso</button>
       </div>
+      <form id="loginForm" class="auth-form">
+        <label>E-mail</label>
+        <input id="loginEmail" type="email" autocomplete="email" required placeholder="exemplo@email.com" />
+        <label>Senha</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required placeholder="Sua senha" />
+        <button class="primary" type="submit">Entrar</button>
+      </form>
+      <form id="signupForm" class="auth-form hidden">
+        <label>Nome</label>
+        <input id="signupName" required placeholder="Nome do usuário" />
+        <label>E-mail</label>
+        <input id="signupEmail" type="email" autocomplete="email" required placeholder="exemplo@email.com" />
+        <label>Senha</label>
+        <input id="signupPassword" type="password" autocomplete="new-password" required minlength="6" placeholder="Mínimo 6 caracteres" />
+        <button class="primary" type="submit">Solicitar acesso</button>
+        <p class="muted small">Depois do cadastro, um administrador precisa ativar o usuário na aba Admin.</p>
+      </form>
+      <div id="authMsg" class="message"></div>
     </div>
-    <div class="cloud-actions">
-      <span id="cloudStatus">Offline</span>
-      <button id="syncNowBtn" class="ghost small" type="button">Sincronizar</button>
-      <button id="logoutBtn" class="ghost small" type="button">Sair</button>
-      <button id="installBtn" class="ghost small hidden">Instalar</button>
-    </div>
-  </header>
+  </section>
 
-  <main class="layout">
-    <section class="panel clients-panel">
-      <div class="panel-title">
+  <section id="pendingScreen" class="screen hidden">
+    <div class="auth-card">
+      <div class="logo-badge">TP</div>
+      <h1>Acesso aguardando liberação</h1>
+      <p>Seu cadastro foi criado, mas ainda não foi ativado por um administrador.</p>
+      <button id="pendingLogout" class="ghost">Sair</button>
+    </div>
+  </section>
+
+  <div id="app" class="app hidden">
+    <aside class="side">
+      <div class="brand">
+        <div class="brand-logo">TP</div>
         <div>
-          <h1>Clientes</h1>
-          <p>Cadastre a visita e salve tudo por ambiente.</p>
+          <h1>Top Planejados</h1>
+          <p>V104.1 Recibo e Admin Online • sem Node/npm</p>
         </div>
-        <button id="addClientBtn" class="primary">+ Cliente</button>
       </div>
-
-      <div class="search-row">
-        <input id="clientSearch" type="search" placeholder="Pesquisar cliente, telefone ou endereço" />
+      <div class="user-box">
+        <b id="sideName">Usuário</b>
+        <span id="sideRole">-</span>
       </div>
-
-      <div id="clientList" class="client-list empty-state"></div>
-    </section>
-
-    <section class="panel detail-panel">
-      <div id="emptyDetail" class="empty-detail">
-        <h2>Selecione um cliente</h2>
-        <p>Depois crie um ambiente, tire uma foto e marque tomadas, portas, colunas, bancadas e outros pontos importantes.</p>
+      <nav id="nav" class="nav"></nav>
+      <div class="sidefoot">
+        <b>Ajuda da aba</b>
+        <div id="helpTitle">Início</div>
+        <p id="helpText">Resumo geral do sistema.</p>
       </div>
+      <button id="logoutBtn" class="logout">Sair</button>
+    </aside>
 
-      <div id="clientDetail" class="hidden">
-        <div class="detail-header">
-          <div>
-            <p class="eyebrow">Cliente selecionado</p>
-            <h2 id="detailName"></h2>
-            <p id="detailMeta"></p>
-          </div>
-          <div class="actions-wrap">
-            <button id="editClientBtn" class="ghost">Editar</button>
-            <button id="deleteClientBtn" class="danger ghost">Excluir</button>
-          </div>
-        </div>
-
-        <div class="notes-card">
-          <strong>Observações do cliente</strong>
-          <p id="detailNotes"></p>
-        </div>
-
-        <div class="section-heading">
-          <div>
-            <h3>Ambientes / Projetos</h3>
-            <p>Cozinha, quarto, banheiro, lavanderia...</p>
-          </div>
-          <button id="addRoomBtn" class="primary">+ Ambiente</button>
-        </div>
-
-        <div id="roomList" class="room-list"></div>
-      </div>
-    </section>
-  </main>
-
-  <dialog id="clientDialog" class="modal">
-    <form method="dialog" id="clientForm" class="modal-card">
-      <div class="modal-header">
-        <h2 id="clientDialogTitle">Novo cliente</h2>
-        <button type="button" class="icon-btn" data-close="clientDialog">×</button>
-      </div>
-      <label>Nome do cliente
-        <input id="clientName" required placeholder="Ex: Maria Silva" />
-      </label>
-      <label>Telefone / WhatsApp
-        <input id="clientPhone" placeholder="Ex: (69) 99999-9999" />
-      </label>
-      <label>Endereço
-        <input id="clientAddress" placeholder="Rua, número, bairro" />
-      </label>
-      <label>Observações
-        <textarea id="clientNotes" rows="3" placeholder="Preferências, horário, detalhes da visita..."></textarea>
-      </label>
-      <div class="modal-actions">
-        <button type="button" class="ghost" data-close="clientDialog">Cancelar</button>
-        <button class="primary" value="default">Salvar cliente</button>
-      </div>
-    </form>
-  </dialog>
-
-  <dialog id="roomDialog" class="modal">
-    <form method="dialog" id="roomForm" class="modal-card">
-      <div class="modal-header">
-        <h2 id="roomDialogTitle">Novo ambiente</h2>
-        <button type="button" class="icon-btn" data-close="roomDialog">×</button>
-      </div>
-      <label>Nome do ambiente
-        <input id="roomName" required placeholder="Ex: Cozinha, quarto casal" />
-      </label>
-      <label>Status
-        <select id="roomStatus">
-          <option>Visita feita</option>
-          <option>Aguardando orçamento</option>
-          <option>Em projeto</option>
-          <option>Aprovado</option>
-          <option>Em produção</option>
-          <option>Montado</option>
-          <option>Cancelado</option>
-        </select>
-      </label>
-      <label>Prazo / data importante
-        <input id="roomDeadline" type="date" />
-      </label>
-      <label>Observações do ambiente
-        <textarea id="roomNotes" rows="4" placeholder="Ex: parede fora de esquadro, conferir tomada, rodapé alto..."></textarea>
-      </label>
-      <div class="modal-actions">
-        <button type="button" class="ghost" data-close="roomDialog">Cancelar</button>
-        <button class="primary" value="default">Salvar ambiente</button>
-      </div>
-    </form>
-  </dialog>
-
-  <dialog id="editorDialog" class="editor-modal">
-    <div class="editor-shell">
-      <div class="editor-topbar">
+    <main class="main">
+      <header class="topbar">
         <div>
-          <strong id="editorTitle">Editor</strong>
-          <span id="editorSubtitle">Foto técnica</span>
+          <h2 id="pageTitle">Início</h2>
+          <small id="pageSubtitle">Carregando...</small>
         </div>
-        <button id="closeEditorBtn" class="ghost small">Fechar</button>
-      </div>
+        <div class="top-actions">
+          <input id="tabSearch" class="tab-search" list="tabList" placeholder="Pesquisar aba..."/><datalist id="tabList"></datalist><button id="themeBtn" class="ghost" type="button">Modo white</button><button id="refreshBtn" class="ghost">Atualizar</button>
+          <span id="cloudStatus" class="pill">Nuvem</span>
+        </div>
+      </header>
+      <section id="content" class="content"></section>
+    </main>
+  </div>
 
-      <div class="editor-body">
-        <aside class="toolbar">
-          <label class="tool-upload">
-            <input id="photoInput" type="file" accept="image/*" capture="environment" multiple />
-            📷 Adicionar foto
-          </label>
-          <div class="tool-group photo-tools">
-            <button id="deletePhotoBtn" class="tool-btn danger" type="button">🗑️ Excluir foto atual</button>
-            <small>Você pode salvar várias fotos no mesmo ambiente. Cada foto tem suas próprias marcações e medidas.</small>
-          </div>
+  <div id="toast" class="toast hidden"></div>
 
-          <div class="tool-group easy-panel">
-            <p>Modo fácil</p>
-            <button id="openListsBtn" class="tool-btn" type="button">📋 Itens e medidas</button>
-            <button id="openChecklistBtn" class="tool-btn" type="button">✅ Checklist</button>
-            <button id="openReportBtn" class="tool-btn" type="button">🧾 Relatório</button>
-          </div>
-
-          <div class="tool-group">
-            <button id="sketchToggle" class="tool-btn">Croqui branco</button>
-            <button id="calibrateBtn" class="tool-btn">Calibrar medida</button>
-            <button id="measureBtn" class="tool-btn">Linha de medida</button>
-            <button id="viewBtn" class="tool-btn active">Visualizar medidas</button>
-            <button id="moveBtn" class="tool-btn">Mover / editar</button>
-            <button id="deleteMarkerBtn" class="tool-btn danger">Remover item</button>
-            <button id="deleteMeasureBtn" class="tool-btn danger">Remover medida</button>
-          </div>
-
-          <div class="tool-group objects">
-            <p>Adicionar objeto</p>
-            <button class="object-btn" data-type="Tomada" data-icon="🔌">🔌 Tomada</button>
-            <button class="object-btn" data-type="Interruptor" data-icon="💡">💡 Interruptor</button>
-            <button class="object-btn" data-type="Ponto de água" data-icon="💧">💧 Água</button>
-            <button class="object-btn" data-type="Esgoto" data-icon="⬇️">⬇️ Esgoto</button>
-            <button class="object-btn" data-type="Porta" data-icon="🚪">🚪 Porta</button>
-            <button class="object-btn" data-type="Janela" data-icon="▤">▤ Janela</button>
-            <button class="object-btn" data-type="Coluna" data-icon="⬛">⬛ Coluna</button>
-            <button class="object-btn" data-type="Rodapé" data-icon="▔">▔ Rodapé</button>
-            <button class="object-btn" data-type="Bancada" data-icon="▰">▰ Bancada</button>
-            <button class="object-btn" data-type="Cuba" data-icon="◉">◉ Cuba</button>
-            <button class="object-btn" data-type="Cooktop" data-icon="▦">▦ Cooktop</button>
-            <button class="object-btn" data-type="Geladeira" data-icon="▣">▣ Geladeira</button>
-            <button class="object-btn" data-type="Obstáculo" data-icon="⚠️">⚠️ Obstáculo</button>
-          </div>
-
-          <div class="tool-group notes-tab">
-            <details open>
-              <summary>📏 Anotações de medidas</summary>
-              <textarea id="measureNotesInput" rows="6" placeholder="Ex:
-Parede principal: 250 cm
-Pé direito: 260 cm
-Tomada esquerda: 45 cm do canto
-Rodapé: 7 cm"></textarea>
-              <button id="saveMeasureNotesBtn" type="button" class="tool-btn">Salvar anotações</button>
-              <p id="measureNotesStatus">As anotações ficam salvas nesse ambiente.</p>
-            </details>
-          </div>
-
-          <div class="tool-group import-tab">
-            <button id="exportProjectBtn" class="tool-btn" type="button">Exportar projeto (.json)</button>
-            <button id="importProjectBtn" class="tool-btn" type="button">Importar projeto (.json)</button>
-            <input id="importProjectInput" type="file" accept="application/json,.json" hidden />
-            <small>Use para levar o projeto para outro celular ou recuperar depois.</small>
-          </div>
-
-          <div class="tool-group">
-            <button id="undoBtn" class="tool-btn">Desfazer</button>
-            <button id="fitBtn" class="tool-btn">Ajustar foto</button>
-            <button id="exportBtn" class="tool-btn">Salvar imagem</button>
-            <button id="whatsAppBtn" class="primary tool-btn">WhatsApp</button>
-            <button id="shareBtn" class="tool-btn">Compartilhar</button>
-            <small class="share-help">WhatsApp: abre direto o compartilhamento da imagem para você escolher o contato.</small>
-          </div>
-
-          <div class="hint-box">
-            <strong>Como usar</strong>
-            <p>1. Tire a foto do ambiente.<br>2. Use “Calibrar” e marque uma medida conhecida.<br>3. Adicione tomadas, portas, colunas e obstáculos.<br>4. Compartilhe a imagem marcada.</p>
-          </div>
-        </aside>
-
-        <section class="canvas-area">
-          <div id="photoStrip" class="photo-strip hidden"></div>
-          <div id="viewInfoPanel" class="view-info-panel hidden"></div>
-          <canvas id="workCanvas"></canvas>
-          <div id="canvasEmpty" class="canvas-empty">
-            <h3>Nenhuma foto ainda</h3>
-            <p>Toque em “Tirar / trocar foto” para começar.</p>
-          </div>
-        </section>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog id="objectDialog" class="modal">
-    <form method="dialog" id="objectForm" class="modal-card">
-      <div class="modal-header">
-        <h2>Editar marcação</h2>
-        <button type="button" class="icon-btn" data-close="objectDialog">×</button>
-      </div>
-      <label>Nome
-        <input id="objectName" required />
-      </label>
-      <label>Altura do chão
-        <input id="objectHeight" placeholder="Ex: 110 cm" />
-      </label>
-      <label>Distância / medida
-        <input id="objectDistance" placeholder="Ex: 45 cm da parede esquerda" />
-      </label>
-      <label>Distância parede esquerda
-        <input id="objectLeftDistance" placeholder="Ex: 45 cm" />
-      </label>
-      <label>Distância parede direita
-        <input id="objectRightDistance" placeholder="Ex: 180 cm" />
-      </label>
-      <label>Distância do chão
-        <input id="objectFloorDistance" placeholder="Ex: 110 cm" />
-      </label>
-      <label>Distância do teto
-        <input id="objectCeilingDistance" placeholder="Ex: 150 cm" />
-      </label>
-      <div id="objectAutoDistances" class="auto-distance-box"></div>
-      <label>Observação
-        <textarea id="objectNotes" rows="3" placeholder="Ex: não cobrir com armário"></textarea>
-      </label>
-      <div class="modal-actions split">
-        <button type="button" id="deleteObjectBtn" class="danger ghost">Excluir</button>
-        <span></span>
-        <button type="button" class="ghost" data-close="objectDialog">Cancelar</button>
-        <button class="primary" value="default">Salvar</button>
-      </div>
-    </form>
-  </dialog>
-
-  <dialog id="measureDialog" class="modal">
-    <form method="dialog" id="measureForm" class="modal-card small-card">
-      <div class="modal-header">
-        <h2 id="measureDialogTitle">Medida</h2>
-        <button type="button" class="icon-btn" data-close="measureDialog">×</button>
-      </div>
-      <p id="measureHelp" class="muted"></p>
-      <label>Valor real
-        <input id="measureValue" inputmode="decimal" placeholder="Ex: 250" required />
-      </label>
-      <label>Unidade
-        <select id="measureUnit">
-          <option value="cm">cm</option>
-          <option value="mm">mm</option>
-          <option value="m">m</option>
-        </select>
-      </label>
-      <div class="modal-actions split">
-        <button type="button" id="deleteMeasureLineBtn" class="danger ghost hidden">Excluir linha</button>
-        <span></span>
-        <button type="button" class="ghost" data-close="measureDialog">Cancelar</button>
-        <button class="primary" value="default">Salvar</button>
-      </div>
-    </form>
-  </dialog>
-
-
-
-  <dialog id="listsDialog" class="modal wide-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Itens e medidas</h2>
-        <button type="button" class="icon-btn" data-close="listsDialog">×</button>
-      </div>
-      <p class="muted">Edite ou exclua tudo sem precisar acertar o toque na foto.</p>
-      <div class="list-tabs">
-        <section>
-          <h3>Itens marcados</h3>
-          <div id="markerListPanel" class="manage-list"></div>
-        </section>
-        <section>
-          <h3>Linhas de medida</h3>
-          <div id="measureListPanel" class="manage-list"></div>
-        </section>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog id="checklistDialog" class="modal wide-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Checklist da visita</h2>
-        <button type="button" class="icon-btn" data-close="checklistDialog">×</button>
-      </div>
-      <p id="checklistProgress" class="muted"></p>
-      <div id="checklistPanel" class="checklist-grid"></div>
-      <label>Observação final da visita
-        <textarea id="checklistNotes" rows="4" placeholder="Ex: confirmar pedra antes da produção, parede fora de esquadro, cliente pediu alteração..."></textarea>
-      </label>
-      <div class="modal-actions">
-        <button type="button" class="ghost" data-close="checklistDialog">Fechar</button>
-        <button id="saveChecklistBtn" type="button" class="primary">Salvar checklist</button>
-      </div>
-    </div>
-  </dialog>
-
-  <dialog id="reportDialog" class="modal report-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <h2>Relatório da visita</h2>
-        <button type="button" class="icon-btn" data-close="reportDialog">×</button>
-      </div>
-      <div id="reportContent" class="report-content"></div>
-      <div class="modal-actions report-actions">
-        <button id="copyReportBtn" type="button" class="ghost">Copiar resumo</button>
-        <button id="reportWhatsAppBtn" type="button" class="primary">Enviar WhatsApp</button>
-        <button id="printReportBtn" type="button" class="ghost">Imprimir / PDF</button>
-      </div>
-    </div>
-  </dialog>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="app.js"></script>
-
-
+  <script src="src/config.js"></script>
+  <script src="src/app.js"></script>
 </body>
 </html>
