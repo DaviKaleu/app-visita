@@ -41,6 +41,8 @@ create table if not exists public.user_company_settings (
   quote_valid_days integer default 7,
   quote_warranty text default '',
   quote_footer_note text default '',
+  contract_model text default 'comercial',
+  receipt_model text default 'comercial',
   updated_at timestamptz not null default now()
 );
 
@@ -72,6 +74,8 @@ create table if not exists public.company_settings (
   quote_valid_days integer default 7,
   quote_warranty text default '',
   quote_footer_note text default '',
+  contract_model text default 'comercial',
+  receipt_model text default 'comercial',
   updated_at timestamptz not null default now()
 );
 insert into public.company_settings (id) values (true) on conflict (id) do nothing;
@@ -85,6 +89,8 @@ alter table public.user_company_settings add column if not exists quote_title te
 alter table public.user_company_settings add column if not exists quote_valid_days integer default 7;
 alter table public.user_company_settings add column if not exists quote_warranty text default '';
 alter table public.user_company_settings add column if not exists quote_footer_note text default '';
+alter table public.user_company_settings add column if not exists contract_model text default 'comercial';
+alter table public.user_company_settings add column if not exists receipt_model text default 'comercial';
 
 
 create table if not exists public.render_settings (

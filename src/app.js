@@ -76,50 +76,50 @@
   ];
 
   const DEFAULT_INVENTORY_ITEMS = [
-    {item_name:'MDF Branco TX 15 mm', category:'MDF', unit:'chapa', min_qty:2, variant_text:'cor: Branco TX; espessura: 15 mm'},
-    {item_name:'MDF Branco TX 18 mm', category:'MDF', unit:'chapa', min_qty:2, variant_text:'cor: Branco TX; espessura: 18 mm'},
-    {item_name:'MDF Plomo 15 mm', category:'MDF', unit:'chapa', min_qty:2, variant_text:'cor: Plomo; espessura: 15 mm'},
-    {item_name:'MDF Ópera Micro 15 mm', category:'MDF', unit:'chapa', min_qty:2, variant_text:'cor: Ópera Micro; espessura: 15 mm'},
-    {item_name:'MDF Chumbo 15 mm', category:'MDF', unit:'chapa', min_qty:2, variant_text:'cor: Chumbo; espessura: 15 mm'},
-    {item_name:'MDF Carvalho Treviso 15 mm', category:'MDF', unit:'chapa', min_qty:2, variant_text:'cor: Carvalho Treviso; espessura: 15 mm'},
-    {item_name:'MDF Roble Catedral 15 mm', category:'MDF', unit:'chapa', min_qty:2, variant_text:'cor: Roble Catedral; espessura: 15 mm'},
-    {item_name:'Fita Branco TX 22 mm', category:'Fita de borda', unit:'rolo', min_qty:1, variant_text:'cor: Branco TX; largura: 22 mm'},
-    {item_name:'Fita Plomo 22 mm', category:'Fita de borda', unit:'rolo', min_qty:1, variant_text:'cor: Plomo; largura: 22 mm'},
-    {item_name:'Fita Ópera Micro 22 mm', category:'Fita de borda', unit:'rolo', min_qty:1, variant_text:'cor: Ópera Micro; largura: 22 mm'},
-    {item_name:'Fita Chumbo 22 mm', category:'Fita de borda', unit:'rolo', min_qty:1, variant_text:'cor: Chumbo; largura: 22 mm'},
-    {item_name:'Fita Carvalho Treviso 22 mm', category:'Fita de borda', unit:'rolo', min_qty:1, variant_text:'cor: Carvalho Treviso; largura: 22 mm'},
-    {item_name:'Fita Roble Catedral 22 mm', category:'Fita de borda', unit:'rolo', min_qty:1, variant_text:'cor: Roble Catedral; largura: 22 mm'},
-    {item_name:'Parafuso 4x16', category:'Parafuso', unit:'caixa', min_qty:1, variant_text:'medida: 4x16'},
-    {item_name:'Parafuso 4x25', category:'Parafuso', unit:'caixa', min_qty:1, variant_text:'medida: 4x25'},
-    {item_name:'Parafuso 4x40', category:'Parafuso', unit:'caixa', min_qty:1, variant_text:'medida: 4x40'},
-    {item_name:'Dobradiça reta com amortecedor', category:'Dobradiça', unit:'un', min_qty:10, variant_text:'tipo: reta; amortecedor: sim'},
-    {item_name:'Dobradiça curva com amortecedor', category:'Dobradiça', unit:'un', min_qty:10, variant_text:'tipo: curva; amortecedor: sim'},
-    {item_name:'Dobradiça super curva com amortecedor', category:'Dobradiça', unit:'un', min_qty:10, variant_text:'tipo: super curva; amortecedor: sim'},
-    {item_name:'Corrediça telescópica 400 mm', category:'Corrediça', unit:'par', min_qty:5, variant_text:'tipo: telescópica; tamanho: 400 mm'},
-    {item_name:'Corrediça telescópica 450 mm', category:'Corrediça', unit:'par', min_qty:5, variant_text:'tipo: telescópica; tamanho: 450 mm'},
-    {item_name:'Corrediça telescópica 500 mm', category:'Corrediça', unit:'par', min_qty:5, variant_text:'tipo: telescópica; tamanho: 500 mm'},
-    {item_name:'Pistão 60N', category:'Pistão', unit:'un', min_qty:4, variant_text:'força: 60N'},
-    {item_name:'Pistão 80N', category:'Pistão', unit:'un', min_qty:4, variant_text:'força: 80N'},
-    {item_name:'Pistão 100N', category:'Pistão', unit:'un', min_qty:4, variant_text:'força: 100N'},
-    {item_name:'Perfil gola preto', category:'Perfil', unit:'barra', min_qty:1, variant_text:'tipo: gola; cor: preto'},
-    {item_name:'Perfil cava 45°', category:'Perfil', unit:'barra', min_qty:1, variant_text:'tipo: cava 45°'},
-    {item_name:'Cabideiro cromado', category:'Cabideiro', unit:'barra', min_qty:1, variant_text:'acabamento: cromado'},
-    {item_name:'Suporte para cabideiro', category:'Cabideiro', unit:'un', min_qty:4, variant_text:'tipo: suporte'},
-    {item_name:'Bucha 6 mm', category:'Bucha', unit:'un', min_qty:20, variant_text:'medida: 6 mm'},
-    {item_name:'Bucha 8 mm', category:'Bucha', unit:'un', min_qty:20, variant_text:'medida: 8 mm'},
-    {item_name:'Silicone transparente', category:'Adesivo/vedação', unit:'un', min_qty:1, variant_text:'cor: transparente'},
-    {item_name:'PU branco', category:'Adesivo/vedação', unit:'un', min_qty:1, variant_text:'cor: branco'},
-    {item_name:'Cola branca', category:'Cola', unit:'un', min_qty:1, variant_text:'tipo: branca'},
-    {item_name:'Cola instantânea', category:'Cola', unit:'un', min_qty:1, variant_text:'tipo: instantânea'},
-    {item_name:'Tapa Furo Branco TX', category:'Tapa furo', unit:'cartela', min_qty:1, variant_text:'cor: Branco TX'},
-    {item_name:'Tapa Furo Plomo', category:'Tapa furo', unit:'cartela', min_qty:1, variant_text:'cor: Plomo'},
-    {item_name:'Tapa Furo Ópera Micro', category:'Tapa furo', unit:'cartela', min_qty:1, variant_text:'cor: Ópera Micro'},
-    {item_name:'Tapa Furo Chumbo', category:'Tapa furo', unit:'cartela', min_qty:1, variant_text:'cor: Chumbo'},
-    {item_name:'Tapa Furo Carvalho Treviso', category:'Tapa furo', unit:'cartela', min_qty:1, variant_text:'cor: Carvalho Treviso'},
-    {item_name:'Tapa Furo Roble Catedral', category:'Tapa furo', unit:'cartela', min_qty:1, variant_text:'cor: Roble Catedral'},
-    {item_name:'Pistão Inverso 60N', category:'Pistão inverso', unit:'un', min_qty:2, variant_text:'tipo: inverso; força: 60N'},
-    {item_name:'Pistão Inverso 80N', category:'Pistão inverso', unit:'un', min_qty:2, variant_text:'tipo: inverso; força: 80N'},
-    {item_name:'Pistão Inverso 100N', category:'Pistão inverso', unit:'un', min_qty:2, variant_text:'tipo: inverso; força: 100N'}
+    {item_name:'MDF Branco TX 15 mm', category:'MDF', unit:'chapa', min_qty:0, variant_text:'cor: Branco TX; espessura: 15 mm'},
+    {item_name:'MDF Branco TX 18 mm', category:'MDF', unit:'chapa', min_qty:0, variant_text:'cor: Branco TX; espessura: 18 mm'},
+    {item_name:'MDF Plomo 15 mm', category:'MDF', unit:'chapa', min_qty:0, variant_text:'cor: Plomo; espessura: 15 mm'},
+    {item_name:'MDF Ópera Micro 15 mm', category:'MDF', unit:'chapa', min_qty:0, variant_text:'cor: Ópera Micro; espessura: 15 mm'},
+    {item_name:'MDF Chumbo 15 mm', category:'MDF', unit:'chapa', min_qty:0, variant_text:'cor: Chumbo; espessura: 15 mm'},
+    {item_name:'MDF Carvalho Treviso 15 mm', category:'MDF', unit:'chapa', min_qty:0, variant_text:'cor: Carvalho Treviso; espessura: 15 mm'},
+    {item_name:'MDF Roble Catedral 15 mm', category:'MDF', unit:'chapa', min_qty:0, variant_text:'cor: Roble Catedral; espessura: 15 mm'},
+    {item_name:'Fita Branco TX 22 mm', category:'Fita de borda', unit:'rolo', min_qty:0, variant_text:'cor: Branco TX; largura: 22 mm'},
+    {item_name:'Fita Plomo 22 mm', category:'Fita de borda', unit:'rolo', min_qty:0, variant_text:'cor: Plomo; largura: 22 mm'},
+    {item_name:'Fita Ópera Micro 22 mm', category:'Fita de borda', unit:'rolo', min_qty:0, variant_text:'cor: Ópera Micro; largura: 22 mm'},
+    {item_name:'Fita Chumbo 22 mm', category:'Fita de borda', unit:'rolo', min_qty:0, variant_text:'cor: Chumbo; largura: 22 mm'},
+    {item_name:'Fita Carvalho Treviso 22 mm', category:'Fita de borda', unit:'rolo', min_qty:0, variant_text:'cor: Carvalho Treviso; largura: 22 mm'},
+    {item_name:'Fita Roble Catedral 22 mm', category:'Fita de borda', unit:'rolo', min_qty:0, variant_text:'cor: Roble Catedral; largura: 22 mm'},
+    {item_name:'Parafuso 4x16', category:'Parafuso', unit:'caixa', min_qty:0, variant_text:'medida: 4x16'},
+    {item_name:'Parafuso 4x25', category:'Parafuso', unit:'caixa', min_qty:0, variant_text:'medida: 4x25'},
+    {item_name:'Parafuso 4x40', category:'Parafuso', unit:'caixa', min_qty:0, variant_text:'medida: 4x40'},
+    {item_name:'Dobradiça reta com amortecedor', category:'Dobradiça', unit:'un', min_qty:0, variant_text:'tipo: reta; amortecedor: sim'},
+    {item_name:'Dobradiça curva com amortecedor', category:'Dobradiça', unit:'un', min_qty:0, variant_text:'tipo: curva; amortecedor: sim'},
+    {item_name:'Dobradiça super curva com amortecedor', category:'Dobradiça', unit:'un', min_qty:0, variant_text:'tipo: super curva; amortecedor: sim'},
+    {item_name:'Corrediça telescópica 400 mm', category:'Corrediça', unit:'par', min_qty:0, variant_text:'tipo: telescópica; tamanho: 400 mm'},
+    {item_name:'Corrediça telescópica 450 mm', category:'Corrediça', unit:'par', min_qty:0, variant_text:'tipo: telescópica; tamanho: 450 mm'},
+    {item_name:'Corrediça telescópica 500 mm', category:'Corrediça', unit:'par', min_qty:0, variant_text:'tipo: telescópica; tamanho: 500 mm'},
+    {item_name:'Pistão 60N', category:'Pistão', unit:'un', min_qty:0, variant_text:'força: 60N'},
+    {item_name:'Pistão 80N', category:'Pistão', unit:'un', min_qty:0, variant_text:'força: 80N'},
+    {item_name:'Pistão 100N', category:'Pistão', unit:'un', min_qty:0, variant_text:'força: 100N'},
+    {item_name:'Perfil gola preto', category:'Perfil', unit:'barra', min_qty:0, variant_text:'tipo: gola; cor: preto'},
+    {item_name:'Perfil cava 45°', category:'Perfil', unit:'barra', min_qty:0, variant_text:'tipo: cava 45°'},
+    {item_name:'Cabideiro cromado', category:'Cabideiro', unit:'barra', min_qty:0, variant_text:'acabamento: cromado'},
+    {item_name:'Suporte para cabideiro', category:'Cabideiro', unit:'un', min_qty:0, variant_text:'tipo: suporte'},
+    {item_name:'Bucha 6 mm', category:'Bucha', unit:'un', min_qty:0, variant_text:'medida: 6 mm'},
+    {item_name:'Bucha 8 mm', category:'Bucha', unit:'un', min_qty:0, variant_text:'medida: 8 mm'},
+    {item_name:'Silicone transparente', category:'Adesivo/vedação', unit:'un', min_qty:0, variant_text:'cor: transparente'},
+    {item_name:'PU branco', category:'Adesivo/vedação', unit:'un', min_qty:0, variant_text:'cor: branco'},
+    {item_name:'Cola branca', category:'Cola', unit:'un', min_qty:0, variant_text:'tipo: branca'},
+    {item_name:'Cola instantânea', category:'Cola', unit:'un', min_qty:0, variant_text:'tipo: instantânea'},
+    {item_name:'Tapa Furo Branco TX', category:'Tapa furo', unit:'cartela', min_qty:0, variant_text:'cor: Branco TX'},
+    {item_name:'Tapa Furo Plomo', category:'Tapa furo', unit:'cartela', min_qty:0, variant_text:'cor: Plomo'},
+    {item_name:'Tapa Furo Ópera Micro', category:'Tapa furo', unit:'cartela', min_qty:0, variant_text:'cor: Ópera Micro'},
+    {item_name:'Tapa Furo Chumbo', category:'Tapa furo', unit:'cartela', min_qty:0, variant_text:'cor: Chumbo'},
+    {item_name:'Tapa Furo Carvalho Treviso', category:'Tapa furo', unit:'cartela', min_qty:0, variant_text:'cor: Carvalho Treviso'},
+    {item_name:'Tapa Furo Roble Catedral', category:'Tapa furo', unit:'cartela', min_qty:0, variant_text:'cor: Roble Catedral'},
+    {item_name:'Pistão Inverso 60N', category:'Pistão inverso', unit:'un', min_qty:0, variant_text:'tipo: inverso; força: 60N'},
+    {item_name:'Pistão Inverso 80N', category:'Pistão inverso', unit:'un', min_qty:0, variant_text:'tipo: inverso; força: 80N'},
+    {item_name:'Pistão Inverso 100N', category:'Pistão inverso', unit:'un', min_qty:0, variant_text:'tipo: inverso; força: 100N'}
   ];
 
   const RENDER_PLANS = {
@@ -218,6 +218,54 @@
     return Object.assign({'apikey': CFG.SUPABASE_ANON_KEY,'Authorization': 'Bearer ' + token,'Content-Type': 'application/json'}, extra || {});
   }
   function html(v){ return String(v == null ? '' : v).replace(/[&<>'"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s])); }
+  function cleanText(v, maxLength){
+    maxLength = maxLength || 300;
+    return String(v == null ? '' : v).replace(/[\u0000-\u001F\u007F]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, maxLength);
+  }
+  function cleanLongText(v, maxLength){
+    maxLength = maxLength || 3000;
+    return String(v == null ? '' : v).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ').trim().slice(0, maxLength);
+  }
+  function cleanPhone(v){ return String(v == null ? '' : v).replace(/[^0-9+()\-\s]/g, '').replace(/\s+/g, ' ').trim().slice(0, 30); }
+  function safeImageSrc(v){
+    const src = String(v == null ? '' : v).trim();
+    if(!src) return '';
+    if(/^data:image\/(png|jpe?g|webp|gif|svg\+xml);base64,/i.test(src)) return src;
+    if(/^https:\/\//i.test(src) || /^assets\//i.test(src) || /^\.\/?assets\//i.test(src) || /^blob:/i.test(src)) return src;
+    return '';
+  }
+  function safeExternalUrl(v){
+    try{ const u = new URL(String(v||''), location.href); return u.protocol === 'https:' ? u.href : ''; }catch(_){ return ''; }
+  }
+  function assertSafeFile(file, maxMb){
+    if(!file) throw new Error('Arquivo não selecionado.');
+    if(!/^image\//i.test(file.type||'')) throw new Error('Envie apenas imagens.');
+    if(file.size > (maxMb||8) * 1024 * 1024) throw new Error('Imagem muito pesada. Use uma imagem menor.');
+  }
+  function imageFileToDataUrl(file, opts){
+    opts = Object.assign({ maxWidth:1400, maxHeight:1400, quality:.82, type:'image/webp' }, opts || {});
+    return new Promise((resolve, reject)=>{
+      try{ assertSafeFile(file, opts.maxMb || 8); }catch(err){ reject(err); return; }
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Não foi possível ler a imagem.'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Imagem inválida.'));
+        img.onload = () => {
+          const scale = Math.min(1, opts.maxWidth / Math.max(1, img.width), opts.maxHeight / Math.max(1, img.height));
+          const w = Math.max(1, Math.round(img.width * scale));
+          const h = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w; canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          resolve(canvas.toDataURL(opts.type, opts.quality));
+        };
+        img.src = String(reader.result||'');
+      };
+      reader.readAsDataURL(file);
+    });
+  }
   function num(v){ return Number(v || 0) || 0; }
   function clamp(v,min,max){ v=num(v); return Math.max(min, Math.min(max, v)); }
   function money(v){ return moneyFmt.format(num(v)); }
@@ -307,6 +355,10 @@
   function statusBadge2(group,value){ const v=normalizeStatus(group,value); return `<span class="status ${html(v)}">${html(statusLabel(group,v))}</span>`; }
 
   async function rawFetch(url, options){
+    const finalUrl = String(url || '');
+    if(!/^https:\/\//i.test(finalUrl) && !finalUrl.startsWith(restBase()) && !finalUrl.startsWith(authBase())){
+      throw new Error('URL insegura bloqueada. Use HTTPS.');
+    }
     const controller = new AbortController();
     const timer = setTimeout(()=>controller.abort(), 25000);
     const opts = Object.assign({}, options || {}, { signal: controller.signal });
@@ -366,7 +418,7 @@
       {tab_key:'leaderboard',title:'Dashboard / Estatísticas',description:'Resumo simples da operação da empresa.',icon:'IN',enabled:true,admin_only:false,order_index:10},
       {tab_key:'clients',title:'Clientes',description:'Cadastro e pesquisa de clientes.',icon:'CL',enabled:true,admin_only:false,order_index:20},
       {tab_key:'projects',title:'Projetos',description:'Organize projetos, imagens e dados técnicos.',icon:'PR',enabled:true,admin_only:false,order_index:30},
-      {tab_key:'budget',title:'Orçamentos',description:'Monte, revise e gere orçamento para o cliente. Pode ser vinculado a um projeto ou avulso.',icon:'OR',enabled:true,admin_only:false,order_index:40},
+      {tab_key:'budget',title:'Orçamentos',description:'Monte, revise e gere orçamento com base em um projeto.',icon:'OR',enabled:true,admin_only:false,order_index:40},
       {tab_key:'contracts',title:'Contratos',description:'Gere contratos após aprovação do orçamento.',icon:'CT',enabled:true,admin_only:false,order_index:50},
       {tab_key:'production',title:'Produção',description:'Acompanhe a produção após orçamento aprovado.',icon:'PD',enabled:true,admin_only:false,order_index:55},
       {tab_key:'services',title:'Serviços',description:'Acompanhe execução, equipe e entrega.',icon:'SV',enabled:true,admin_only:false,order_index:60},
@@ -451,10 +503,30 @@
     return true;
   }
 
-  function defaultCompany(){ return { company_name:'Top Planejados', document_number:'', responsible_name:'', phone:'', whatsapp:'', instagram:'', address:'', pix_key:'', contract_city:'Porto Velho - RO', price_white:850, price_white_wood:950, price_wood:1100, card_factor:1.30, default_discount:0, entry_pct:50, delivery_pct:50, logo_url:'', quote_primary_color:'#111111', quote_secondary_color:'#8b8b8b', quote_accent_color:'#dc2626', quote_text_color:'#111827', quote_title:'ORÇAMENTO DE SERVIÇO', quote_valid_days:7, quote_warranty:'Garantia de um ano. Garantia não válida para contato dos móveis com água. A garantia fica atrelada à inspeção técnica para avaliar defeito de fabricação ou mau uso.', quote_footer_note:'' }; }
+  function defaultCompany(){ return { company_name:'Top Planejados', document_number:'', responsible_name:'', phone:'', whatsapp:'', instagram:'', address:'', pix_key:'', contract_city:'Porto Velho - RO', price_white:850, price_white_wood:950, price_wood:1100, card_factor:1.30, default_discount:0, entry_pct:50, delivery_pct:50, logo_url:'', quote_primary_color:'#111111', quote_secondary_color:'#8b8b8b', quote_accent_color:'#dc2626', quote_text_color:'#111827', quote_title:'ORÇAMENTO DE SERVIÇO', quote_valid_days:7, quote_warranty:'Garantia de um ano. Garantia não válida para contato dos móveis com água. A garantia fica atrelada à inspeção técnica para avaliar defeito de fabricação ou mau uso.', quote_footer_note:'', contract_model:'comercial', receipt_model:'comercial' }; }
   function priceByColor(color){ color=String(color||'branco'); if(color==='branco_madeirado') return num(state.company.price_white_wood||950); if(color==='madeirado') return num(state.company.price_wood||1100); return num(state.company.price_white||850); }
   function colorName(color){ if(color==='branco_madeirado') return 'Branco com madeirado'; if(color==='madeirado') return 'Madeirado'; return 'Branco'; }
-  function paymentName(p){ return p==='cartao' ? 'Cartão' : 'Dinheiro/Pix'; }
+  function paymentName(p){
+    p=String(p||'dinheiro');
+    if(p==='cartao') return 'Cartão';
+    if(p==='fechamento') return '100% à vista no fechamento';
+    if(p==='fornecedor_entrega') return '50% à vista no fornecedor/loja e 50% à vista na entrega';
+    if(p==='entrega') return '100% à vista na entrega';
+    return 'Dinheiro/Pix';
+  }
+  function supplierSplitText(){ return '50% de entrada para compra de material no fornecedor/loja, podendo seguir a condição de pagamento/cartão combinada diretamente com a loja/fornecedor, e 50% à vista na entrega do serviço. O saldo da entrega não é parcelado, salvo novo acordo por escrito.'; }
+  function budgetPaymentPlainText(p){
+    const note=String((p&&p.budget_payment_note)||'').trim();
+    if(note) return note;
+    const entry=num(p&&p.entry_pct), delivery=num(p&&p.delivery_pct);
+    if(entry===50 && delivery===50) return '50% à vista no fechamento/entrada e 50% à vista na entrega.';
+    if(entry===100 && delivery===0) return '100% à vista no fechamento.';
+    if(entry===0 && delivery===100) return '100% à vista na entrega.';
+    if(entry || delivery) return `${entry}% de entrada e ${delivery}% na entrega.`;
+    return 'Conforme combinado.';
+  }
+  function isAutoBudgetNote(v){ return /orçamento criado sem projeto obrigatório/i.test(String(v||'')); }
+  function cleanDocNote(v){ const t=String(v||'').trim(); return isAutoBudgetNote(t) ? '' : t; }
   function operationData(projectId){
     const project=getProject(projectId||'');
     const client=getClient(project.client_id||'');
@@ -470,7 +542,7 @@
     return map[key]||fallback||key;
   }
   function tabClearDesc(key, fallback){
-    const map={leaderboard:'Resumo simples da operação: orçamentos, produção, serviços, financeiro e alertas.',clients:'Cadastro principal dos clientes da Top.',budget:'Monte orçamento com ou sem projeto vinculado.',projects:'Organize projetos, imagens e informações técnicas.',contracts:'Gere contratos somente após aprovação do orçamento.',production:'Acompanhe material, fabricação, finalização e entrega.',services:'Acompanhe execução, equipe e entrega.',finance:'Controle entradas, despesas, compras e fornecedor.',inventory:'Controle itens, variantes e alertas de estoque mínimo.',suppliers:'Cadastro simples de fornecedores e lojas.',payroll:'Funcionários e valores a receber por serviço fechado.',render:'Renderização opcional via API externa no futuro.',company:'Dados oficiais da empresa e configurações de documentos.',admin:'Usuários, permissões, abas e configurações internas.'};
+    const map={leaderboard:'Resumo simples da operação: orçamentos, produção, serviços, financeiro e alertas.',clients:'Cadastro principal dos clientes da Top.',budget:'Monte orçamento com base em um projeto vinculado ao cliente.',projects:'Organize projetos, imagens e informações técnicas.',contracts:'Gere contratos somente após aprovação do orçamento.',production:'Acompanhe material, fabricação, finalização e entrega.',services:'Acompanhe execução, equipe e entrega.',finance:'Controle entradas, despesas, compras e fornecedor.',inventory:'Controle itens, variantes e alertas de estoque mínimo.',suppliers:'Cadastro simples de fornecedores e lojas.',payroll:'Funcionários e valores a receber por serviço fechado.',render:'Renderização opcional via API externa no futuro.',company:'Dados oficiais da empresa e configurações de documentos.',admin:'Usuários, permissões, abas e configurações internas.'};
     return map[key]||fallback||'';
   }
   function planInfo(id){ return RENDER_PLANS[id] || RENDER_PLANS.inicial; }
@@ -631,12 +703,14 @@
 
   function closedStatuses(){ return ['entregue','finalizado']; }
   function isStoreCreditTx(t){ const type=String(t.type||'').toLowerCase(); const cat=String(t.category||'').toLowerCase(); return type==='credito_loja' || cat.includes('credito loja') || cat.includes('crédito loja') || cat.includes('fornecedor'); }
+  function isPayrollTx(t){ return String(t.category||'').toUpperCase().startsWith('FOLHA_SERVICO_') || String(t.description||'').toLowerCase().includes('folha de pagamento'); }
+  function payrollPaidTotal(){ return (state.services||[]).reduce((total,sv)=> total + serviceEmployeeIds(sv).filter(id=>payrollPaidForServiceEmployee(sv,id)).reduce((sum,id)=>sum+servicePayrollAmountForEmployee(sv,id),0),0); }
   function txValueClass(t){ return t.type==='entrada'?'green':(t.type==='saida'?'red':'blue'); }
   function txTypeLabel(t){ return t.type==='credito_loja'?'crédito loja':(t.type||'-'); }
   function stats(){
     const now = new Date(); const curMonth = monthKey(now); const prev = new Date(now.getFullYear(), now.getMonth()-1, 1); const prevMonth = monthKey(prev);
     const entrada = state.transactions.filter(t=>t.type==='entrada').reduce((a,b)=>a+num(b.amount),0);
-    const saida = state.transactions.filter(t=>t.type==='saida').reduce((a,b)=>a+num(b.amount),0);
+    const saida = state.transactions.filter(t=>t.type==='saida' && !isPayrollTx(t)).reduce((a,b)=>a+num(b.amount),0);
     const storeCredit = state.transactions.filter(isStoreCreditTx).reduce((a,b)=>a+num(b.amount),0);
     const curEntrada = state.transactions.filter(t=>t.type==='entrada' && String(t.transaction_date||'').slice(0,7)===curMonth).reduce((a,b)=>a+num(b.amount),0);
     const prevEntrada = state.transactions.filter(t=>t.type==='entrada' && String(t.transaction_date||'').slice(0,7)===prevMonth).reduce((a,b)=>a+num(b.amount),0);
@@ -656,7 +730,7 @@
     const totalDeals = closed.length + orcandoList.length + cancelados.length;
     const conversion = totalDeals ? (closed.length/totalDeals)*100 : 0;
     const overdue = state.projects.filter(p=>p.delivery_deadline && new Date(p.delivery_deadline+'T00:00:00') < new Date(new Date().toISOString().slice(0,10)+'T00:00:00') && !['entregue','finalizado'].includes(normalizeStatus('production',p.production_status))).length;
-    return {entrada, saida, storeCredit, profit, curEntrada, prevEntrada, growth, closedCount:closed.length, closedValue, ticket, pipeline, orcando, orcandoValue, openProjects, margin, conversion, overdue};
+    return {entrada, saida, storeCredit, payrollPaid:payrollPaidTotal(), profit, curEntrada, prevEntrada, growth, closedCount:closed.length, closedValue, ticket, pipeline, orcando, orcandoValue, openProjects, margin, conversion, overdue};
   }
   function statusBars(){
     const items = STATUS.service.map(([st,label])=>({st,label,n: state.services.filter(s=>normalizeStatus('service',s.status)===st).length}));
@@ -672,7 +746,7 @@
     const pendingPayroll=(state.services||[]).reduce((a,sv)=>a+serviceEmployeeIds(sv).filter(id=>servicePayrollReleased(sv) && !servicePayrollPaidMap(sv)[id]).reduce((b,id)=>b+servicePayrollAmountForEmployee(sv,id),0),0);
     const lowStock=(state.inventoryItems||[]).filter(i=>num(i.current_qty)<=num(i.min_qty)).length;
     const recentBudgets=state.projects.slice(0,5).map(p=>[html(getClient(p.client_id).name||'-'), html(p.name||'-'), money(projectTotal(p).final||p.budget_value), statusBadge2('budget',p.status||'rascunho'), `<button class="ghost mini" onclick="TP.openProjectBudget('${p.id}')">Abrir</button>`]);
-    return `<div class="clearHero card"><div><span class="badge">V104.1 Recibo e Admin</span><h2>Fluxo da ${html((state.company&&state.company.company_name)||'Top Planejados')}</h2><p>Use o sistema de forma linear: cadastra o cliente, cria projeto quando precisar, monta o orçamento, aprova, gera contrato, acompanha serviço e fecha no financeiro.</p></div><div class="flowSteps"><button onclick="TP.openTabKey('clients')">1 Cliente</button><button onclick="TP.openTabKey('projects')">2 Projeto opcional</button><button onclick="TP.openTabKey('budget')">3 Orçamento</button><button onclick="TP.openTabKey('contracts')">4 Contrato</button><button onclick="TP.openTabKey('services')">5 Serviço</button><button onclick="TP.openTabKey('finance')">6 Financeiro</button></div></div>
+    return `<div class="clearHero card"><div><span class="badge">V111 Layout e Estoque</span><h2>Fluxo da ${html((state.company&&state.company.company_name)||'Top Planejados')}</h2><p>Use o sistema de forma linear: cadastra o cliente, cria o projeto, monta o orçamento, aprova, gera contrato, acompanha serviço e fecha no financeiro.</p></div><div class="flowSteps"><button onclick="TP.openTabKey('clients')">1 Cliente</button><button onclick="TP.openTabKey('projects')">2 Projeto</button><button onclick="TP.openTabKey('budget')">3 Orçamento</button><button onclick="TP.openTabKey('contracts')">4 Contrato</button><button onclick="TP.openTabKey('services')">5 Serviço</button><button onclick="TP.openTabKey('finance')">6 Financeiro</button></div></div>
     <div class="grid clearStats">
       <div class="card stat"><div class="label">Orçamentos em aberto</div><div class="value orange">${openBudgets}</div><div class="sub">Projetos ainda em negociação</div></div>
       <div class="card stat"><div class="label">Aprovados / produção</div><div class="value blue">${approved}</div><div class="sub">Prontos para contrato/serviço</div></div>
@@ -682,6 +756,7 @@
       <div class="card stat"><div class="label">Saídas totais</div><div class="value red">${money(s.saida)}</div><div class="sub">Custos e despesas</div></div>
       <div class="card stat"><div class="label">Saldo fornecedor</div><div class="value blue">${money(s.storeCredit)}</div><div class="sub">Crédito/loja cadastrado</div></div>
       <div class="card stat"><div class="label">Funcionários pendentes</div><div class="value orange">${money(pendingPayroll)}</div><div class="sub">A pagar pela folha</div></div>
+      <div class="card stat"><div class="label">Valor pago a funcionários</div><div class="value green">${money(s.payrollPaid)}</div><div class="sub">Controle separado das saídas</div></div>
       <div class="card stat"><div class="label">Estoque baixo</div><div class="value ${lowStock?'red':'green'}">${lowStock}</div><div class="sub">Itens abaixo do mínimo</div></div>
     </div>
     <div class="grid2" style="margin-top:14px"><div class="card"><h3>Orçamentos recentes</h3>${table(['Cliente','Projeto','Valor','Status','Ação'], recentBudgets)}</div><div class="card"><h3>Próximas ações</h3><div class="clearChecklist"><div><b>1.</b> Cliente cadastrado?</div><div><b>2.</b> Projeto criado, se for necessário?</div><div><b>3.</b> Orçamento com itens revisados?</div><div><b>4.</b> PDF enviado e aprovado?</div><div><b>5.</b> Contrato, serviço e financeiro acompanhando?</div></div></div></div>`;
@@ -692,6 +767,17 @@
   function table(head, rows){ if(!rows || !rows.length) return '<div class="empty">Nenhum registro ainda.</div>'; return `<div class="table-wrap"><table class="table"><thead><tr>${head.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(c=>`<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`; }
   function clientOptions(selected){ return '<option value="">Selecione</option>' + state.clients.map(c=>`<option value="${c.id}" ${selected===c.id?'selected':''}>${html(c.name)}</option>`).join(''); }
   function projectOptions(selected){ return '<option value="">Opcional</option>' + state.projects.map(p=>`<option value="${p.id}" ${selected===p.id?'selected':''}>${html(p.name)}</option>`).join(''); }
+  function clientBudgetDetailsHtml(clientId){
+    const c=getClient(clientId||'');
+    if(!c.id) return '<div class="notice"><b>Nenhum cliente selecionado</b><br><span class="muted small">Selecione um cliente para puxar nome, telefone, CPF/CNPJ e endereço para o orçamento.</span></div>';
+    const parts=[];
+    if(c.phone) parts.push('Telefone: '+html(c.phone));
+    if(c.document_number) parts.push('CPF/CNPJ: '+html(c.document_number));
+    if(c.city) parts.push('Cidade: '+html(c.city));
+    if(c.address) parts.push('Endereço: '+html(c.address));
+    if(c.notes) parts.push('Obs.: '+html(c.notes));
+    return `<div class="notice greenline"><b>${html(c.name||'Cliente')}</b><br><span class="muted small">${parts.length?parts.join('<br>'):'Dados básicos do cliente selecionado.'}</span></div>`;
+  }
   function serviceOptions(selected){ return '<option value="">Opcional</option>' + state.services.map(s=>`<option value="${s.id}" ${selected===s.id?'selected':''}>${html(s.title)}</option>`).join(''); }
   function supplierOptions(selected){ return '<option value="">Sem fornecedor</option>' + (state.suppliers||[]).map(f=>`<option value="${f.id}" ${selected===f.id?'selected':''}>${html(f.name)}</option>`).join(''); }
   function payrollEmployeeOptions(selected){ return '<option value="">Sem funcionário</option>' + (state.payrollEmployees||[]).filter(e=>e.active!==false).map(e=>`<option value="${e.id}" ${selected===e.id?'selected':''}>${html(e.name)}</option>`).join(''); }
@@ -720,13 +806,28 @@
   function payrollPaidForService(s){ const ids=serviceEmployeeIds(s); return ids.length ? ids.every(id=>payrollPaidForServiceEmployee(s,id)) : !!s.payroll_paid; }
   function employeePayrollSummary(employeeId){ const list=(state.services||[]).filter(s=>serviceEmployeeIds(s).includes(employeeId) && servicePayrollReleased(s)); const total=list.reduce((a,s)=>a+servicePayrollAmountForEmployee(s,employeeId),0); const paid=list.filter(s=>payrollPaidForServiceEmployee(s,employeeId)).reduce((a,s)=>a+servicePayrollAmountForEmployee(s,employeeId),0); return {list,total,paid,pending:total-paid}; }
 
+  function documentModelPreviewHtml(c){
+    const comp=Object.assign(defaultCompany(), c||{});
+    const logo=comp.logo_url ? `<img src="${html(comp.logo_url)}" alt="Logo">` : '<b>LOGO</b>';
+    return `<div class="docPreviewReal" style="--doc-primary:${html(comp.quote_primary_color||'#111111')};--doc-secondary:${html(comp.quote_secondary_color||'#8b8b8b')};--doc-accent:${html(comp.quote_accent_color||'#dc2626')};--doc-text:${html(comp.quote_text_color||'#111827')}"><div class="docPreviewHeader"><div class="docPreviewLogo">${logo}</div><div><b>${html(comp.company_name||'Top Planejados')}</b><span>Contrato / recibo</span></div></div><div class="docPreviewBody"><p><b>Cliente:</b> Nome do cliente</p><p><b>Serviço:</b> Móveis planejados</p><div class="docPreviewTotal">R$ 0,00</div></div><div class="docPreviewFoot">Assinatura da empresa &nbsp;&nbsp; | &nbsp;&nbsp; Assinatura do cliente</div></div>`;
+  }
+  function docColors(comp){ comp=Object.assign(defaultCompany(), comp||{}); return {primary:comp.quote_primary_color||'#111111', secondary:comp.quote_secondary_color||'#8b8b8b', accent:comp.quote_accent_color||'#dc2626', text:comp.quote_text_color||'#111827'}; }
+  function contractLogoHtml(comp){ return comp.logo_url ? `<img class="contractLogo" src="${html(comp.logo_url)}">` : `<div class="contractLogoFallback">TP</div>`; }
+  function contractStyleAttr(comp){ const c=docColors(comp); return `style="--doc-primary:${html(c.primary)};--doc-secondary:${html(c.secondary)};--doc-accent:${html(c.accent)};--doc-text:${html(c.text)}"`; }
+  function contractHeaderHtml(comp,title,sub){ return `<div class="contractHeader"><div class="contractHeaderBg"></div>${contractLogoHtml(comp)}<div><h1>${html(title)}</h1><b>${html(comp.company_name||'Top Planejados')}</b><br><span>${html(comp.phone||comp.whatsapp||'')} ${comp.instagram?'• '+html(comp.instagram):''}</span><br><small>${html(comp.address||'')}</small></div></div>`; }
+  function contractPartiesHtml(comp,c){ return `<div class="contractMeta"><div><b>Contratada</b><br>${html(comp.company_name||'Top Planejados')}<br>CPF/CNPJ: ${html(comp.document_number||'-')}<br>Responsável: ${html(comp.responsible_name||'-')}<br>Endereço: ${html(comp.address||'-')}</div><div><b>Contratante</b><br>${html(c.name||'Cliente selecionado')}<br>CPF/CNPJ: ${html(c.document_number||'-')}<br>Telefone: ${html(c.phone||'-')}<br>Endereço: ${html(c.address||'-')} ${c.city?' - '+html(c.city):''}</div></div>`; }
+  function sectionHtml(title,body){ return `<section class="contractSection"><h2>${html(title)}</h2>${body}</section>`; }
+  function syncReceiptPaymentFromContract(force){ const cp=$('#contractPayment'), rp=$('#receiptPayment'); if(!cp||!rp) return; const cur=String(rp.value||'').trim().toLowerCase(); if(force || !state.receiptPaymentTouched || cur==='' || cur==='pix') rp.value=cp.value.trim() || 'PIX'; }
+  function contractPrintCss(){ return `body{font-family:Arial;padding:20px;color:#111;background:#f3f4f6}.contract{max-width:900px;margin:auto;background:#fff;padding:0;line-height:1.55}.contractDoc{background:#fff;color:var(--doc-text,#111827);border-radius:14px;overflow:hidden;border:1px solid #e5e7eb}.contractHeader{position:relative;display:flex;gap:18px;align-items:center;padding:22px 24px;color:#fff;background:var(--doc-primary,#111)}.contractHeaderBg{position:absolute;left:0;right:0;bottom:-18px;height:42px;background:var(--doc-secondary,#999);opacity:.38;border-radius:0 0 50% 50%}.contractHeader>*:not(.contractHeaderBg){position:relative;z-index:2}.contractLogo{width:86px;height:86px;object-fit:contain;background:#fff;border-radius:12px;padding:8px}.contractLogoFallback{width:86px;height:86px;background:#fff;color:var(--doc-primary,#111);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;border-radius:12px}.contractHeader h1{font-size:24px;margin:0;color:#fff}.contractHeader b{color:#fff}.contractMeta,.paymentCards,.contractSigs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 24px}.contractMeta>div,.paymentCards>div{border:1px solid #e5e7eb;border-radius:12px;padding:12px;background:#fff}.contractSection{margin:18px 24px}.contract h2{font-size:16px;margin:0 0 8px;color:var(--doc-primary,#111);border-bottom:2px solid var(--doc-accent,#dc2626);padding-bottom:5px}.contract table{width:100%;border-collapse:collapse}.contract td,.contract th{border:1px solid #ddd;padding:7px}.receiptValue{font-size:30px;font-weight:900;margin:18px 24px;padding:18px;border:2px solid var(--doc-accent,#dc2626);border-radius:14px;text-align:center;color:var(--doc-primary,#111);background:#f9fafb}.contractCity{margin:24px}.contractSigs{margin-top:42px;text-align:center}.annexProjectImage{max-width:100%;max-height:260px;object-fit:contain}.annexGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.model-formal .contractHeader{background:#fff;color:var(--doc-text,#111);border-bottom:4px solid var(--doc-primary,#111)}.model-formal .contractHeader h1,.model-formal .contractHeader b{color:var(--doc-primary,#111)}.model-formal .contractHeader span,.model-formal .contractHeader small{color:var(--doc-text,#111)}.model-formal .contractHeaderBg{display:none}.model-compacto .contractHeader{padding:14px;background:var(--doc-primary,#111)}.model-compacto .contractLogo,.model-compacto .contractLogoFallback{width:64px;height:64px}.printBtn{position:fixed;right:18px;top:18px;padding:10px 14px}.receiptSheet{background:#fff;color:var(--doc-text,#111827);border:1px solid #d1d5db;border-radius:14px;overflow:hidden;max-width:920px;margin:auto;font-family:Arial,sans-serif}.receiptTop{display:grid;grid-template-columns:90px 1fr 180px;gap:14px;align-items:center;padding:18px 22px;background:linear-gradient(135deg,var(--doc-primary,#111),var(--doc-secondary,#555));color:#fff}.receiptTop h1{margin:0;font-size:24px;color:#fff}.receiptTop p{margin:4px 0 0;color:#f8fafc}.receiptLogo{width:78px;height:78px;object-fit:contain;background:#fff;border-radius:12px;padding:8px}.receiptLogoFallback{width:78px;height:78px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--doc-primary,#111);border-radius:12px;font-weight:900;font-size:26px}.receiptAmountBox{background:#fff;color:var(--doc-primary,#111);border-radius:12px;padding:14px;text-align:center;font-size:22px;font-weight:900}.receiptTable{width:calc(100% - 44px);margin:18px 22px;border-collapse:collapse;background:#fff}.receiptTable th{background:var(--doc-secondary,#777);color:#fff;text-align:left;padding:9px}.receiptTable td{border:1px solid #d1d5db;padding:8px;vertical-align:top}.receiptItems th{background:var(--doc-primary,#111)}.receiptStrong{font-size:18px;font-weight:900;color:var(--doc-primary,#111)}.receiptDeclaration{margin:18px 22px;border-left:4px solid var(--doc-accent,#dc2626);background:#f8fafc;padding:12px;line-height:1.5}.receiptSigs{display:grid;grid-template-columns:1fr 1fr;gap:22px;text-align:center;margin:42px 22px 24px}@media print{body{background:#fff;padding:0}.printBtn{display:none}.contract{padding:0}.contractDoc{border:0}}`; }
   function renderCompany(){
     const c = state.company || defaultCompany();
-    return `<div class="grid2"><div class="card form"><h3>Dados oficiais da Top</h3><div class="notice goldline">Esses dados alimentam orçamento, contrato e documentos da operação. Mantenha aqui a informação oficial da Top Planejados.</div><form id="companyForm"><label>Nome da empresa</label><input id="companyName" value="${html(c.company_name)}"><label>CPF/CNPJ</label><input id="companyDoc" value="${html(c.document_number)}"><label>Responsável</label><input id="companyResponsible" value="${html(c.responsible_name)}"><label>Telefone</label><input id="companyPhone" value="${html(c.phone)}"><label>WhatsApp</label><input id="companyWhatsapp" value="${html(c.whatsapp)}"><label>Instagram</label><input id="companyInstagram" value="${html(c.instagram)}"><label>Endereço</label><input id="companyAddress" value="${html(c.address)}"><label>Chave PIX</label><input id="companyPix" value="${html(c.pix_key)}"><label>Cidade do contrato/orçamento</label><input id="companyCity" value="${html(c.contract_city)}"><button class="primary" type="submit">Salvar empresa</button></form></div><div class="card form"><h3>Documentos da Top</h3><div class="notice">Configuração visual usada nos PDFs de orçamento e contrato.</div><label>Logo da empresa</label><input id="companyLogoFile" type="file" accept="image/*"><input id="companyLogo" value="${html(c.logo_url||'')}" placeholder="Cole uma URL/base64 ou envie uma imagem acima"><div class="form-grid"><div><label>Cor principal</label><input id="quotePrimary" type="color" value="${html(c.quote_primary_color||'#111111')}"></div><div><label>Cor secundária/onda</label><input id="quoteSecondary" type="color" value="${html(c.quote_secondary_color||'#8b8b8b')}"></div><div><label>Cor de destaque</label><input id="quoteAccent" type="color" value="${html(c.quote_accent_color||'#dc2626')}"></div><div><label>Cor do texto</label><input id="quoteText" type="color" value="${html(c.quote_text_color||'#111827')}"></div></div><label>Título padrão</label><input id="quoteTitle" value="${html(c.quote_title||'ORÇAMENTO DE SERVIÇO')}"><div class="form-grid"><div><label>Validade do orçamento em dias</label><input id="quoteValidDays" type="number" value="${html(c.quote_valid_days||7)}"></div><div><label>Cidade</label><input value="${html(c.contract_city||'')}" disabled></div></div><label>Texto de garantia</label><textarea id="quoteWarranty">${html(c.quote_warranty||defaultCompany().quote_warranty)}</textarea><label>Observação final personalizada</label><textarea id="quoteFooterNote" placeholder="Ex: orçamento sujeito a alteração após medição técnica...">${html(c.quote_footer_note||'')}</textarea><div class="quotePreviewMini" style="--p:${html(c.quote_primary_color||'#111111')};--s:${html(c.quote_secondary_color||'#8b8b8b')};--a:${html(c.quote_accent_color||'#dc2626')}"><div class="miniWave"></div><div class="miniLogo">LOGO</div><div><b>${html(c.company_name||'Top Planejados')}</b><br><span>${html(c.phone||c.whatsapp||'')}</span><br><span>${html(c.instagram||'')}</span></div></div><p class="muted small">Depois de alterar, clique em <b>Salvar personalização</b> para gravar dados e layout.</p><button class="primary" type="button" onclick="document.getElementById('companyForm').requestSubmit()">Salvar personalização</button></div></div><div class="grid2" style="margin-top:14px"><div class="card form"><h3>Valores por metro da planilha</h3><div class="notice">Mesma lógica da planilha antiga: <b>quantidade × largura(mm) × altura(mm) convertido para m² × fator do móvel × valor por metro × forma de pagamento</b>.</div><form id="priceForm"><label>Branco</label><input id="priceWhite" type="number" step="0.01" value="${html(c.price_white)}"><label>Branco com madeirado</label><input id="priceWhiteWood" type="number" step="0.01" value="${html(c.price_white_wood)}"><label>Madeirado</label><input id="priceWood" type="number" step="0.01" value="${html(c.price_wood)}"><label>Multiplicador cartão</label><input id="cardFactor" type="number" step="0.01" value="${html(c.card_factor)}"><div class="form-grid"><div><label>% entrada padrão</label><input id="entryPct" type="number" value="${html(c.entry_pct)}"></div><div><label>% entrega padrão</label><input id="deliveryPct" type="number" value="${html(c.delivery_pct)}"></div></div><button class="primary" type="submit">Salvar preços</button></form></div><div class="card"><h3>Catálogo de fatores</h3><div class="table-wrap compact-table"><table class="table"><thead><tr><th>Cód.</th><th>Móvel</th><th>Fator</th></tr></thead><tbody>${CATALOG.map(ca=>`<tr><td>${ca.code}</td><td>${html(ca.name)}</td><td><b>${ca.factor}</b></td></tr>`).join('')}</tbody></table></div></div></div>`;
+    const model = c.contract_model || 'comercial';
+    const receiptModel = c.receipt_model || 'comercial';
+    return `<div class="grid2"><div class="card form"><h3>Dados oficiais da empresa</h3><div class="notice goldline">Esses dados alimentam orçamento, contrato, recibo e documentos da operação.</div><form id="companyForm"><label>Nome da empresa</label><input id="companyName" value="${html(c.company_name)}"><label>CPF/CNPJ</label><input id="companyDoc" value="${html(c.document_number)}"><label>Responsável</label><input id="companyResponsible" value="${html(c.responsible_name)}"><label>Telefone</label><input id="companyPhone" value="${html(c.phone)}"><label>WhatsApp</label><input id="companyWhatsapp" value="${html(c.whatsapp)}"><label>Instagram</label><input id="companyInstagram" value="${html(c.instagram)}"><label>Endereço</label><input id="companyAddress" value="${html(c.address)}"><label>Chave PIX</label><input id="companyPix" value="${html(c.pix_key)}"><label>Cidade do contrato/orçamento</label><input id="companyCity" value="${html(c.contract_city)}"><button class="primary" type="submit">Salvar empresa</button></form></div><div class="card form"><h3>Documentos da empresa</h3><div class="notice">Escolha logo, cores e modelo. A prévia abaixo fica parecida com o contrato/recibo real.</div><label>Logo da empresa</label><input id="companyLogoFile" type="file" accept="image/*"><input id="companyLogo" value="${html(c.logo_url||'')}" placeholder="Cole uma URL/base64 ou envie uma imagem acima"><div class="form-grid"><div><label>Cor principal</label><input id="quotePrimary" type="color" value="${html(c.quote_primary_color||'#111111')}"></div><div><label>Cor secundária/onda</label><input id="quoteSecondary" type="color" value="${html(c.quote_secondary_color||'#8b8b8b')}"></div><div><label>Cor de destaque</label><input id="quoteAccent" type="color" value="${html(c.quote_accent_color||'#dc2626')}"></div><div><label>Cor do texto</label><input id="quoteText" type="color" value="${html(c.quote_text_color||'#111827')}"></div></div><div class="form-grid"><div><label>Modelo do contrato</label><select id="contractModel"><option value="comercial" ${model==='comercial'?'selected':''}>Comercial com cabeçalho</option><option value="formal" ${model==='formal'?'selected':''}>Formal limpo</option><option value="compacto" ${model==='compacto'?'selected':''}>Compacto simples</option></select></div><div><label>Modelo do recibo</label><select id="receiptModel"><option value="comercial" ${receiptModel==='comercial'?'selected':''}>Comercial com valor destacado</option><option value="formal" ${receiptModel==='formal'?'selected':''}>Formal limpo</option><option value="compacto" ${receiptModel==='compacto'?'selected':''}>Compacto simples</option></select></div></div><label>Título padrão do orçamento</label><input id="quoteTitle" value="${html(c.quote_title||'ORÇAMENTO DE SERVIÇO')}"><div class="form-grid"><div><label>Validade do orçamento em dias</label><input id="quoteValidDays" type="number" value="${html(c.quote_valid_days||7)}"></div><div><label>Cidade</label><input value="${html(c.contract_city||'')}" disabled></div></div><label>Texto de garantia</label><textarea id="quoteWarranty">${html(c.quote_warranty||defaultCompany().quote_warranty)}</textarea><label>Observação final personalizada</label><textarea id="quoteFooterNote" placeholder="Ex: orçamento sujeito a alteração após medição técnica...">${html(c.quote_footer_note||'')}</textarea>${documentModelPreviewHtml(c)}<p class="muted small">Depois de alterar, clique em <b>Salvar personalização</b> para gravar dados e layout.</p><button class="primary" type="button" onclick="document.getElementById('companyForm').requestSubmit()">Salvar personalização</button></div></div><div class="grid2" style="margin-top:14px"><div class="card form"><h3>Valores por metro da planilha</h3><div class="notice">Mesma lógica da planilha antiga: <b>quantidade × largura(mm) × altura(mm) convertido para m² × fator do móvel × valor por metro × forma de pagamento</b>.</div><form id="priceForm"><label>Branco</label><input id="priceWhite" type="number" step="0.01" value="${html(c.price_white)}"><label>Branco com madeirado</label><input id="priceWhiteWood" type="number" step="0.01" value="${html(c.price_white_wood)}"><label>Madeirado</label><input id="priceWood" type="number" step="0.01" value="${html(c.price_wood)}"><label>Multiplicador cartão</label><input id="cardFactor" type="number" step="0.01" value="${html(c.card_factor)}"><div class="form-grid"><div><label>% entrada padrão</label><input id="entryPct" type="number" value="${html(c.entry_pct)}"></div><div><label>% entrega padrão</label><input id="deliveryPct" type="number" value="${html(c.delivery_pct)}"></div></div><button class="primary" type="submit">Salvar preços</button></form></div><div class="card"><h3>Catálogo de fatores</h3><div class="table-wrap compact-table"><table class="table"><thead><tr><th>Cód.</th><th>Móvel</th><th>Fator</th></tr></thead><tbody>${CATALOG.map(ca=>`<tr><td>${ca.code}</td><td>${html(ca.name)}</td><td><b>${ca.factor}</b></td></tr>`).join('')}</tbody></table></div></div></div>`;
   }
 
   function renderClients(){
-    const rows = state.clients.map(c=>[html(c.name), html(c.document_number||'-'), html(c.phone||'-'), html(c.city||'-'), statusBadge2('client',c.status), fmtDate((c.created_at||'').slice(0,10)), `<div class="row-actions"><button class="ghost mini" onclick="TP.editClient('${c.id}')">Editar</button><button class="danger mini" onclick="TP.deleteClient('${c.id}')">Excluir</button></div>`]);
+    const rows = state.clients.map(c=>[`<button class="linkRow" onclick="TP.editClient('${c.id}')"><b>${html(c.name)}</b></button>`, html(c.document_number||'-'), html(c.phone||'-'), html(c.city||'-'), statusBadge2('client',c.status), fmtDate((c.created_at||'').slice(0,10)), `<div class="row-actions"><button class="ghost mini" onclick="TP.editClient('${c.id}')">Editar</button><button class="success mini" onclick="TP.openClientBudget('${c.id}')">Orçamento</button><button class="danger mini" onclick="TP.deleteClient('${c.id}')">Excluir</button></div>`]);
     return `<div class="split"><div class="card form"><h3 id="clientFormTitle">Novo cliente</h3><div class="notice">Cadastre o cliente uma vez. Orçamentos, contratos, serviços e financeiro vão usar esse cadastro.</div><form id="clientForm"><input type="hidden" id="clientId"><label>Nome</label><input id="clientName" required><label>CPF/CNPJ do cliente</label><input id="clientDoc" placeholder="000.000.000-00"><label>Telefone/WhatsApp</label><input id="clientPhone"><label>Cidade</label><input id="clientCity" value="Porto Velho - RO"><label>Endereço</label><input id="clientAddress"><label>Origem do cliente</label><input id="clientSource" placeholder="Instagram, indicação, WhatsApp..."><label>Status</label><select id="clientStatus">${statusOptions('client','ativo')}</select><label>Observações</label><textarea id="clientNotes"></textarea><div class="row-actions"><button class="primary" type="submit">Salvar cliente</button><button class="ghost" type="button" onclick="TP.clearClientForm()">Limpar</button></div></form></div><div class="card"><div class="toolbar"><h3>Clientes cadastrados</h3><input class="search" id="clientSearch" placeholder="Pesquisar cliente..."></div><div id="clientTable">${table(['Nome','CPF/CNPJ','Telefone','Cidade','Status','Cadastro','Ações'], rows)}</div></div></div>`;
   }
 
@@ -736,18 +837,70 @@
     return raw.split(/\n|\|\|/).map(x=>x.trim()).filter(Boolean);
   }
 
+  function clientBudgetProjects(clientId, excludeProjectId){
+    if(!clientId) return [];
+    return (state.projects||[]).filter(p=>String(p.client_id)===String(clientId) && String(p.id)!==String(excludeProjectId||'') && Array.isArray(p.budget_items) && p.budget_items.length);
+  }
+  function clientBudgetItems(clientId, excludeProjectId){
+    const projects=clientBudgetProjects(clientId, excludeProjectId);
+    const out=[];
+    projects.forEach(p=>{ (p.budget_items||[]).forEach(it=>out.push(Object.assign({}, it, {source_project_id:p.id, source_project_name:p.name||'Orçamento'}))); });
+    return out;
+  }
+  function clientBudgetItemsSummaryHtml(clientId, excludeProjectId){
+    const items=clientBudgetItems(clientId, excludeProjectId);
+    if(!clientId) return '<div class="notice">Selecione um cliente para ver se ele já possui móveis/orçamentos vinculados.</div>';
+    if(!items.length) return '<div class="notice">Este cliente ainda não possui móveis em orçamentos anteriores.</div>';
+    const rows=items.slice(0,12).map(it=>[html(it.desc||it.name||'Móvel'), num(it.qty)||1, `${Math.round(num(it.width)||0)} x ${Math.round(num(it.height)||0)} mm`, html(it.source_project_name||'-')]);
+    const more=items.length>12?`<p class="muted small">+ ${items.length-12} item(ns) ocultos nesta prévia.</p>`:'';
+    return `<div class="notice greenline"><b>${items.length} móvel(is) encontrados para este cliente.</b><br><span class="muted small">Ao marcar a opção abaixo, esses móveis serão puxados para este projeto ao salvar.</span></div>${table(['Móvel','Qtd','Medida','Origem'],rows)}${more}`;
+  }
+  function updateProjectClientBudgetBox(clientId){
+    const box=$('#projectClientBudgetBox'); if(!box) return;
+    const exclude=($('#projectId')&&$('#projectId').value)||'';
+    box.innerHTML=clientBudgetItemsSummaryHtml(clientId, exclude);
+    const check=$('#projectImportClientItems'); if(check) check.checked=!!clientBudgetItems(clientId, exclude).length && !exclude;
+  }
+  function importItemsForProject(clientId, excludeProjectId, currentItems){
+    const existing=Array.isArray(currentItems)?currentItems.slice():[];
+    const seen=new Set(existing.map(it=>[String(it.desc||it.name||''),Math.round(num(it.width)||0),Math.round(num(it.height)||0),String(it.code||'')].join('|')));
+    clientBudgetItems(clientId, excludeProjectId).forEach(it=>{
+      const key=[String(it.desc||it.name||''),Math.round(num(it.width)||0),Math.round(num(it.height)||0),String(it.code||'')].join('|');
+      if(seen.has(key)) return;
+      seen.add(key);
+      const clean=Object.assign({}, it, {id:uid(), note:(it.note||'') + (it.source_project_name ? ' | puxado de '+it.source_project_name : '')});
+      delete clean.source_project_id; delete clean.source_project_name; existing.push(clean);
+    });
+    return existing;
+  }
+
   function renderProjects(){
-    const rows = state.projects.map(p=>[html(p.name), html(getClient(p.client_id).name||'-'), html(p.environment||'-'), projectImages(p).length?'<span class="badge green">'+projectImages(p).length+' imagem(ns)</span>':'<span class="muted small">sem imagem</span>', statusBadge2('project',p.project_status), statusBadge2('budget',p.status), `<div class="row-actions"><button class="ghost mini" onclick="TP.editProject('${p.id}')">Editar</button><button class="ghost mini" onclick="TP.openProjectBudget('${p.id}')">Orçamento</button><button class="danger mini" onclick="TP.deleteProject('${p.id}')">Excluir</button></div>`]);
-    return `<div class="split"><div class="card form"><h3 id="projectFormTitle">Novo projeto</h3><div class="notice">O projeto guarda cliente, ambiente, anexos e dados técnicos. Valor, prazo e pagamento ficam no orçamento.</div><form id="projectForm"><input type="hidden" id="projectId"><label>Cliente</label><select id="projectClient" required>${clientOptions()}</select><label>Título do projeto</label><input id="projectName" required placeholder="Ex: Cozinha, Quarto casal, Escritório..."><label>Ambiente</label><select id="projectEnv"><option>Cozinha</option><option>Quarto</option><option>Banheiro</option><option>Sala</option><option>Escritório</option><option>Área gourmet</option><option>Lavanderia</option><option>Outro</option></select><label>Cores/materiais</label><input id="projectColors" placeholder="Branco TX, Nude, Preto São Gabriel..."><label>Imagens do projeto</label><div class="dropzone compact"><b>Importar imagens do projeto</b><br><span class="muted">Pode adicionar mais de uma imagem, uma por vez.</span><br><input id="projectImageFile" type="file" accept="image/*"></div><textarea id="projectImageUrl" placeholder="As imagens importadas aparecem aqui. Uma URL/base64 por linha."></textarea><div id="projectImagePreview" class="project-image-preview multi"></div><label>Status do projeto</label><select id="projectStatus">${statusOptions('project','em_criacao')}</select><label>Observações técnicas</label><textarea id="projectNotes"></textarea><div class="row-actions"><button class="primary" type="submit">Salvar projeto</button><button class="ghost" type="button" onclick="TP.clearProjectForm()">Limpar</button></div></form></div><div class="card"><div class="toolbar"><h3>Projetos</h3><input class="search" id="projectSearch" placeholder="Pesquisar projeto..."></div><div id="projectTable">${table(['Projeto','Cliente','Ambiente','Imagens','Status projeto','Status orçamento','Ações'], rows)}</div></div></div>`;
+    const rows = state.projects.map(p=>{
+      const items=(p.budget_items||[]).length;
+      const projectStatusSelect = `<select class="miniInput statusMini" onchange="TP.updateProjectStatus('${p.id}',this.value)">${statusOptions('project',p.project_status)}</select>`;
+      const budgetStatusSelect = `<select class="miniInput statusMini" onchange="TP.updateBudgetStatus('${p.id}',this.value)">${statusOptions('budget',p.status)}</select>`;
+      return [
+        `<button class="linkRow" onclick="TP.editProject('${p.id}')"><b>${html(p.name)}</b></button>`,
+        html(getClient(p.client_id).name||'-'),
+        html(p.environment||'-'),
+        projectImages(p).length?'<span class="badge green">'+projectImages(p).length+' imagem(ns)</span>':'<span class="muted small">sem imagem</span>',
+        items?'<span class="badge green">'+items+' móvel(is)</span>':'<span class="muted small">sem móveis</span>',
+        projectStatusSelect,
+        budgetStatusSelect,
+        `<div class="row-actions"><button class="ghost mini" onclick="TP.editProject('${p.id}')">Editar</button><button class="ghost mini" onclick="TP.openProjectBudget('${p.id}')">Orçamento</button><button class="danger mini" onclick="TP.deleteProject('${p.id}')">Excluir</button></div>`
+      ];
+    });
+    const firstClient = (state.clients[0]&&state.clients[0].id)||'';
+    return `<div class="split"><div class="card form"><h3 id="projectFormTitle">Novo projeto</h3><div class="notice">O projeto guarda cliente, ambiente, anexos e dados técnicos. O orçamento será montado depois, sempre vinculado a este projeto.</div><form id="projectForm"><input type="hidden" id="projectId"><label>Cliente</label><select id="projectClient" required>${clientOptions(firstClient)}</select><label>Título do projeto</label><input id="projectName" required placeholder="Ex: Cozinha, Quarto casal, Escritório..."><label>Ambiente</label><select id="projectEnv"><option>Cozinha</option><option>Quarto</option><option>Banheiro</option><option>Sala</option><option>Escritório</option><option>Área gourmet</option><option>Lavanderia</option><option>Outro</option></select><label>Cores/materiais</label><input id="projectColors" placeholder="Branco TX, Nude, Preto São Gabriel..."><label>Imagens do projeto</label><div class="dropzone compact"><b>Importar imagens do projeto</b><br><span class="muted">Pode adicionar mais de uma imagem, uma por vez.</span><br><input id="projectImageFile" type="file" accept="image/*"></div><textarea id="projectImageUrl" placeholder="As imagens importadas aparecem aqui. Uma URL/base64 por linha."></textarea><div id="projectImagePreview" class="project-image-preview multi"></div><label>Status do projeto</label><select id="projectStatus">${statusOptions('project','em_criacao')}</select><label>Observações técnicas</label><textarea id="projectNotes"></textarea><div class="row-actions"><button class="primary" type="submit">Salvar projeto</button><button class="ghost" type="button" onclick="TP.clearProjectForm()">Limpar</button></div></form></div><div class="card"><div class="toolbar"><h3>Projetos</h3><input class="search" id="projectSearch" placeholder="Pesquisar projeto..."></div><div class="notice greenline">Agora você pode alterar <b>Status do projeto</b> e <b>Status do orçamento</b> direto na tabela, sem entrar em editar.</div><div id="projectTable">${table(['Projeto','Cliente','Ambiente','Imagens','Móveis','Status projeto','Status orçamento','Ações'], rows)}</div></div></div>`;
   }
 
   function selectedBudgetProject(){ const id = $('#budgetProject') ? $('#budgetProject').value : state.budgetProjectId; return getProject(id); }
   function renderBudget(){
     const pid = state.budgetProjectId || '';
     const data=operationData(pid); const p=data.project, c=data.client, tt=data.totals, items=data.items;
-    return `<div class="clearFlow card"><div><span class="badge">Fluxo da ${html((state.company&&state.company.company_name)||'Top Planejados')}</span><h3>Cliente → Projeto opcional → Orçamento → Aprovação → Contrato</h3><p class="muted">O projeto vem antes no fluxo, mas o orçamento pode ser feito sem projeto. Se quiser, vincule um projeto existente; se não quiser, crie um orçamento avulso para o cliente.</p></div><div class="row-actions"><button class="ghost" onclick="TP.openTabKey('clients')">Clientes</button><button class="ghost" onclick="TP.openTabKey('projects')">Projetos</button><button class="ghost" onclick="TP.openTabKey('contracts')">Contratos</button></div></div>
-    <div class="card form" style="margin-top:14px"><h3>1. Selecionar ou criar orçamento</h3><div class="form-grid"><div><label>Projeto / orçamento existente</label><select id="budgetProject">${quoteProjectOptions(pid)}</select></div><div><label>Cliente</label><div class="notice"><b>${html(c.name||'Nenhum orçamento selecionado')}</b><br><span class="muted small">${p.id ? html(c.phone||'') + (c.document_number?' • '+html(c.document_number):'') : 'Escolha um orçamento existente ou crie um novo abaixo.'}</span></div></div><div><label>Total atual</label><div class="notice greenline"><b>${money(tt.final)}</b><br><span class="muted small">Subtotal ${money(tt.subtotal)} • Entrada ${money(tt.entry)} • Entrega ${money(tt.delivery)}</span></div></div></div></div>
-    ${!p.id ? `<div class="card form" style="margin-top:14px"><h3>Novo orçamento sem projeto obrigatório</h3><div class="notice goldline">Use isso para fazer orçamento rápido. Depois, se quiser, você pode criar projeto/imagens na aba Projetos.</div><form id="quickBudgetForm"><div class="form-grid"><div><label>Cliente</label><select id="quickBudgetClient" required>${clientOptions()}</select></div><div><label>Nome do orçamento</label><input id="quickBudgetName" required placeholder="Ex: Cozinha Davi, Guarda-roupa Beatriz"></div><div><label>Ambiente</label><select id="quickBudgetEnv"><option>Cozinha</option><option>Quarto</option><option>Banheiro</option><option>Sala</option><option>Escritório</option><option>Área gourmet</option><option>Lavanderia</option><option>Outro</option></select></div></div><label>Descrição inicial</label><textarea id="quickBudgetNotes" placeholder="Resumo do serviço para aparecer no orçamento."></textarea><button class="primary" type="submit">Criar orçamento</button></form></div>` : `<div class="grid2" style="margin-top:14px"><div class="card form"><h3>2. Adicionar item</h3><label>Móvel da tabela</label><select id="iCatalog">${catalogOptions('')}</select><div class="form-grid compactInputs"><div><label>Qtd.</label><input id="iQty" type="number" value="1"></div><div><label>Largura mm</label><input id="iWidth" type="number" step="1" value="1000"></div><div><label>Altura mm</label><input id="iHeight" type="number" step="1" value="1000"></div><div><label>Fator</label><input id="iFactor" type="number" step="0.01" value="${CATALOG[0].factor}"></div><div><label>Cor / tipo</label><select id="iColor"><option value="branco">Branco</option><option value="branco_madeirado">Branco com madeirado</option><option value="madeirado">Madeirado</option></select></div><div><label>Pagamento</label><select id="iPayment"><option value="dinheiro">Dinheiro/Pix</option><option value="cartao">Cartão</option></select></div></div><label>Observação do item</label><input id="iNote" placeholder="Ex: puxador perfil, sem pedra/cuba..."><button class="primary" onclick="TP.addBudgetItem()">Adicionar item</button></div><div class="card form"><h3>3. Status, pagamento e prazo</h3><form id="budgetFieldsForm"><label>Status do orçamento</label><select id="budgetStatus">${statusOptions('budget',p.status||'rascunho')}</select><div class="form-grid compactInputs"><div><label>Desconto R$</label><input id="bDiscount" type="number" step="0.01" value="${html(p.budget_discount||0)}"></div><div><label>% entrada</label><input id="bEntry" type="number" value="${html(p.entry_pct || state.company.entry_pct || 50)}"></div><div><label>% entrega</label><input id="bDelivery" type="number" value="${html(p.delivery_pct || state.company.delivery_pct || 50)}"></div><div><label>Início do prazo</label><input id="bStart" type="date" value="${html(p.contract_start || today())}"></div><div><label>Prazo em dias</label><input id="bDays" type="number" value="${html(p.delivery_days || 30)}"></div></div><div class="row-actions" style="margin:8px 0"><button type="button" class="ghost" onclick="TP.setPaymentSplit(100,0)">100% no fechamento</button><button type="button" class="ghost" onclick="TP.setPaymentSplit(50,50)">50/50</button><button type="button" class="ghost" onclick="TP.setSupplierSplit()">Fornecedor / entrega</button><button type="button" class="ghost" onclick="TP.setPaymentSplit(0,100)">Na entrega</button></div><label>Forma/observação de pagamento</label><textarea id="bPaymentNote" placeholder="Condição comercial do orçamento">${html(p.budget_payment_note||'')}</textarea><div class="row-actions"><button class="primary" type="submit">Salvar orçamento</button><button class="success" type="button" onclick="TP.markBudgetApproved('${p.id}')">Marcar aprovado</button><button class="ghost" type="button" onclick="TP.exportBudgetHtml()">Gerar PDF</button></div></form></div></div><div class="card" style="margin-top:14px"><div class="toolbar"><h3>4. Itens editáveis do orçamento</h3><span class="badge">edite direto na tabela e clique salvar</span></div>${budgetItemsTable(p, items)}</div>`}`;
+    return `<div class="clearFlow card"><div><span class="badge">Fluxo da ${html((state.company&&state.company.company_name)||'Top Planejados')}</span><h3>Cliente → Projeto → Orçamento → Aprovação → Contrato</h3><p class="muted">O orçamento volta a ser gerado com base em um projeto. Crie ou selecione o projeto primeiro para puxar cliente, ambiente, imagens e dados técnicos corretamente.</p></div><div class="row-actions"><button class="ghost" onclick="TP.openTabKey('projects')">Criar/abrir projeto</button><button class="ghost" onclick="TP.openTabKey('contracts')">Contratos</button></div></div>
+    <div class="card form" style="margin-top:14px"><h3>1. Selecione o projeto do orçamento</h3><div class="form-grid"><div><label>Projeto / orçamento base</label><select id="budgetProject">${quoteProjectOptions(pid)}</select><p class="muted small">Obrigatório. O orçamento puxa os dados do cliente e do ambiente pelo projeto selecionado.</p></div><div><label>Cliente vinculado</label><div id="budgetClientDetails">${p.id ? clientBudgetDetailsHtml(c.id) : '<div class="notice redline">Selecione um projeto para carregar o cliente.</div>'}</div></div><div><label>Total atual</label><div class="notice greenline"><b>${money(tt.final)}</b><br><span class="muted small">Subtotal ${money(tt.subtotal)} • Entrada ${money(tt.entry)} • Entrega ${money(tt.delivery)}</span></div></div></div></div>
+    ${!p.id ? `<div class="card" style="margin-top:14px"><h3>Orçamento precisa de projeto</h3><div class="notice goldline">Para evitar dados soltos e contrato errado, crie um projeto primeiro. Depois volte aqui e monte o orçamento com os móveis.</div><button class="primary" onclick="TP.openTabKey('projects')">Ir para Projetos</button></div>` : `<div class="grid2" style="margin-top:14px"><div class="card form"><h3>2. Adicionar item</h3><div class="notice">Móvel vinculado ao projeto <b>${html(p.name||'-')}</b> e ao cliente <b>${html(c.name||'-')}</b>.</div><label>Móvel da tabela</label><select id="iCatalog">${catalogOptions('')}</select><div class="form-grid compactInputs"><div><label>Qtd.</label><input id="iQty" type="number" value="1"></div><div><label>Largura mm</label><input id="iWidth" type="number" step="1" value="1000"></div><div><label>Altura mm</label><input id="iHeight" type="number" step="1" value="1000"></div><div><label>Fator</label><input id="iFactor" type="number" step="0.01" value="${CATALOG[0].factor}"></div><div><label>Cor / tipo</label><select id="iColor"><option value="branco">Branco</option><option value="branco_madeirado">Branco com madeirado</option><option value="madeirado">Madeirado</option></select></div><div><label>Pagamento do item</label><select id="iPayment">${budgetPaymentSelectOptions('dinheiro')}</select></div></div><label>Observação do item</label><input id="iNote" placeholder="Ex: puxador perfil, sem pedra/cuba..."><button class="primary" onclick="TP.addBudgetItem()">Adicionar item ao orçamento</button></div><div class="card form"><h3>3. Status, pagamento e prazo</h3><form id="budgetFieldsForm"><label>Status do orçamento</label><select id="budgetStatus">${statusOptions('budget',p.status||'rascunho')}</select><div class="form-grid compactInputs"><div><label>Desconto R$</label><input id="bDiscount" type="number" step="0.01" value="${html(p.budget_discount||0)}"></div><div><label>% entrada</label><input id="bEntry" type="number" value="${html(p.entry_pct || state.company.entry_pct || 50)}"></div><div><label>% entrega</label><input id="bDelivery" type="number" value="${html(p.delivery_pct || state.company.delivery_pct || 50)}"></div><div><label>Início do prazo</label><input id="bStart" type="date" value="${html(p.contract_start || today())}"></div><div><label>Prazo em dias</label><input id="bDays" type="number" value="${html(p.delivery_days || 30)}"></div></div><label>Modelos rápidos de pagamento</label><select id="budgetPaymentPreset" onchange="TP.applyPaymentPreset('budget')">${paymentPresetOptions(paymentPresetFromProject(p))}</select><div class="row-actions" style="margin:8px 0"><button type="button" class="ghost" onclick="TP.setPaymentSplit(100,0,'100% à vista no fechamento.')">100% no fechamento</button><button type="button" class="ghost" onclick="TP.setPaymentSplit(50,50,'50% à vista no fechamento + 50% à vista na entrega.')">50/50</button><button type="button" class="ghost" onclick="TP.setSupplierSplit()">50% fornecedor/loja + entrega</button><button type="button" class="ghost" onclick="TP.setPaymentSplit(0,100,'100% à vista na entrega.')">Na entrega</button></div><label>Forma/observação de pagamento</label><textarea id="bPaymentNote" placeholder="Condição comercial do orçamento">${html(p.budget_payment_note||'')}</textarea><div class="row-actions"><button class="primary" type="submit">Salvar orçamento</button><button class="success" type="button" onclick="TP.markBudgetApproved('${p.id}')">Marcar aprovado</button><button class="ghost" type="button" onclick="TP.exportBudgetHtml()">Gerar PDF</button></div></form></div></div><div class="card" style="margin-top:14px"><div class="toolbar"><h3>4. Itens editáveis do orçamento</h3><span class="badge">edite direto na tabela e clique salvar</span></div>${budgetItemsTable(p, items)}</div>`}`;
   }
   function budgetItemsTable(p, items){
     if(!items.length) return '<div class="empty">Nenhum item no orçamento ainda.</div>';
@@ -759,7 +912,7 @@
         `<input class="miniInput small" type="number" id="bi_w_${esc}" value="${html(Math.round(num(it.width)))}"> x <input class="miniInput small" type="number" id="bi_h_${esc}" value="${html(Math.round(num(it.height)))}">`,
         `<input class="miniInput tiny" type="number" step="0.01" id="bi_factor_${esc}" value="${html(num(it.factor)||1)}">`,
         `<select class="miniInput" id="bi_color_${esc}"><option value="branco" ${it.color==='branco'?'selected':''}>Branco</option><option value="branco_madeirado" ${it.color==='branco_madeirado'?'selected':''}>Branco/madeirado</option><option value="madeirado" ${it.color==='madeirado'?'selected':''}>Madeirado</option></select>`,
-        `<select class="miniInput" id="bi_payment_${esc}"><option value="dinheiro" ${(!it.payment||it.payment==='dinheiro')?'selected':''}>Pix/dinheiro</option><option value="fechamento" ${it.payment==='fechamento'?'selected':''}>100% fechamento</option><option value="cartao" ${it.payment==='cartao'?'selected':''}>Cartão</option></select>`,
+        `<select class="miniInput paymentMini" id="bi_payment_${esc}">${budgetPaymentSelectOptions(it.payment||'dinheiro')}</select>`,
         money(itemTotal(it)),
         `<div class="row-actions nowrap"><button class="ghost mini" onclick="TP.updateBudgetItem('${p.id}','${id}')">Salvar</button><button class="ghost mini" onclick="TP.duplicateBudgetItem('${p.id}','${id}')">Duplicar</button><button class="danger mini" onclick="TP.removeBudgetItem('${p.id}','${id}')">Remover</button></div>`
       ];
@@ -778,7 +931,7 @@
     return `<div class="split"><div class="card form"><h3 id="supplierFormTitle">Novo fornecedor</h3><form id="supplierForm"><input type="hidden" id="supplierId"><label>Nome</label><input id="supplierName" required placeholder="Ex: Madeireira, loja de ferragens"><label>Telefone</label><input id="supplierPhone"><label>Endereço</label><input id="supplierAddress"><label>Tipo de material fornecido</label><input id="supplierType" placeholder="MDF, ferragens, pedras, acessórios..."><label>Observações</label><textarea id="supplierNotes"></textarea><div class="row-actions"><button class="primary" type="submit">Salvar fornecedor</button><button class="ghost" type="button" onclick="TP.clearSupplierForm()">Limpar</button></div></form></div><div class="card"><div class="toolbar"><h3>Fornecedores</h3><input class="search" id="supplierSearch" placeholder="Pesquisar fornecedor..."></div><div id="supplierTable">${table(['Nome','Telefone','Material','Endereço','Obs.','Ações'], rows)}</div></div></div>`;
   }
   function renderServices(){
-    const rows = state.services.map(s=>{ const ids=serviceEmployeeIds(s); const names=ids.map(id=>getPayrollEmployee(id).name).filter(Boolean); const pay=servicePayrollTotal(s); return [html(s.title), html(getClient(s.client_id).name||'-'), html(getProject(s.project_id).name||'-'), names.length?names.map(html).join('<br>'):'-', money(s.value), money(s.cost), fmtDate(s.started_at), fmtDate(s.closed_at), statusBadge2('service',s.status), pay?`${String(s.payroll_release_mode||'status')==='entregue'?'<span class="muted small">só na entrega</span><br>':''}${payrollPaidForService(s)?'<span class="status entregue">equipe paga</span>':'<span class="status aguardando_inicio">há pendências</span>'}<br><b>${money(pay)}</b>`:'-', `<div class="row-actions"><button class="ghost mini" onclick="TP.editService('${s.id}')">Editar</button><button class="success mini" onclick="TP.markServiceDelivered('${s.id}')">Entregue</button><button class="danger mini" onclick="TP.deleteService('${s.id}')">Excluir</button></div>`]; });
+    const rows = state.services.map(s=>{ const ids=serviceEmployeeIds(s); const names=ids.map(id=>getPayrollEmployee(id).name).filter(Boolean); const pay=servicePayrollTotal(s); return [`<button class="linkRow" onclick="TP.editService('${s.id}')"><b>${html(s.title)}</b></button>`, html(getClient(s.client_id).name||'-'), html(getProject(s.project_id).name||'-'), names.length?names.map(html).join('<br>'):'-', money(s.value), money(s.cost), fmtDate(s.started_at), fmtDate(s.closed_at), statusBadge2('service',s.status), pay?`${String(s.payroll_release_mode||'status')==='entregue'?'<span class="muted small">só na entrega</span><br>':''}${payrollPaidForService(s)?'<span class="status entregue">equipe paga</span>':'<span class="status aguardando_inicio">há pendências</span>'}<br><b>${money(pay)}</b>`:'-', `<div class="row-actions"><button class="ghost mini" onclick="TP.editService('${s.id}')">Editar</button><button class="success mini" onclick="TP.markServiceDelivered('${s.id}')">Entregue</button><button class="danger mini" onclick="TP.deleteService('${s.id}')">Excluir</button></div>`]; });
     return `<div class="split"><div class="card form"><h3 id="serviceFormTitle">Novo serviço</h3><div class="notice">Serviço acompanha execução e equipe. Ele deve nascer de um orçamento aprovado ou ser vinculado a um projeto existente.</div><form id="serviceForm"><input type="hidden" id="serviceId"><label>Cliente</label><select id="serviceClient" required>${clientOptions()}</select><label>Projeto vinculado</label><select id="serviceProject">${projectOptions()}</select><label>Título do serviço</label><input id="serviceTitle" required placeholder="Ex: Cozinha cliente X"><label>Status</label><select id="serviceStatus">${statusOptions('service','aguardando_inicio')}</select><label>Equipe que recebe por este serviço</label>${payrollEmployeeChecklist([])}<p class="muted small">Marque todos os funcionários que recebem por este serviço. Cada um entra separado em Funcionários.</p><label class="check wideCheck"><input id="servicePayOnDelivery" type="checkbox"> funcionários recebem somente quando o serviço for entregue</label><div class="form-grid"><div><label>Valor</label><input id="serviceValue" type="number" step="0.01" value="0"></div><div><label>Custo</label><input id="serviceCost" type="number" step="0.01" value="0"></div><div><label>Início</label><input id="serviceStart" type="date" value="${today()}"></div><div><label>Entregue/finalizado em</label><input id="serviceClose" type="date"></div></div><label>Observações</label><textarea id="serviceNotes"></textarea><div class="row-actions"><button class="primary" type="submit">Salvar serviço</button><button class="ghost" type="button" onclick="TP.clearServiceForm()">Limpar</button></div></form></div><div class="card"><div class="toolbar"><h3>Serviços</h3><input class="search" id="serviceSearch" placeholder="Pesquisar serviço..."></div><div id="serviceTable">${table(['Serviço','Cliente','Projeto','Equipe','Valor','Custo','Início','Fim','Status','Funcionários','Ações'], rows)}</div></div></div>`;
   }
 
@@ -788,10 +941,34 @@
     return `<div class="grid2 financeClear"><div class="card form"><h3>Movimentação financeira</h3><div class="notice goldline">Use este formulário para entrada de cliente, despesa/compra ou crédito no fornecedor. O fornecedor e o comprovante são opcionais.</div><form id="txForm"><div class="form-grid"><div><label>Tipo</label><select id="txType"><option value="entrada">entrada de cliente</option><option value="saida">saída/despesa/compra</option><option value="credito_loja">crédito na loja / fornecedor</option></select></div><div><label>Data</label><input id="txDate" type="date" value="${today()}"></div><div><label>Fornecedor</label><select id="txSupplier">${supplierOptions('')}</select></div><div><label>Forma de pagamento</label><select id="txPayment"><option>Pix</option><option>Dinheiro</option><option>Cartão</option><option>Transferência</option><option>Boleto</option><option>Saldo fornecedor</option></select></div></div><label>Descrição</label><input id="txDescription" required placeholder="Ex: compra de parafusos, entrada do cliente, crédito na loja"><div class="form-grid"><div><label>Valor total</label><input id="txAmount" type="number" step="0.01" required value="0"></div><div><label>Categoria</label><input id="txCategory" placeholder="material, ferragem, entrada cliente..."></div></div><div class="form-grid"><div><label>Projeto</label><select id="txProject">${projectOptions()}</select></div><div><label>Serviço</label><select id="txService">${serviceOptions()}</select></div></div><label>Observações</label><textarea id="txNotes" placeholder="Detalhes da compra, número do cupom, condições..."></textarea><label>Anexo do cupom/comprovante</label><input id="txReceiptFile" type="file" accept="image/*"><input id="txReceiptUrl" placeholder="Anexo em base64/URL"><button class="primary" type="submit">Salvar movimentação</button></form></div><div class="card form"><h3>Comprar usando saldo do fornecedor</h3><div class="notice redline">Use quando comprar material descontando do crédito que a Top já tem no fornecedor.</div><div class="stat"><div class="label">Saldo atual no fornecedor</div><div class="value blue">${money(s.storeCredit)}</div><div class="sub">Créditos menos compras descontadas</div></div><form id="providerPurchaseForm"><div class="form-grid"><div><label>Data</label><input id="providerDate" type="date" value="${today()}"></div><div><label>Fornecedor / loja</label><select id="providerSupplier">${supplierOptions('')}</select></div></div><label>Descrição da compra</label><input id="providerDesc" placeholder="Ex: chapa MDF, corrediças, fita de borda..."><label>Valor descontado do saldo</label><input id="providerAmount" type="number" step="0.01" value="0"><div class="form-grid"><div><label>Projeto</label><select id="providerProject">${projectOptions()}</select></div><div><label>Serviço</label><select id="providerService">${serviceOptions()}</select></div></div><label>Anexo do cupom/comprovante</label><input id="providerReceiptFile" type="file" accept="image/*"><input id="providerReceiptUrl" placeholder="Anexo em base64/URL"><button class="danger" type="submit">Descontar do saldo</button></form></div></div><div class="card" style="margin-top:14px"><h3>Histórico financeiro</h3>${table(['Data','Tipo','Categoria','Descrição','Fornecedor','Pagamento','Valor','Anexo','Ações'], rows)}</div>`;
   }
 
-  function inventoryStatus(it){ const q=num(it.current_qty), min=num(it.min_qty); if(min>0 && q<=min) return '<span class="status cancelado">baixo</span>'; if(q<=0) return '<span class="status cancelado">zerado</span>'; return '<span class="status entregue">ok</span>'; }
+  function inventoryNumberText(value){ const n=num(value); return n>0 ? String(n).replace('.',',') : ''; }
+  function inventoryCostText(value){ const n=num(value); return n>0 ? money(n) : ''; }
+  function inventoryStatus(it){ const q=num(it.current_qty), min=num(it.min_qty); if(!q && !min) return '<span class="status">sem qtd.</span>'; if(min>0 && q<=min) return '<span class="status cancelado">baixo</span>'; if(q<=0) return '<span class="status cancelado">zerado</span>'; return '<span class="status entregue">ok</span>'; }
+  function inventoryVariantText(it){
+    const raw = it && (it.variant_text || it.variants || '');
+    if(!raw) return '';
+    if(typeof raw === 'string'){
+      if(raw === '[object Object]') return '';
+      try{ const obj=JSON.parse(raw); if(obj && typeof obj==='object') return Object.entries(obj).map(([k,v])=>`${k}: ${v}`).join('; '); }catch(_){ }
+      return raw;
+    }
+    if(typeof raw === 'object') return Object.entries(raw).map(([k,v])=>`${k}: ${v}`).join('; ');
+    return String(raw||'');
+  }
   function renderInventory(){
-    const rows=(state.inventoryItems||[]).map(it=>[html(it.item_name), html(it.category||'-'), html(it.variant_text||it.variants||'-'), html(it.unit||'un'), String(num(it.current_qty)).replace('.',','), String(num(it.min_qty)).replace('.',','), money(it.avg_cost), html(it.supplier||'-'), inventoryStatus(it), `<div class="row-actions"><button class="ghost mini" onclick="TP.editInventoryItem('${it.id}')">Editar</button><button class="danger mini" onclick="TP.deleteInventoryItem('${it.id}')">Excluir</button></div>`]);
-    return `<div class="split"><div class="card form"><h3 id="inventoryFormTitle">Novo item de estoque</h3><div class="notice goldline">A lista padrão de marcenaria fica pronta para editar. Você pode alterar quantidade, mínimo, fornecedor e variantes de cada item.</div><form id="inventoryForm"><input type="hidden" id="inventoryId"><label>Item</label><input id="inventoryName" required placeholder="Ex: Chapa MDF Plomo"><div class="form-grid"><div><label>Categoria</label><input id="inventoryCategory" placeholder="MDF, ferragem, acessório..."></div><div><label>Unidade</label><input id="inventoryUnit" value="un" placeholder="un, chapa, par, metro..."></div><div><label>Quantidade atual</label><input id="inventoryQty" type="number" step="0.01" value="0"></div><div><label>Estoque mínimo</label><input id="inventoryMin" type="number" step="0.01" value="0"></div><div><label>Custo médio</label><input id="inventoryCost" type="number" step="0.01" value="0"></div><div><label>Fornecedor</label><input id="inventorySupplier" placeholder="Nome da loja"></div></div><label>Variantes</label><textarea id="inventoryVariants" placeholder="Ex: cor: Branco TX; espessura: 15mm; chapa: 2750x1830; fabricante: Berneck"></textarea><label>Observações</label><textarea id="inventoryNotes"></textarea><div class="row-actions"><button class="primary" type="submit">Salvar item</button><button class="ghost" type="button" onclick="TP.clearInventoryForm()">Limpar</button></div></form><div class="quickParts"><button class="primary mini" type="button" onclick="TP.seedDefaultInventory()">Adicionar lista padrão de marcenaria</button><button class="ghost mini" onclick="TP.prefillInventory('MDF Branco TX 15 mm','MDF','chapa')">+ MDF Branco TX</button><button class="ghost mini" onclick="TP.prefillInventory('Corrediça telescópica 450 mm','Corrediça','par')">+ Corrediça</button><button class="ghost mini" onclick="TP.prefillInventory('Dobradiça reta com amortecedor','Dobradiça','un')">+ Dobradiça</button></div></div><div class="card"><div class="toolbar"><h3>Controle de estoque</h3><input class="search" id="inventorySearch" placeholder="Pesquisar estoque..."></div><div id="inventoryTable">${table(['Item','Categoria','Variantes','Un.','Qtd','Mín.','Custo','Fornecedor','Status','Ações'], rows)}</div></div></div>`;
+    const rows=(state.inventoryItems||[]).map(it=>{
+      const infoParts=[html(it.category||'-'), inventoryVariantText(it)?html(inventoryVariantText(it)):'', it.supplier?('Fornecedor: '+html(it.supplier)):'', num(it.avg_cost)>0?('Custo: '+inventoryCostText(it.avg_cost)):''].filter(Boolean);
+      const info=infoParts.map((x,i)=>i===0?x:`<span class="muted small">${x}</span>`).join('<br>');
+      return [
+        `<div class="row-actions nowrap"><button class="ghost mini" onclick="TP.editInventoryItem('${it.id}')">Editar</button><button class="danger mini" onclick="TP.deleteInventoryItem('${it.id}')">Excluir</button></div>`,
+        `<button class="linkRow" onclick="TP.editInventoryItem('${it.id}')"><b>${html(it.item_name)}</b></button><div class="muted small">clique para editar</div>`,
+        `<span>${info}</span>`,
+        html(it.unit||'un'),
+        `${inventoryNumberText(it.current_qty)||'-'}${inventoryNumberText(it.min_qty)?' / mín. '+inventoryNumberText(it.min_qty):''}`,
+        inventoryStatus(it)
+      ];
+    });
+    return `<div class="split inventoryLayout"><div class="card form compactCard"><h3 id="inventoryFormTitle">Novo item de estoque</h3><div class="notice goldline compactNotice">Clique no item da tabela para editar rápido. A lista padrão entra sem quantidade, mínimo e custo.</div><form id="inventoryForm"><input type="hidden" id="inventoryId"><label>Item</label><input id="inventoryName" required placeholder="Ex: Chapa MDF Plomo"><div class="form-grid compactInputs"><div><label>Categoria</label><input id="inventoryCategory" placeholder="MDF, ferragem..."></div><div><label>Unidade</label><input id="inventoryUnit" value="un" placeholder="un, chapa, par..."></div><div><label>Quantidade atual</label><input id="inventoryQty" type="number" step="0.01" placeholder="em branco"></div><div><label>Estoque mínimo</label><input id="inventoryMin" type="number" step="0.01" placeholder="em branco"></div><div><label>Custo médio</label><input id="inventoryCost" type="number" step="0.01" placeholder="em branco"></div><div><label>Fornecedor</label><input id="inventorySupplier" placeholder="Nome da loja"></div></div><label>Variantes</label><textarea id="inventoryVariants" placeholder="Ex: cor: Branco TX; espessura: 15mm"></textarea><label>Observações</label><textarea id="inventoryNotes"></textarea><div class="row-actions"><button class="primary" type="submit">Salvar item</button><button class="ghost" type="button" onclick="TP.clearInventoryForm()">Limpar</button></div></form><div class="quickParts"><button class="primary mini" type="button" onclick="TP.seedDefaultInventory()">Adicionar lista padrão</button><button class="ghost mini" onclick="TP.prefillInventory('MDF Branco TX 15 mm','MDF','chapa')">+ MDF Branco TX</button><button class="ghost mini" onclick="TP.prefillInventory('Corrediça telescópica 450 mm','Corrediça','par')">+ Corrediça</button><button class="ghost mini" onclick="TP.prefillInventory('Dobradiça reta com amortecedor','Dobradiça','un')">+ Dobradiça</button></div><div class="dangerZone"><button class="danger" type="button" onclick="TP.clearAllInventory()">Limpar estoque</button><span class="muted small">Apaga todos os itens do estoque desta conta após confirmação.</span></div></div><div class="card compactCard"><div class="toolbar"><h3>Controle de estoque</h3><input class="search" id="inventorySearch" placeholder="Pesquisar estoque..."></div><div id="inventoryTable" class="clickableTable">${table(['Ações','Item','Categoria / variantes','Un.','Qtd / mínimo','Status'], rows)}</div></div></div>`;
   }
   function payrollStatus(pr){ return String(pr.status||'pendente').toLowerCase()==='pago' ? '<span class="status entregue">pago</span>' : '<span class="status orcando">pendente</span>'; }
   function renderPayroll(){
@@ -801,15 +978,37 @@
     const employeeRows=employees.map(e=>{ const sum=employeePayrollSummary(e.id); return [html(e.name), e.payment_mode==='valor_servico' ? `Valor por serviço: <b>${money(e.service_fixed_value)}</b>` : `Comissão: <b>${num(e.percent_value).toFixed(2).replace('.',',')}%</b>`, sum.list.length, `<b>${money(sum.pending)}</b>`, money(sum.paid), `<div class="row-actions"><button class="ghost mini" onclick="TP.editPayrollEmployee('${e.id}')">Editar</button><button class="danger mini" onclick="TP.deletePayrollEmployee('${e.id}')">Excluir</button></div>`]; });
     const serviceRows=[];
     employees.forEach(e=>{ const sum=employeePayrollSummary(e.id); sum.list.forEach(s=>{ const amount=servicePayrollAmountForEmployee(s,e.id); const isPaid=payrollPaidForServiceEmployee(s,e.id); serviceRows.push([html(e.name), html(s.title), html(getClient(s.client_id).name||'-'), statusBadge2('service',s.status), money(s.value), `<b>${money(amount)}</b>`, isPaid?'<span class="status entregue">pago</span>':'<span class="status aguardando_inicio">faltando pagar</span>', isPaid?`<button class="warning mini" onclick="TP.markServicePayrollPending('${s.id}','${e.id}')">Voltar pendente</button>`:`<button class="success mini" onclick="TP.markServicePayrollPaid('${s.id}','${e.id}')">Pagar</button>`]); }); });
-    return `<div class="split"><div class="card form"><h3 id="payrollFormTitle">Cadastrar funcionário</h3><div class="notice goldline">Cadastre só o funcionário e a regra. O valor a receber é gerado automaticamente pelos serviços <b>em andamento, entregues e finalizados</b> onde ele faz parte da equipe.</div><form id="payrollForm"><input type="hidden" id="payrollEmployeeId"><label>Nome do funcionário</label><input id="payrollEmployeeName" required placeholder="Ex: Davi"><label>Regra de pagamento</label><select id="payrollEmployeeMode"><option value="percentual">% em cima do valor do serviço</option><option value="valor_servico">valor fixo por serviço</option></select><div class="form-grid"><div><label>Porcentagem %</label><input id="payrollEmployeePercent" type="number" step="0.01" value="0"></div><div><label>Valor fixo por serviço</label><input id="payrollEmployeeFixed" type="number" step="0.01" value="0"></div></div><label>Observações</label><textarea id="payrollEmployeeNotes" placeholder="Ex: montador, ajudante, acabamento..."></textarea><div class="row-actions"><button class="primary" type="submit">Salvar funcionário</button><button class="ghost" type="button" onclick="TP.clearPayrollForm()">Limpar</button></div></form><div class="notice" style="margin-top:12px">Para aparecer aqui, vá em <b>Serviços</b>, selecione a equipe do serviço e salve. Cada funcionário terá status pago/pendente separado.</div></div><div class="card"><h3>Resumo da folha</h3><div class="grid"><div class="card stat"><div class="label">A pagar</div><div class="value orange">${money(totalPending)}</div><div class="sub">Serviços ainda pendentes</div></div><div class="card stat"><div class="label">Já pago</div><div class="value green">${money(totalPaid)}</div><div class="sub">Lançado como saída</div></div></div><h3 style="margin-top:14px">Funcionários</h3>${table(['Funcionário','Regra','Serviços','A receber','Pago','Ações'], employeeRows)}</div></div><div class="card" style="margin-top:14px"><h3>Serviços por funcionário</h3>${table(['Funcionário','Serviço','Cliente','Status serviço','Valor serviço','Valor a receber','Pagamento','Ação'], serviceRows)}</div>`;
+    return `<div class="split"><div class="card form"><h3 id="payrollFormTitle">Cadastrar funcionário</h3><div class="notice goldline">Cadastre só o funcionário e a regra. O valor a receber é gerado automaticamente pelos serviços <b>em andamento, entregues e finalizados</b> onde ele faz parte da equipe.</div><form id="payrollForm"><input type="hidden" id="payrollEmployeeId"><label>Nome do funcionário</label><input id="payrollEmployeeName" required placeholder="Ex: Davi"><label>Regra de pagamento</label><select id="payrollEmployeeMode"><option value="percentual">% em cima do valor do serviço</option><option value="valor_servico">valor fixo por serviço</option></select><div class="form-grid"><div><label>Porcentagem %</label><input id="payrollEmployeePercent" type="number" step="0.01" value="0"></div><div><label>Valor fixo por serviço</label><input id="payrollEmployeeFixed" type="number" step="0.01" value="0"></div></div><label>Observações</label><textarea id="payrollEmployeeNotes" placeholder="Ex: montador, ajudante, acabamento..."></textarea><div class="row-actions"><button class="primary" type="submit">Salvar funcionário</button><button class="ghost" type="button" onclick="TP.clearPayrollForm()">Limpar</button></div></form><div class="notice" style="margin-top:12px">Para aparecer aqui, vá em <b>Serviços</b>, selecione a equipe do serviço e salve. Cada funcionário terá status pago/pendente separado.</div></div><div class="card"><h3>Resumo da folha</h3><div class="grid"><div class="card stat"><div class="label">A pagar</div><div class="value orange">${money(totalPending)}</div><div class="sub">Serviços ainda pendentes</div></div><div class="card stat"><div class="label">Já pago</div><div class="value green">${money(totalPaid)}</div><div class="sub">Controlado separado das saídas</div></div></div><h3 style="margin-top:14px">Funcionários</h3>${table(['Funcionário','Regra','Serviços','A receber','Pago','Ações'], employeeRows)}</div></div><div class="card" style="margin-top:14px"><h3>Serviços por funcionário</h3>${table(['Funcionário','Serviço','Cliente','Status serviço','Valor serviço','Valor a receber','Pagamento','Ação'], serviceRows)}</div>`;
   }
+  function defaultContractClauses(){
+    const comp=state.company||defaultCompany();
+    return [
+      'O serviço será executado conforme projeto/orçamento aprovado, medidas conferidas, materiais especificados e observações registradas no sistema.',
+      'Alterações solicitadas após aprovação do orçamento poderão gerar acréscimo de valor e alteração do prazo de entrega.',
+      'O prazo de entrega começa a contar após aprovação final, confirmação do pagamento inicial e disponibilidade dos materiais necessários.',
+      'A garantia cobre defeitos de fabricação e montagem, não cobrindo mau uso, umidade, infiltração, contato direto com água, alterações feitas por terceiros ou danos causados após a entrega.',
+      (comp.quote_warranty||defaultCompany().quote_warranty||'').trim()
+    ].filter(Boolean).join('\n\n');
+  }
+  function addContractClause(){ const el=$('#contractClauses'); if(!el) return; const base=el.value.trim(); el.value = base + (base?'\n\n':'') + 'Nova cláusula: descreva aqui a condição combinada com o cliente.'; el.focus(); }
+  function removeContractClause(){ const el=$('#contractClauses'); if(!el) return; const parts=String(el.value||'').split(/\n\s*\n/g).map(x=>x.trim()).filter(Boolean); parts.pop(); el.value=parts.join('\n\n'); }
+  function resetContractClauses(){ const el=$('#contractClauses'); if(el) el.value=defaultContractClauses(); }
+  function importContractModelFile(e){ const file=e&&e.target&&e.target.files&&e.target.files[0]; if(!file) return; const r=new FileReader(); r.onload=()=>{ const el=$('#contractClauses'); if(el){ el.value=String(r.result||'').trim(); toast('Modelo de contrato importado. Revise antes de gerar.'); } }; r.readAsText(file); }
+  function contractClausesHtml(){ const raw=($('#contractClauses')&&$('#contractClauses').value.trim())||defaultContractClauses(); const parts=raw.split(/\n\s*\n/g).map(x=>x.trim()).filter(Boolean); if(!parts.length) return ''; return sectionHtml('Cláusulas e condições', parts.map((txt,i)=>`<p><b>${i+1}.</b> ${html(txt).replace(/\n/g,'<br>')}</p>`).join('')); }
+  function paymentPresetOptions(selected){ selected=String(selected||''); const opts=[['','Selecione uma condição...'],['pix_dinheiro','Dinheiro/Pix'],['cartao','Cartão'],['50_50','50% à vista no fechamento + 50% à vista na entrega'],['fornecedor_entrega','50% entrada no fornecedor/loja + 50% à vista na entrega'],['100_fechamento','100% à vista no fechamento'],['100_entrega','100% à vista na entrega']]; return opts.map(o=>`<option value="${o[0]}" ${selected===o[0]?'selected':''}>${html(o[1])}</option>`).join(''); }
+  function paymentPresetFromProject(p){ const note=String((p&&p.budget_payment_note)||'').toLowerCase(); const e=Math.round(num(p&&p.entry_pct)); const d=Math.round(num(p&&p.delivery_pct)); if(note.includes('fornecedor')||note.includes('loja')) return 'fornecedor_entrega'; if(e===100&&d===0) return '100_fechamento'; if(e===0&&d===100) return '100_entrega'; if(e===50&&d===50) return '50_50'; if(note.includes('cart')) return 'cartao'; if(note.includes('pix')||note.includes('dinheiro')) return 'pix_dinheiro'; return ''; }
+  function budgetPaymentSelectOptions(selected){ selected=String(selected||'dinheiro'); const opts=[['dinheiro','Dinheiro/Pix'],['cartao','Cartão'],['50_50','50% no fechamento + 50% na entrega'],['fornecedor_entrega','50% fornecedor/loja + 50% entrega'],['fechamento','100% no fechamento'],['entrega','100% na entrega']]; return opts.map(o=>`<option value="${o[0]}" ${selected===o[0]?'selected':''}>${html(o[1])}</option>`).join(''); }
+  function applyPaymentPreset(targetPrefix){ const el=$('#'+targetPrefix+'PaymentPreset'); if(!el) return; const v=el.value; if(targetPrefix==='contract'){ if(v==='50_50') setContractSplit(50,50,'50% à vista no fechamento + 50% à vista na entrega.'); else if(v==='fornecedor_entrega') setContractSplit(50,50,supplierSplitText()); else if(v==='100_fechamento') setContractSplit(100,0,'100% à vista no fechamento.'); else if(v==='100_entrega') setContractSplit(0,100,'100% à vista na entrega.'); else if(v==='cartao'){ const pay=$('#contractPayment'); if(pay) pay.value='Cartão conforme condição combinada.'; } else if(v==='pix_dinheiro'){ const pay=$('#contractPayment'); if(pay) pay.value='Dinheiro/Pix.'; } syncReceiptPaymentFromContract(true); return; } if(v==='50_50') setPaymentSplit(50,50,'50% à vista no fechamento + 50% à vista na entrega.'); else if(v==='fornecedor_entrega') setSupplierSplit(); else if(v==='100_fechamento') setPaymentSplit(100,0,'100% à vista no fechamento.'); else if(v==='100_entrega') setPaymentSplit(0,100,'100% à vista na entrega.'); else if(v==='cartao'){ if($('#bPaymentNote')) $('#bPaymentNote').value='Cartão conforme condição combinada.'; } else if(v==='pix_dinheiro'){ if($('#bPaymentNote')) $('#bPaymentNote').value='Dinheiro/Pix.'; } if(targetPrefix==='budget') queueBudgetFieldsAutosave(); }
+
   function renderContracts(){
     const defaultProject = getProject(state.budgetProjectId || (state.projects[0] && state.projects[0].id) || '');
     const defaultClient = getClient(defaultProject.client_id || (state.clients[0] && state.clients[0].id) || '');
     const ttDefault = defaultProject.id ? projectTotal(defaultProject) : {final:0};
     const defaultValue = ttDefault.final || num(defaultProject.budget_value) || 0;
-    return `<div class="grid2"><div class="card form no-print"><h3>Gerar contrato</h3><div class="notice goldline">Selecione o orçamento/projeto aprovado. O contrato puxa cliente, valores, prazo, imagens e dados oficiais da Top.</div><label>Cliente</label><select id="contractClient">${clientOptions(defaultClient.id)}</select><label>Projeto / orçamento base</label><select id="contractProject">${quoteProjectOptions(defaultProject.id)}</select><label>Nome que aparecerá no contrato</label><input id="contractProjectName" value="${html(defaultProject.name||'')}" placeholder="Ex: Móveis planejados cozinha e quarto"><label>Ambientes do contrato</label><textarea id="contractEnvironments" placeholder="Ex: Cozinha planejada&#10;Quarto casal">${html(defaultProject.environment||'')}</textarea><label>Serviço</label><select id="contractService">${serviceOptions()}</select><div class="form-grid"><div><label>Valor total</label><input id="contractValue" type="number" step="0.01" value="${html(defaultValue.toFixed(2))}"></div><div><label>Desconto em R$</label><input id="contractDiscount" type="number" step="0.01" value="${html(defaultProject.budget_discount||0)}"></div><div><label>% entrada</label><input id="contractEntryPct" type="number" value="${html(defaultProject.entry_pct || state.company.entry_pct || 50)}"></div><div><label>% entrega</label><input id="contractDeliveryPct" type="number" value="${html(defaultProject.delivery_pct || state.company.delivery_pct || 50)}"></div><div><label>Início do prazo</label><input id="contractStart" type="date" value="${html(defaultProject.contract_start || today())}"></div><div><label>Prazo de entrega em dias</label><input id="contractDays" type="number" value="${html(defaultProject.delivery_days || 30)}"></div></div><div class="row-actions"><button class="ghost" onclick="TP.setContractSplit(100,0)">100% no fechamento</button><button class="ghost" onclick="TP.setContractSplit(50,50)">50/50</button><button class="ghost" onclick="TP.setContractSupplierSplit()">Entrada fornecedor / entrega</button><button class="ghost" onclick="TP.setContractSplit(0,100)">Tudo na entrega</button></div><label>Forma de pagamento</label><input id="contractPayment" value="${html(defaultProject.budget_payment_note||'PIX, dinheiro, cartão ou conforme combinado')}"><label>Observações contratuais</label><textarea id="contractNotes" placeholder="Inclua detalhes específicos do projeto..."></textarea><div class="form-grid"><div><label>Valor recebido para recibo</label><input id="receiptAmount" type="number" step="0.01" value="${html(defaultValue.toFixed(2))}"></div><div><label>Forma de pagamento do recibo</label><input id="receiptPayment" value="PIX"></div></div><label>Referente ao recibo</label><input id="receiptReference" value="${html(defaultProject.name||'Serviço de móveis planejados')}" placeholder="Ex: entrada dos móveis planejados da cozinha"><div class="row-actions"><button class="primary" onclick="TP.generateContract()">Gerar contrato</button><button class="ghost" onclick="TP.printContractPdf()">Gerar PDF do contrato</button><button class="success" onclick="TP.generateReceipt()">Gerar recibo</button><button class="ghost" onclick="TP.printReceiptPdf()">PDF do recibo</button></div><div class="notice" style="margin-top:12px">Dica: selecione um projeto com orçamento para puxar valor/itens automaticamente. O recibo usa os mesmos dados de cliente, empresa e valor.</div></div><div class="card"><div id="contractOutput" class="contract clearContract"><h1>Contrato</h1><p class="muted">Selecione cliente, projeto ou serviço e clique em gerar.</p></div></div></div>`;
+    const receiptPay = defaultProject.budget_payment_note || 'PIX';
+    return `<div class="grid2 contractWorkspace"><div class="card form no-print"><h3>Gerar contrato</h3><div class="notice goldline">Selecione o projeto/orçamento aprovado. O contrato puxa cliente, itens, imagens, prazo e dados oficiais da empresa.</div><label>Cliente</label><select id="contractClient">${clientOptions(defaultClient.id)}</select><label>Projeto / orçamento base</label><select id="contractProject">${quoteProjectOptions(defaultProject.id)}</select><label>Nome que aparecerá no contrato</label><input id="contractProjectName" value="${html(defaultProject.name||'')}" placeholder="Ex: Móveis planejados cozinha e quarto"><label>Ambientes do contrato</label><textarea id="contractEnvironments" placeholder="Ex: Cozinha planejada&#10;Quarto casal">${html(defaultProject.environment||'')}</textarea><label>Serviço</label><select id="contractService">${serviceOptions()}</select><div class="form-grid"><div><label>Valor total</label><input id="contractValue" type="number" step="0.01" value="${html(defaultValue.toFixed(2))}"></div><div><label>Desconto em R$</label><input id="contractDiscount" type="number" step="0.01" value="${html(defaultProject.budget_discount||0)}"></div><div><label>% entrada</label><input id="contractEntryPct" type="number" value="${html(defaultProject.entry_pct || state.company.entry_pct || 50)}"></div><div><label>% entrega</label><input id="contractDeliveryPct" type="number" value="${html(defaultProject.delivery_pct || state.company.delivery_pct || 50)}"></div><div><label>Início do prazo</label><input id="contractStart" type="date" value="${html(defaultProject.contract_start || today())}"></div><div><label>Prazo de entrega em dias</label><input id="contractDays" type="number" value="${html(defaultProject.delivery_days || 30)}"></div></div><label>Modelos rápidos de pagamento</label><select id="contractPaymentPreset" onchange="TP.applyPaymentPreset('contract')">${paymentPresetOptions('')}</select><div class="row-actions"><button class="ghost" onclick="TP.setContractSplit(100,0,'100% à vista no fechamento.')">100% no fechamento</button><button class="ghost" onclick="TP.setContractSplit(50,50,'50% à vista no fechamento + 50% à vista na entrega.')">50/50</button><button class="ghost" onclick="TP.setContractSupplierSplit()">50% fornecedor/loja + entrega</button><button class="ghost" onclick="TP.setContractSplit(0,100,'100% à vista na entrega.')">Tudo na entrega</button></div><label>Forma de pagamento</label><textarea id="contractPayment" rows="3">${html(defaultProject.budget_payment_note||'PIX, dinheiro, cartão ou conforme combinado')}</textarea><label>Observações contratuais</label><textarea id="contractNotes" placeholder="Inclua detalhes específicos do projeto..."></textarea><div class="card softPanel"><h4>Cláusulas do contrato</h4><p class="muted small">Você pode editar, apagar, adicionar cláusulas ou importar um modelo em texto. Cada parágrafo separado por linha em branco vira uma cláusula.</p><textarea id="contractClauses" rows="9">${html(defaultContractClauses())}</textarea><div class="row-actions"><button class="ghost mini" type="button" onclick="TP.addContractClause()">Adicionar cláusula</button><button class="warning mini" type="button" onclick="TP.removeContractClause()">Remover última</button><button class="ghost mini" type="button" onclick="TP.resetContractClauses()">Restaurar padrão</button><label class="ghost mini fileButton">Importar modelo<input id="contractModelFile" type="file" accept=".txt,.md,text/plain" hidden></label></div></div><div class="form-grid"><div><label>Valor recebido para recibo</label><input id="receiptAmount" type="number" step="0.01" value="${html(defaultValue.toFixed(2))}"></div><div><label>Forma de pagamento do recibo</label><input id="receiptPayment" value="${html(receiptPay)}"></div></div><div class="row-actions"><button class="ghost" type="button" onclick="TP.syncReceiptPaymentFromContract(true)">Usar pagamento do contrato no recibo</button></div><label>Referente ao recibo</label><input id="receiptReference" value="${html(defaultProject.name||'Serviço de móveis planejados')}" placeholder="Ex: entrada dos móveis planejados da cozinha"><div class="row-actions"><button class="primary" onclick="TP.generateContract()">Gerar contrato</button><button class="ghost" onclick="TP.printContractPdf()">Gerar PDF do contrato</button><button class="success" onclick="TP.generateReceipt()">Gerar recibo</button><button class="ghost" onclick="TP.printReceiptPdf()">PDF do recibo</button></div><div class="notice" style="margin-top:12px">Dica: modelo visual, logo e cores ficam em <b>Configurações &gt; Documentos da empresa</b>. As cláusulas são ajustadas aqui antes de gerar.</div></div><div class="card"><div id="contractOutput" class="contract clearContract"><h1>Contrato</h1><p class="muted">Selecione cliente, projeto ou serviço e clique em gerar.</p></div></div></div>`;
   }
+
   function renderRenderLab(){
     const rs = state.renderSettings || {};
     return `<div class="grid2"><div class="card form"><h3>Render API</h3><div class="notice goldline">Ferramenta reservada para integração futura. Não interfere no fluxo principal da Top e não possui planos de venda dentro do app.</div><label>Imagem do projeto</label><div class="dropzone"><b>Enviar imagem do projeto</b><br><span class="muted">PNG ou JPG</span><br><input id="renderFile" type="file" accept="image/*"></div><div class="form-grid"><div><label>Tipo de ambiente</label><select id="renderEnvironment"><option>Cozinha planejada</option><option>Quarto planejado</option><option>Banheiro planejado</option><option>Sala / painel</option><option>Área gourmet</option><option>Outro</option></select></div><div><label>Qualidade</label><select id="renderQuality"><option>Realista premium</option><option>Catálogo comercial</option><option>Foto imobiliária</option></select></div><div><label>Iluminação</label><select id="renderLight"><option>Natural suave</option><option>LED quente</option><option>LED neutro</option></select></div><div><label>Fidelidade</label><select id="renderFidelity"><option>Preservar 100% do projeto</option><option>Melhorar realismo sem mudar design</option></select></div></div><label>Materiais principais</label><input id="renderMaterials" placeholder="Branco TX, Nude, pedra Preto São Gabriel..."><label>Instruções extras</label><textarea id="renderExtra" placeholder="Não alterar medidas, layout, materiais ou proporções."></textarea><div class="row-actions"><button class="primary" onclick="TP.generateRenderPrompt()">Gerar prompt técnico</button><button class="ghost" onclick="TP.callRenderApi()">Testar API</button></div><p class="muted small">Endpoint/proxy: ${html(rs.public_endpoint || 'não configurado')}</p></div><div class="card"><h3>Prévia / Prompt</h3><div id="renderPreview" class="render-preview">Envie uma imagem para pré-visualizar aqui.</div><textarea id="renderPrompt" class="copyarea" placeholder="O prompt técnico aparecerá aqui."></textarea><div class="notice redline" style="margin-top:12px"><b>Segurança:</b> chave secreta de API não deve ficar no navegador. Use proxy/Edge Function.</div></div></div>`;
@@ -1381,7 +1580,7 @@
       return `<div class="${rowCls}"><div><b>${html(tabClearTitle(t.tab_key,t.title))}</b><div class="muted small">${html(tabClearDesc(t.tab_key,t.description))}</div><span class="badge">${html(t.tab_key)}</span> ${badge}</div><div class="row-actions">${control}</div></div>`;
     }).join('');
     const rs = state.renderSettings || {};
-    return `<div class="grid2"><div class="card"><h3>Abas e permissões</h3><div class="notice">Controle quais áreas aparecem para a equipe. O objetivo da V104.1 Recibo e Admin é manter o fluxo principal simples: cliente, orçamento, contrato, serviço e financeiro.</div>${tabs}</div><div class="card"><h3>Usuários</h3><div class="notice goldline">Novo usuário criado em qualquer computador aparece aqui para o administrador ativar. Se aparecer como “sem perfil”, ao liberar o app cria o perfil automaticamente.</div><button class="ghost" onclick="TP.loadAdminUsers()">Recarregar usuários</button><div id="usersTable" style="margin-top:12px">${table(['Nome','E-mail','Cargo','Acesso','Perfil','Criado em','Ações'], usersRows)}</div></div></div><div class="grid2" style="margin-top:14px"><div class="card"><h3>Dados da operação</h3><p>Use a aba <b>Configurações</b> para manter os dados oficiais da empresa, valores por metro e padrões dos documentos.</p><div class="badge-list"><span class="badge">Preço branco: ${money(state.company.price_white)}</span><span class="badge">Cartão: ${state.company.card_factor}</span><span class="badge">Fatores: ${CATALOG.length}</span></div></div><div class="card form"><h3>Render API interna</h3><form id="renderSettingsForm"><label>Fornecedor / modo</label><input id="renderProvider" value="${html(rs.provider||'proxy-interno') }"><label>Endpoint público/proxy</label><input id="renderEndpoint" value="${html(rs.public_endpoint||'')}" placeholder="https://seu-endpoint/render"><label>Referência da API Key</label><input id="renderKeyRef" value="${html(rs.api_key_reference||'')}" placeholder="Chave salva no backend/proxy"><label>Pronto para uso?</label><select id="renderReady"><option value="false" ${!rs.ready?'selected':''}>Não</option><option value="true" ${rs.ready?'selected':''}>Sim</option></select><label>Notas internas</label><textarea id="renderNotes">${html(rs.admin_notes||'')}</textarea><button class="primary" type="submit">Salvar integração</button></form></div></div>`;
+    return `<div class="grid2"><div class="card"><h3>Abas e permissões</h3><div class="notice">Controle quais áreas aparecem para a equipe. O objetivo da V111 Layout e Estoque é manter o fluxo principal simples: cliente, orçamento, contrato, serviço e financeiro.</div>${tabs}</div><div class="card"><h3>Usuários</h3><div class="notice goldline">Novo usuário criado em qualquer computador aparece aqui para o administrador ativar. Se aparecer como “sem perfil”, ao liberar o app cria o perfil automaticamente.</div><button class="ghost" onclick="TP.loadAdminUsers()">Recarregar usuários</button><div id="usersTable" style="margin-top:12px">${table(['Nome','E-mail','Cargo','Acesso','Perfil','Criado em','Ações'], usersRows)}</div></div></div><div class="grid2" style="margin-top:14px"><div class="card"><h3>Dados da operação</h3><p>Use a aba <b>Configurações</b> para manter os dados oficiais da empresa, valores por metro e padrões dos documentos.</p><div class="badge-list"><span class="badge">Preço branco: ${money(state.company.price_white)}</span><span class="badge">Cartão: ${state.company.card_factor}</span><span class="badge">Fatores: ${CATALOG.length}</span></div></div><div class="card form"><h3>Render API interna</h3><form id="renderSettingsForm"><label>Fornecedor / modo</label><input id="renderProvider" value="${html(rs.provider||'proxy-interno') }"><label>Endpoint público/proxy</label><input id="renderEndpoint" value="${html(rs.public_endpoint||'')}" placeholder="https://seu-endpoint/render"><label>Referência da API Key</label><input id="renderKeyRef" value="${html(rs.api_key_reference||'')}" placeholder="Chave salva no backend/proxy"><label>Pronto para uso?</label><select id="renderReady"><option value="false" ${!rs.ready?'selected':''}>Não</option><option value="true" ${rs.ready?'selected':''}>Sim</option></select><label>Notas internas</label><textarea id="renderNotes">${html(rs.admin_notes||'')}</textarea><button class="primary" type="submit">Salvar integração</button></form></div></div>`;
   }
 
 
@@ -1403,6 +1602,9 @@
     if($('#priceForm')) $('#priceForm').addEventListener('submit', e=>runAction(()=>savePrices(e)));
     if($('#budgetFieldsForm')) $('#budgetFieldsForm').addEventListener('submit', e=>runAction(()=>saveBudgetFields(e)));
     if($('#quickBudgetForm')) $('#quickBudgetForm').addEventListener('submit', e=>runAction(()=>createQuickBudget(e)));
+    if($('#quickBudgetClient')) $('#quickBudgetClient').addEventListener('change', e=>previewBudgetClient(e.target.value));
+    if($('#budgetClientPicker')) $('#budgetClientPicker').addEventListener('change', e=>{ state.quickBudgetClientId=e.target.value; const box=$('#budgetClientDetails'); if(box) box.innerHTML=clientBudgetDetailsHtml(e.target.value); const q=$('#quickBudgetClient'); if(q) q.value=e.target.value; });
+    if($('#quickItemCatalog')) $('#quickItemCatalog').addEventListener('change', e=>{ const c=CATALOG.find(x=>String(x.code)===String(e.target.value)); if(c && $('#quickItemFactor')) $('#quickItemFactor').value=c.factor; });
     if($('#renderSettingsForm')) $('#renderSettingsForm').addEventListener('submit', e=>runAction(()=>saveRenderSettings(e)));
     enableEnterNext($('#content'));
     if($('#clientSearch')) $('#clientSearch').addEventListener('input', e=>filterRows('#clientTable', e.target.value));
@@ -1419,6 +1621,9 @@
     if($('#budgetProject')) $('#budgetProject').addEventListener('change', e=>{ state.budgetProjectId=e.target.value; render(); });
     if($('#contractProject')) $('#contractProject').addEventListener('change', syncContractFromProject);
     if($('#contractService')) $('#contractService').addEventListener('change', syncContractFromService);
+    if($('#contractPayment')) $('#contractPayment').addEventListener('input', ()=>syncReceiptPaymentFromContract(false));
+    if($('#contractModelFile')) $('#contractModelFile').addEventListener('change', importContractModelFile);
+    if($('#receiptPayment')) $('#receiptPayment').addEventListener('input', ()=>{ state.receiptPaymentTouched=true; });
     if($('#iCatalog')) $('#iCatalog').addEventListener('change', e=>{ const c=CATALOG.find(x=>String(x.code)===String(e.target.value)); if(c && $('#iFactor')) $('#iFactor').value=c.factor; });
     bindDesignerEvents();
   }
@@ -1455,17 +1660,17 @@
   let syncTimer=null;
   async function afterSave(msg){
     toast(msg || 'Salvo com sucesso.');
-    setCloud(false,'Salvo. Sincronizando...');
+    setCloud(true,'Salvo. Sincronizando em segundo plano...');
     if(syncTimer) clearTimeout(syncTimer);
     syncTimer=setTimeout(()=>{
-      loadAll().then(()=>render()).catch(err=>{ console.error(err); setCloud(false,'Erro na nuvem'); toast('Salvo, mas a atualização da tela falhou. Aperte Atualizar.', 'red'); });
-    },220);
+      loadAll().then(()=>{ if(document.activeElement && ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return; render(); }).catch(err=>{ console.error(err); setCloud(false,'Erro na nuvem'); toast('Salvo, mas a atualização da tela falhou. Aperte Atualizar.', 'red'); });
+    },750);
   }
 
   async function saveClient(e){
     e.preventDefault();
     const id = $('#clientId').value;
-    const obj = { name:$('#clientName').value.trim(), document_number:($('#clientDoc')?$('#clientDoc').value.trim():''), phone:$('#clientPhone').value.trim(), city:$('#clientCity').value.trim(), address:$('#clientAddress').value.trim(), source:$('#clientSource').value.trim(), status:$('#clientStatus').value, notes:$('#clientNotes').value.trim(), created_by:effectiveUserId() };
+    const obj = { name:cleanText($('#clientName').value,100), document_number:cleanText(($('#clientDoc')?$('#clientDoc').value:''),40), phone:cleanPhone($('#clientPhone').value), city:cleanText($('#clientCity').value,80), address:cleanText($('#clientAddress').value,180), source:cleanText($('#clientSource').value,80), status:normalizeStatus('client',$('#clientStatus').value), notes:cleanLongText($('#clientNotes').value,1200), created_by:effectiveUserId() };
     if(!obj.name){ toast('Informe o nome do cliente.', 'red'); return; }
     try{
       if(id) await update('clients','id=eq.'+id,obj); else await insert('clients',obj);
@@ -1482,7 +1687,10 @@
   async function saveProject(e){
     e.preventDefault();
     const id = $('#projectId').value; const cur=getProject(id);
-    const obj = { client_id:$('#projectClient').value || null, name:$('#projectName').value.trim(), environment:$('#projectEnv').value, colors:$('#projectColors').value.trim(), project_image_url:($('#projectImageUrl')?$('#projectImageUrl').value.trim():''), project_status:normalizeStatus('project',$('#projectStatus').value||'em_criacao'), status:cur.status||'rascunho', budget_value:num(cur.budget_value||0), budget_items:cur.budget_items||[], budget_discount:num(cur.budget_discount||0), delivery_days:num(cur.delivery_days||30)||30, production_status:cur.production_status||'nao_iniciado', notes:$('#projectNotes').value.trim(), created_by:effectiveUserId() };
+    let budgetItems=Array.isArray(cur.budget_items)?cur.budget_items.slice():[];
+    const temp=Object.assign({}, cur, {budget_items:budgetItems, budget_discount:num(cur.budget_discount||0), entry_pct:cur.entry_pct||state.company.entry_pct, delivery_pct:cur.delivery_pct||state.company.delivery_pct});
+    const safeProjectImages = (($('#projectImageUrl')?$('#projectImageUrl').value:'') || '').split(/\n|\|\|/).map(safeImageSrc).filter(Boolean).join('\n');
+    const obj = { client_id:$('#projectClient').value || null, name:cleanText($('#projectName').value,120), environment:cleanText($('#projectEnv').value,60), colors:cleanText($('#projectColors').value,200), project_image_url:safeProjectImages, project_status:normalizeStatus('project',$('#projectStatus').value||'em_criacao'), status:cur.status||'rascunho', budget_value:projectTotal(temp).final || num(cur.budget_value||0), budget_items:budgetItems, budget_discount:num(cur.budget_discount||0), delivery_days:num(cur.delivery_days||30)||30, production_status:cur.production_status||'nao_iniciado', notes:cleanLongText($('#projectNotes').value,1800), created_by:effectiveUserId() };
     if(!obj.client_id){ toast('Selecione o cliente do projeto.', 'red'); return; }
     if(!obj.name){ toast('Informe o título do projeto.', 'red'); return; }
     try{ if(id) await update('projects','id=eq.'+id,obj); else await insert('projects',obj); }
@@ -1493,7 +1701,7 @@
         toast('Projeto salvo. Rode a migration_v103.sql para liberar os novos status separados.', 'red');
       } else throw err;
     }
-    await logAction(id?'projeto_atualizado':'projeto_criado',{id,name:obj.name}); await afterSave('Projeto salvo.');
+    await logAction(id?'projeto_atualizado':'projeto_criado',{id,name:obj.name,items:budgetItems.length}); await afterSave('Projeto salvo.');
   }
 
   function syncServiceFromProject(){
@@ -1511,7 +1719,7 @@
   async function saveService(e){
     e.preventDefault(); const id = $('#serviceId').value;
     const employeeIds=selectedValues('serviceEmployees');
-    const obj = { client_id:$('#serviceClient').value || null, project_id:$('#serviceProject').value || null, title:$('#serviceTitle').value.trim(), status:normalizeStatus('service',$('#serviceStatus').value), value:num($('#serviceValue').value), cost:num($('#serviceCost').value), started_at:$('#serviceStart').value || null, closed_at:$('#serviceClose').value || (['entregue','finalizado'].includes(normalizeStatus('service',$('#serviceStatus').value)) ? today() : null), notes:$('#serviceNotes').value.trim(), payroll_employee_id:employeeIds[0]||null, payroll_employee_ids:employeeIds, payroll_release_mode:($('#servicePayOnDelivery')&&$('#servicePayOnDelivery').checked?'entregue':'status'), created_by:effectiveUserId() };
+    const obj = { client_id:$('#serviceClient').value || null, project_id:$('#serviceProject').value || null, title:cleanText($('#serviceTitle').value,140), status:normalizeStatus('service',$('#serviceStatus').value), value:num($('#serviceValue').value), cost:num($('#serviceCost').value), started_at:$('#serviceStart').value || null, closed_at:$('#serviceClose').value || (['entregue','finalizado'].includes(normalizeStatus('service',$('#serviceStatus').value)) ? today() : null), notes:cleanLongText($('#serviceNotes').value,1500), payroll_employee_id:employeeIds[0]||null, payroll_employee_ids:employeeIds, payroll_release_mode:($('#servicePayOnDelivery')&&$('#servicePayOnDelivery').checked?'entregue':'status'), created_by:effectiveUserId() };
     let rows; if(id) rows = await update('services','id=eq.'+id,obj); else rows = await insert('services',obj);
     const saved = rows && rows[0] ? rows[0] : Object.assign({id}, obj);
     await syncAutoServiceTransactions(saved);
@@ -1526,14 +1734,14 @@
       if(num(s.cost)>0) await insert('transactions',{ type:'saida', category:'AUTO_SERVICO', description:'AUTO: Custo do serviço - '+s.title, amount:num(s.cost), transaction_date:s.closed_at || today(), project_id:s.project_id, service_id:s.id, created_by:effectiveUserId() });
     }
   }
-  function readTxReceiptFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; const rd=new FileReader(); rd.onload=()=>{ if($('#txReceiptUrl')) $('#txReceiptUrl').value=String(rd.result||''); toast('Comprovante anexado. Clique em salvar movimentação.'); }; rd.readAsDataURL(file); }
-  function readProviderReceiptFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; const rd=new FileReader(); rd.onload=()=>{ if($('#providerReceiptUrl')) $('#providerReceiptUrl').value=String(rd.result||''); toast('Cupom anexado. Clique em descontar do saldo.'); }; rd.readAsDataURL(file); }
+  async function readTxReceiptFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; try{ const val=await imageFileToDataUrl(file,{maxWidth:1400,maxHeight:1400,quality:.78,type:'image/webp',maxMb:8}); if($('#txReceiptUrl')) $('#txReceiptUrl').value=val; toast('Comprovante otimizado. Clique em salvar movimentação.'); }catch(err){ toast(err.message || 'Não foi possível anexar o comprovante.', 'red'); } finally{ if(e.target) e.target.value=''; } }
+  async function readProviderReceiptFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; try{ const val=await imageFileToDataUrl(file,{maxWidth:1400,maxHeight:1400,quality:.78,type:'image/webp',maxMb:8}); if($('#providerReceiptUrl')) $('#providerReceiptUrl').value=val; toast('Cupom otimizado. Clique em descontar do saldo.'); }catch(err){ toast(err.message || 'Não foi possível anexar o cupom.', 'red'); } finally{ if(e.target) e.target.value=''; } }
   async function saveTx(e){
     e.preventDefault();
     const txType=$('#txType').value;
     const supplierId=$('#txSupplier') ? $('#txSupplier').value : null;
     const supplierName=supplierId ? (((state.suppliers||[]).find(f=>f.id===supplierId)||{}).name||'') : '';
-    const obj = { type:txType, category:($('#txCategory').value.trim() || (txType==='credito_loja'?'Crédito loja/fornecedor':'')), description:$('#txDescription').value.trim(), amount:num($('#txAmount').value), transaction_date:$('#txDate').value || today(), project_id:$('#txProject').value || null, service_id:$('#txService').value || null, supplier_id:supplierId||null, supplier:supplierName, payment_method:($('#txPayment')&&$('#txPayment').value)||'', notes:($('#txNotes')&&$('#txNotes').value.trim())||'', receipt_url:($('#txReceiptUrl')&&$('#txReceiptUrl').value.trim())||'', created_by:effectiveUserId() };
+    const obj = { type:txType, category:(cleanText($('#txCategory').value,80) || (txType==='credito_loja'?'Crédito loja/fornecedor':'')), description:cleanText($('#txDescription').value,180), amount:num($('#txAmount').value), transaction_date:$('#txDate').value || today(), project_id:$('#txProject').value || null, service_id:$('#txService').value || null, supplier_id:supplierId||null, supplier:cleanText(supplierName,120), payment_method:cleanText(($('#txPayment')&&$('#txPayment').value)||'',60), notes:cleanLongText(($('#txNotes')&&$('#txNotes').value)||'',1200), receipt_url:safeImageSrc(($('#txReceiptUrl')&&$('#txReceiptUrl').value)||''), created_by:effectiveUserId() };
     if(!obj.description){ toast('Informe uma descrição.', 'red'); return; }
     if(!obj.amount || obj.amount<=0){ toast('Informe um valor maior que zero.', 'red'); return; }
     try{ await insert('transactions',obj); }
@@ -1556,8 +1764,8 @@
     const supplierId=($('#providerSupplier')&&$('#providerSupplier').value)||'';
     const supplierObj=(state.suppliers||[]).find(f=>f.id===supplierId)||{};
     const supplier=supplierObj.name || 'Fornecedor';
-    const desc=($('#providerDesc').value||'Compra descontada do saldo').trim();
-    const obj={ type:'credito_loja', category:'USO_CREDITO_FORNECEDOR', description:`Compra no fornecedor: ${supplier} - ${desc}`, amount:-Math.abs(amount), transaction_date:$('#providerDate').value||today(), supplier_id:supplierId||null, supplier, payment_method:'Saldo fornecedor', receipt_url:($('#providerReceiptUrl')&&$('#providerReceiptUrl').value.trim())||'', project_id:$('#providerProject').value||null, service_id:$('#providerService').value||null, created_by:effectiveUserId() };
+    const desc=cleanText(($('#providerDesc').value||'Compra descontada do saldo'),160);
+    const obj={ type:'credito_loja', category:'USO_CREDITO_FORNECEDOR', description:`Compra no fornecedor: ${cleanText(supplier,120)} - ${desc}`, amount:-Math.abs(amount), transaction_date:$('#providerDate').value||today(), supplier_id:supplierId||null, supplier:cleanText(supplier,120), payment_method:'Saldo fornecedor', receipt_url:safeImageSrc(($('#providerReceiptUrl')&&$('#providerReceiptUrl').value)||''), project_id:$('#providerProject').value||null, service_id:$('#providerService').value||null, created_by:effectiveUserId() };
     try{ await insert('transactions',obj); }
     catch(err){
       const msg=String(err.message||err);
@@ -1576,7 +1784,7 @@
     const missing = DEFAULT_INVENTORY_ITEMS.filter(i=>!existing.has(normalizeInventoryName(i.item_name)));
     if(!missing.length){ toast('A lista padrão já está no estoque.'); return; }
     setCloud(false, 'Adicionando itens...');
-    const payloads = missing.map(i=>Object.assign({current_qty:0, avg_cost:0, supplier:'', notes:'Item padrão editável.', created_by:effectiveUserId()}, i));
+    const payloads = missing.map(i=>Object.assign({current_qty:0, min_qty:0, avg_cost:0, supplier:'', notes:'Item padrão editável sem quantidade/mínimo/custo.', created_by:effectiveUserId()}, i));
     try{
       await insert('inventory_items', payloads);
       localStorage.setItem('tp_inventory_seed_done_'+effectiveUserId(),'1');
@@ -1592,7 +1800,7 @@
     if((state.inventoryItems||[]).length) return;
     if(localStorage.getItem('tp_inventory_seed_done_'+effectiveUserId())==='1' || localStorage.getItem('tp_inventory_seed_skip_'+effectiveUserId())==='1') return;
     try{
-      const payloads = DEFAULT_INVENTORY_ITEMS.map(i=>Object.assign({current_qty:0, avg_cost:0, supplier:'', notes:'Item padrão editável.', created_by:effectiveUserId()}, i));
+      const payloads = DEFAULT_INVENTORY_ITEMS.map(i=>Object.assign({current_qty:0, min_qty:0, avg_cost:0, supplier:'', notes:'Item padrão editável sem quantidade/mínimo/custo.', created_by:effectiveUserId()}, i));
       await insert('inventory_items', payloads);
       const uidFilter = encodeURIComponent(effectiveUserId());
       state.inventoryItems = await safeSelect('inventory_items', 'select=*&created_by=eq.' + uidFilter + '&order=item_name.asc');
@@ -1605,11 +1813,13 @@
   }
 
   function prefillInventory(name,category,unit){ if($('#inventoryName')) $('#inventoryName').value=name; if($('#inventoryCategory')) $('#inventoryCategory').value=category; if($('#inventoryUnit')) $('#inventoryUnit').value=unit; }
+  function previewBudgetClient(clientId){ state.quickBudgetClientId=clientId||''; const box=$('#quickClientDetails'); if(box) box.innerHTML=clientBudgetDetailsHtml(state.quickBudgetClientId); }
+  function openClientBudget(clientId){ state.quickBudgetClientId=clientId||''; state.current='projects'; render(); setTimeout(()=>toast('Crie ou selecione um projeto para este cliente. Depois abra o orçamento pelo projeto.'),50); }
   function clearInventoryForm(){ if($('#inventoryForm')) $('#inventoryForm').reset(); if($('#inventoryId')) $('#inventoryId').value=''; if($('#inventoryFormTitle')) $('#inventoryFormTitle').textContent='Novo item de estoque'; }
-  function editInventoryItem(id){ const it=(state.inventoryItems||[]).find(x=>x.id===id)||{}; fill({inventoryId:'id',inventoryName:'item_name',inventoryCategory:'category',inventoryUnit:'unit',inventoryQty:'current_qty',inventoryMin:'min_qty',inventoryCost:'avg_cost',inventorySupplier:'supplier',inventoryVariants:'variant_text',inventoryNotes:'notes'},it); if($('#inventoryFormTitle')) $('#inventoryFormTitle').textContent='Editar item de estoque'; }
+  function editInventoryItem(id){ const it=(state.inventoryItems||[]).find(x=>x.id===id)||{}; fill({inventoryId:'id',inventoryName:'item_name',inventoryCategory:'category',inventoryUnit:'unit',inventoryQty:'current_qty',inventoryMin:'min_qty',inventoryCost:'avg_cost',inventorySupplier:'supplier',inventoryVariants:'variant_text',inventoryNotes:'notes'},it); ['inventoryQty','inventoryMin','inventoryCost'].forEach(field=>{ const el=$('#'+field); if(el && num(el.value)===0) el.value=''; }); if($('#inventoryFormTitle')) $('#inventoryFormTitle').textContent='Editar item de estoque'; }
   async function saveInventoryItem(e){
     e.preventDefault(); const id=$('#inventoryId').value;
-    const obj={ item_name:$('#inventoryName').value.trim(), category:$('#inventoryCategory').value.trim(), unit:$('#inventoryUnit').value.trim()||'un', current_qty:num($('#inventoryQty').value), min_qty:num($('#inventoryMin').value), avg_cost:num($('#inventoryCost').value), supplier:$('#inventorySupplier').value.trim(), variant_text:($('#inventoryVariants')&&$('#inventoryVariants').value.trim())||'', notes:$('#inventoryNotes').value.trim(), created_by:effectiveUserId() };
+    const obj={ item_name:cleanText($('#inventoryName').value,140), category:cleanText($('#inventoryCategory').value,80), unit:cleanText($('#inventoryUnit').value,30)||'un', current_qty:num($('#inventoryQty').value), min_qty:num($('#inventoryMin').value), avg_cost:num($('#inventoryCost').value), supplier:cleanText($('#inventorySupplier').value,120), variant_text:cleanLongText(($('#inventoryVariants')&&$('#inventoryVariants').value)||'',800), notes:cleanLongText($('#inventoryNotes').value,1200), created_by:effectiveUserId() };
     if(!obj.item_name){ toast('Informe o nome do item.', 'red'); return; }
     try{ if(id) await update('inventory_items','id=eq.'+id,obj); else await insert('inventory_items',obj); }
     catch(err){
@@ -1619,22 +1829,45 @@
     await afterSave('Item de estoque salvo.');
   }
   async function deleteInventoryItem(id){ if(!confirm('Excluir item de estoque?')) return; await removeRow('inventory_items','id=eq.'+id); await afterSave('Item excluído.'); }
+async function clearInventoryIds(ids){
+  const cleanIds = (ids || []).filter(Boolean);
+  for(let i=0;i<cleanIds.length;i+=40){
+    const chunk = cleanIds.slice(i,i+40).map(id => encodeURIComponent(id));
+    if(!chunk.length) continue;
+    try{
+      await removeRow('inventory_items','id=in.(' + chunk.join(',') + ')');
+    }catch(batchErr){
+      console.warn('Falha ao limpar estoque em lote. Tentando item por item.', batchErr);
+      for(const id of chunk){
+        await removeRow('inventory_items','id=eq.' + id);
+      }
+    }
+  }
+}
+async function clearAllInventory(){
+  const items = (state.inventoryItems || []).filter(item => item && item.id);
+  if(!items.length){ toast('Estoque já está vazio.'); return; }
+  if(!confirm('Limpar TODO o estoque? Isso apagará ' + items.length + ' item(ns).')) return;
+  if(!confirm('Confirma mesmo? Essa ação não tem volta.')) return;
+  await clearInventoryIds(items.map(item => item.id));
+  localStorage.removeItem('tp_inventory_seed_done_' + effectiveUserId());
+  localStorage.setItem('tp_inventory_seed_skip_' + effectiveUserId(), '1');
+  state.inventoryItems = [];
+  await logAction('estoque_limpo', { total: items.length });
+  await afterSave(items.length + ' item(ns) removido(s) do estoque.');
+}
   function clearPayrollForm(){ if($('#payrollForm')) $('#payrollForm').reset(); if($('#payrollEmployeeId')) $('#payrollEmployeeId').value=''; if($('#payrollFormTitle')) $('#payrollFormTitle').textContent='Cadastrar funcionário'; }
   function editPayrollEmployee(id){ const e=getPayrollEmployee(id); fill({payrollEmployeeId:'id',payrollEmployeeName:'name',payrollEmployeeMode:'payment_mode',payrollEmployeePercent:'percent_value',payrollEmployeeFixed:'service_fixed_value',payrollEmployeeNotes:'notes'},e); if($('#payrollFormTitle')) $('#payrollFormTitle').textContent='Editar funcionário'; }
-  async function savePayrollEmployee(ev){ ev.preventDefault(); const id=$('#payrollEmployeeId').value; const obj={ name:$('#payrollEmployeeName').value.trim(), payment_mode:$('#payrollEmployeeMode').value, percent_value:num($('#payrollEmployeePercent').value), service_fixed_value:num($('#payrollEmployeeFixed').value), notes:$('#payrollEmployeeNotes').value.trim(), active:true, created_by:effectiveUserId() }; if(!obj.name){ toast('Informe o nome do funcionário.', 'red'); return; } if(id) await update('payroll_employees','id=eq.'+id,obj); else await insert('payroll_employees',obj); await afterSave('Funcionário salvo. Agora vincule ele na aba Serviços.'); }
+  async function savePayrollEmployee(ev){ ev.preventDefault(); const id=$('#payrollEmployeeId').value; const obj={ name:cleanText($('#payrollEmployeeName').value,120), payment_mode:cleanText($('#payrollEmployeeMode').value,40), percent_value:num($('#payrollEmployeePercent').value), service_fixed_value:num($('#payrollEmployeeFixed').value), notes:cleanLongText($('#payrollEmployeeNotes').value,1200), active:true, created_by:effectiveUserId() }; if(!obj.name){ toast('Informe o nome do funcionário.', 'red'); return; } if(id) await update('payroll_employees','id=eq.'+id,obj); else await insert('payroll_employees',obj); await afterSave('Funcionário salvo. Agora vincule ele na aba Serviços.'); }
   async function deletePayrollEmployee(id){ if(!confirm('Excluir funcionário da folha? Ele será removido da equipe dos serviços.')) return; try{ for(const s of state.services||[]){ const ids=serviceEmployeeIds(s); if(ids.includes(id)){ const nextIds=ids.filter(x=>x!==id); const paid=servicePayrollPaidMap(s); delete paid[id]; await update('services','id=eq.'+s.id,{payroll_employee_id:nextIds[0]||null,payroll_employee_ids:nextIds,payroll_paid_map:paid,payroll_paid:nextIds.length?nextIds.every(empId=>paid[empId]===true):false}); } } }catch(_){ } await removeRow('payroll_employees','id=eq.'+id); await afterSave('Funcionário excluído.'); }
   async function syncPayrollServiceTransaction(service, employeeId){
     if(!service || !service.id || !employeeId) return;
     const cat='FOLHA_SERVICO_'+service.id+'_'+employeeId;
     try{ await removeRow('transactions','category=eq.'+encodeURIComponent(cat)); }catch(_){ }
-    const amount=servicePayrollAmountForEmployee(service, employeeId);
-    if(payrollPaidForServiceEmployee(service, employeeId) && amount>0){
-      const emp=getPayrollEmployee(employeeId);
-      await insert('transactions',{ type:'saida', category:cat, description:'Folha de pagamento - '+(emp.name||'funcionário')+' - '+service.title, amount, transaction_date:service.payroll_paid_at || today(), project_id:service.project_id||null, service_id:service.id, created_by:effectiveUserId() });
-    }
+    // V111: pagamento de funcionário não entra mais em Saídas. O valor é controlado em estatística própria.
   }
-  async function markServicePayrollPaid(serviceId, employeeId){ const service=getService(serviceId); if(!service.id || !employeeId) return; const ids=serviceEmployeeIds(service); const paid=servicePayrollPaidMap(service); paid[employeeId]=true; const allPaid=ids.length?ids.every(id=>paid[id]===true):false; const patch={payroll_paid_map:paid,payroll_paid:allPaid,payroll_paid_at:today()}; const rows=await update('services','id=eq.'+serviceId,patch); const updated=rows&&rows[0]?rows[0]:Object.assign({},service,patch); await syncPayrollServiceTransaction(updated, employeeId); await afterSave('Pagamento deste funcionário marcado como pago e lançado no financeiro.'); }
-  async function markServicePayrollPending(serviceId, employeeId){ const service=getService(serviceId); if(!service.id || !employeeId) return; const paid=servicePayrollPaidMap(service); paid[employeeId]=false; const patch={payroll_paid_map:paid,payroll_paid:false,payroll_paid_at:null}; const rows=await update('services','id=eq.'+serviceId,patch); const updated=rows&&rows[0]?rows[0]:Object.assign({},service,patch); await syncPayrollServiceTransaction(updated, employeeId); await afterSave('Pagamento deste funcionário voltou para pendente e a saída foi removida.'); }
+  async function markServicePayrollPaid(serviceId, employeeId){ const service=getService(serviceId); if(!service.id || !employeeId) return; const ids=serviceEmployeeIds(service); const paid=servicePayrollPaidMap(service); paid[employeeId]=true; const allPaid=ids.length?ids.every(id=>paid[id]===true):false; const patch={payroll_paid_map:paid,payroll_paid:allPaid,payroll_paid_at:today()}; const rows=await update('services','id=eq.'+serviceId,patch); const updated=rows&&rows[0]?rows[0]:Object.assign({},service,patch); await syncPayrollServiceTransaction(updated, employeeId); await afterSave('Pagamento deste funcionário marcado como pago.'); }
+  async function markServicePayrollPending(serviceId, employeeId){ const service=getService(serviceId); if(!service.id || !employeeId) return; const paid=servicePayrollPaidMap(service); paid[employeeId]=false; const patch={payroll_paid_map:paid,payroll_paid:false,payroll_paid_at:null}; const rows=await update('services','id=eq.'+serviceId,patch); const updated=rows&&rows[0]?rows[0]:Object.assign({},service,patch); await syncPayrollServiceTransaction(updated, employeeId); await afterSave('Pagamento deste funcionário voltou para pendente.'); }
   function syncPayrollFromService(){ }
   function updatePayrollCalc(){ }
   function editPayroll(id){ editPayrollEmployee(id); }
@@ -1642,12 +1875,12 @@
   async function markPayrollPaid(id){ const s=getService(id); return markServicePayrollPaid(id, serviceEmployeeIds(s)[0]); }
   async function markPayrollPending(id){ const s=getService(id); return markServicePayrollPending(id, serviceEmployeeIds(s)[0]); }
   async function deletePayroll(id){ return deletePayrollEmployee(id); }
-  async function saveCompany(e){ e.preventDefault(); const obj = { company_name:$('#companyName').value.trim(), document_number:$('#companyDoc').value.trim(), responsible_name:$('#companyResponsible').value.trim(), phone:$('#companyPhone').value.trim(), whatsapp:$('#companyWhatsapp').value.trim(), instagram:$('#companyInstagram').value.trim(), address:$('#companyAddress').value.trim(), pix_key:$('#companyPix').value.trim(), contract_city:$('#companyCity').value.trim(), logo_url:($('#companyLogo')?$('#companyLogo').value.trim():''), quote_primary_color:($('#quotePrimary')?$('#quotePrimary').value:'#111111'), quote_secondary_color:($('#quoteSecondary')?$('#quoteSecondary').value:'#8b8b8b'), quote_accent_color:($('#quoteAccent')?$('#quoteAccent').value:'#dc2626'), quote_text_color:($('#quoteText')?$('#quoteText').value:'#111827'), quote_title:($('#quoteTitle')?$('#quoteTitle').value.trim():'ORÇAMENTO DE SERVIÇO'), quote_valid_days:num($('#quoteValidDays')?$('#quoteValidDays').value:7)||7, quote_warranty:($('#quoteWarranty')?$('#quoteWarranty').value.trim():''), quote_footer_note:($('#quoteFooterNote')?$('#quoteFooterNote').value.trim():'') }; await update('user_company_settings','user_id=eq.'+effectiveUserId(),obj); await logAction('empresa_atualizada',{}); await afterSave('Dados da empresa e personalização salvos.'); }
-  function readCompanyLogoFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; const rd=new FileReader(); rd.onload=()=>{ const img=$('#companyLogo'); if(img) img.value=rd.result; toast('Logo carregada. Clique em Salvar empresa.'); }; rd.readAsDataURL(file); }
-  function updateProjectImagePreview(value){ const box=$('#projectImagePreview'); if(!box) return; const imgs=String(value||'').split(/\n|\|\|/).map(x=>x.trim()).filter(Boolean); box.innerHTML=imgs.map((src,i)=>`<figure><img src="${html(src)}" alt="Imagem ${i+1}"><figcaption>Imagem ${i+1}</figcaption></figure>`).join(''); }
-  function readProjectImageFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; const rd=new FileReader(); rd.onload=()=>{ const input=$('#projectImageUrl'); const val=String(rd.result||''); if(input){ const cur=input.value.trim(); input.value=cur ? cur+'\n'+val : val; updateProjectImagePreview(input.value); } else updateProjectImagePreview(val); toast('Imagem adicionada. Clique em Salvar projeto.'); }; rd.readAsDataURL(file); }
+  async function saveCompany(e){ e.preventDefault(); const obj = { company_name:cleanText($('#companyName').value,140), document_number:cleanText($('#companyDoc').value,40), responsible_name:cleanText($('#companyResponsible').value,120), phone:cleanPhone($('#companyPhone').value), whatsapp:cleanPhone($('#companyWhatsapp').value), instagram:cleanText($('#companyInstagram').value,80), address:cleanText($('#companyAddress').value,180), pix_key:cleanText($('#companyPix').value,140), contract_city:cleanText($('#companyCity').value,80), logo_url:safeImageSrc(($('#companyLogo')?$('#companyLogo').value:'')), quote_primary_color:($('#quotePrimary')?$('#quotePrimary').value:'#111111'), quote_secondary_color:($('#quoteSecondary')?$('#quoteSecondary').value:'#8b8b8b'), quote_accent_color:($('#quoteAccent')?$('#quoteAccent').value:'#dc2626'), quote_text_color:($('#quoteText')?$('#quoteText').value:'#111827'), quote_title:cleanText(($('#quoteTitle')?$('#quoteTitle').value:'ORÇAMENTO DE SERVIÇO'),120), quote_valid_days:num($('#quoteValidDays')?$('#quoteValidDays').value:7)||7, quote_warranty:cleanLongText(($('#quoteWarranty')?$('#quoteWarranty').value:''),1200), quote_footer_note:cleanLongText(($('#quoteFooterNote')?$('#quoteFooterNote').value:''),1200), contract_model:cleanText(($('#contractModel')?$('#contractModel').value:'comercial'),40), receipt_model:cleanText(($('#receiptModel')?$('#receiptModel').value:'comercial'),40) }; await update('user_company_settings','user_id=eq.'+effectiveUserId(),obj); await logAction('empresa_atualizada',{}); await afterSave('Dados da empresa, modelo de contrato e recibo salvos.'); }
+  async function readCompanyLogoFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; try{ const val=await imageFileToDataUrl(file,{maxWidth:700,maxHeight:700,quality:.86,type:'image/webp',maxMb:5}); const img=$('#companyLogo'); if(img) img.value=val; toast('Logo otimizada. Clique em Salvar empresa.'); }catch(err){ toast(err.message || 'Não foi possível importar a logo.', 'red'); } finally{ if(e.target) e.target.value=''; } }
+  function updateProjectImagePreview(value){ const box=$('#projectImagePreview'); if(!box) return; const imgs=String(value||'').split(/\n|\|\|/).map(safeImageSrc).filter(Boolean); box.innerHTML=imgs.map((src,i)=>`<figure><img loading="lazy" decoding="async" src="${html(src)}" alt="Imagem ${i+1}"><figcaption>Imagem ${i+1}</figcaption></figure>`).join(''); }
+  async function readProjectImageFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; try{ const val=await imageFileToDataUrl(file,{maxWidth:1600,maxHeight:1200,quality:.82,type:'image/webp',maxMb:10}); const input=$('#projectImageUrl'); if(input){ const cur=input.value.trim(); input.value=cur ? cur+'\n'+val : val; updateProjectImagePreview(input.value); } else updateProjectImagePreview(val); toast('Imagem otimizada e adicionada. Clique em Salvar projeto.'); }catch(err){ toast(err.message || 'Não foi possível importar a imagem.', 'red'); } finally{ if(e.target) e.target.value=''; } }
   async function savePrices(e){ e.preventDefault(); const obj = { price_white:num($('#priceWhite').value)||850, price_white_wood:num($('#priceWhiteWood').value)||950, price_wood:num($('#priceWood').value)||1100, card_factor:num($('#cardFactor').value)||1.3, entry_pct:num($('#entryPct').value)||50, delivery_pct:num($('#deliveryPct').value)||50 }; await update('user_company_settings','user_id=eq.'+effectiveUserId(),obj); await logAction('precos_orcamento_atualizados',obj); await afterSave('Preços do orçamento salvos.'); }
-  async function saveRenderSettings(e){ e.preventDefault(); const obj = { provider:$('#renderProvider').value.trim(), public_endpoint:$('#renderEndpoint').value.trim(), api_key_reference:$('#renderKeyRef').value.trim(), ready:$('#renderReady').value==='true', admin_notes:$('#renderNotes').value.trim() }; await update('render_settings','id=eq.true',obj); await logAction('render_settings_atualizado',{}); await afterSave('Integração de render salva.'); }
+  async function saveRenderSettings(e){ e.preventDefault(); const endpoint=safeExternalUrl($('#renderEndpoint').value); if($('#renderEndpoint').value.trim() && !endpoint){ toast('Endpoint de render bloqueado: use uma URL HTTPS válida.', 'red'); return; } const obj = { provider:cleanText($('#renderProvider').value,80), public_endpoint:endpoint, api_key_reference:cleanText($('#renderKeyRef').value,120), ready:$('#renderReady').value==='true', admin_notes:cleanLongText($('#renderNotes').value,1200) }; await update('render_settings','id=eq.true',obj); await logAction('render_settings_atualizado',{}); await afterSave('Integração de render salva.'); }
 
   function fill(fields, obj){ Object.keys(fields).forEach(id => { const el = $('#'+id); if(el) el.value = obj[fields[id]] == null ? '' : obj[fields[id]]; }); }
   function clearClientForm(){ $('#clientForm').reset(); $('#clientId').value=''; $('#clientFormTitle').textContent='Novo cliente'; }
@@ -1677,7 +1910,7 @@
   async function saveSupplier(e){
     e.preventDefault();
     const id=$('#supplierId').value;
-    const obj={ name:$('#supplierName').value.trim(), phone:$('#supplierPhone').value.trim(), address:$('#supplierAddress').value.trim(), material_type:$('#supplierType').value.trim(), notes:$('#supplierNotes').value.trim(), created_by:effectiveUserId() };
+    const obj={ name:cleanText($('#supplierName').value,120), phone:cleanPhone($('#supplierPhone').value), address:cleanText($('#supplierAddress').value,180), material_type:cleanText($('#supplierType').value,100), notes:cleanLongText($('#supplierNotes').value,1200), created_by:effectiveUserId() };
     if(!obj.name){ toast('Informe o nome do fornecedor.', 'red'); return; }
     if(id) await update('suppliers','id=eq.'+id,obj); else await insert('suppliers',obj);
     await afterSave('Fornecedor salvo.');
@@ -1691,29 +1924,112 @@
     await update('projects','id=eq.'+projectId,patch);
     await afterSave('Status de produção atualizado.');
   }
+  async function updateProjectStatus(projectId,status){
+    const p=getProject(projectId); if(!p.id) return;
+    await update('projects','id=eq.'+projectId,{ project_status: normalizeStatus('project',status) });
+    await afterSave('Status do projeto atualizado.');
+  }
+  async function updateBudgetStatus(projectId,status){
+    const p=getProject(projectId); if(!p.id) return;
+    const st=normalizeStatus('budget',status);
+    const patch={ status: st };
+    if(st==='aprovado'){
+      patch.project_status='aprovado';
+      patch.production_status=p.production_status||'nao_iniciado';
+      patch.budget_value=projectTotal(p).final || p.budget_value || 0;
+    }
+    await update('projects','id=eq.'+projectId,patch);
+    await afterSave('Status do orçamento atualizado.');
+  }
+
+  function quickBudgetPaymentConfig(model){
+    model = String(model || '50_50');
+    if(model==='fornecedor_entrega') return {entry:50, delivery:50, note:supplierSplitText()};
+    if(model==='100_fechamento') return {entry:100, delivery:0, note:'100% à vista no fechamento.'};
+    if(model==='100_entrega') return {entry:0, delivery:100, note:'100% à vista na entrega.'};
+    return {entry:50, delivery:50, note:'50% à vista no fechamento/entrada e 50% à vista na entrega.'};
+  }
+
+  function selectedBudgetClientId(){
+    return ($('#budgetClientPicker') && $('#budgetClientPicker').value) || ($('#quickBudgetClient') && $('#quickBudgetClient').value) || state.quickBudgetClientId || ((state.clients[0]&&state.clients[0].id)||'');
+  }
+
+  async function createBudgetProjectForClient(initialItems){
+    const clientId = selectedBudgetClientId();
+    if(!clientId){ alert('Selecione um cliente para criar o orçamento.'); return null; }
+    const client = getClient(clientId);
+    const model = ($('#quickBudgetPaymentModel') && $('#quickBudgetPaymentModel').value) || '50_50';
+    const paymentConfig = quickBudgetPaymentConfig(model);
+    const name = cleanText(($('#quickBudgetName') && $('#quickBudgetName').value) || ('Orçamento '+(client.name||'cliente')),120);
+    const env = ($('#quickBudgetEnv') && $('#quickBudgetEnv').value) || 'Outro';
+    const notes = cleanLongText(($('#quickBudgetNotes') && $('#quickBudgetNotes').value) || '',1200);
+    const items = Array.isArray(initialItems) ? initialItems : [];
+    const tempForTotal={ budget_items:items, budget_discount:0, entry_pct:paymentConfig.entry, delivery_pct:paymentConfig.delivery };
+    const obj={
+      client_id: clientId,
+      name,
+      environment: env,
+      colors: '',
+      status: 'rascunho',
+      project_status: 'em_criacao',
+      production_status: 'nao_iniciado',
+      budget_value: projectTotal(tempForTotal).final,
+      cost_value: 0,
+      paid_value: 0,
+      budget_items: items,
+      budget_discount: 0,
+      entry_pct: paymentConfig.entry,
+      delivery_pct: paymentConfig.delivery,
+      budget_payment_note: paymentConfig.note,
+      contract_start: today(),
+      delivery_days: num($('#quickBudgetDays') && $('#quickBudgetDays').value) || 30,
+      notes,
+      created_by: effectiveUserId()
+    };
+    let created;
+    try{ created = await insert('projects', obj); }
+    catch(err){
+      const fallback=Object.assign({},obj); delete fallback.project_status; delete fallback.production_status;
+      created = await insert('projects', fallback);
+      toast('Orçamento criado. Rode a migration mais recente para liberar os novos status.', 'red');
+    }
+    const row = Array.isArray(created) ? created[0] : created;
+    if(row && row.id) state.budgetProjectId = row.id;
+    return row || null;
+  }
 
   async function createQuickBudget(e){
     e.preventDefault();
     const clientId = ($('#quickBudgetClient') && $('#quickBudgetClient').value) || '';
     if(!clientId){ alert('Selecione um cliente para criar o orçamento.'); return; }
+    const initialItems=[];
+    if($('#quickAddItem') && $('#quickAddItem').checked){
+      const code = ($('#quickItemCatalog') && $('#quickItemCatalog').value) || '';
+      const cat = CATALOG.find(c=>String(c.code)===String(code)) || CATALOG[0];
+      initialItems.push({ id:uid(), code:cat.code, desc:cat.name, name:cat.name, qty:num($('#quickItemQty')&&$('#quickItemQty').value)||1, width:num($('#quickItemWidth')&&$('#quickItemWidth').value)||0, height:num($('#quickItemHeight')&&$('#quickItemHeight').value)||0, factor:num($('#quickItemFactor')&&$('#quickItemFactor').value)||cat.factor, color:($('#quickItemColor')&&$('#quickItemColor').value)||'branco', payment:($('#quickItemPayment')&&$('#quickItemPayment').value)||'dinheiro', note:cleanLongText((($('#quickItemNote')&&$('#quickItemNote').value)||'Móvel vinculado ao cliente no orçamento.'),600) });
+    }
+    const model = ($('#quickBudgetPaymentModel') && $('#quickBudgetPaymentModel').value) || '50_50';
+    const paymentConfig = quickBudgetPaymentConfig(model);
+    const tempForTotal={ budget_items:initialItems, budget_discount:0, entry_pct:paymentConfig.entry, delivery_pct:paymentConfig.delivery };
     const obj={
       client_id: clientId,
-      name: ($('#quickBudgetName') && $('#quickBudgetName').value.trim()) || 'Orçamento avulso',
+      name: cleanText((($('#quickBudgetName') && $('#quickBudgetName').value) || 'Orçamento avulso'),120),
       environment: ($('#quickBudgetEnv') && $('#quickBudgetEnv').value) || 'Outro',
       colors: '',
       status: 'rascunho',
       project_status: 'em_criacao',
       production_status: 'nao_iniciado',
-      budget_value: 0,
+      budget_value: projectTotal(tempForTotal).final,
       cost_value: 0,
       paid_value: 0,
-      budget_items: [],
+      budget_items: initialItems,
       budget_discount: 0,
-      entry_pct: state.company.entry_pct || 50,
-      delivery_pct: state.company.delivery_pct || 50,
+      entry_pct: paymentConfig.entry,
+      delivery_pct: paymentConfig.delivery,
+      budget_payment_note: paymentConfig.note,
       contract_start: today(),
-      delivery_days: 30,
-      notes: ($('#quickBudgetNotes') && $('#quickBudgetNotes').value.trim()) || 'Orçamento criado sem projeto obrigatório.',
+      delivery_days: num($('#quickBudgetDays') && $('#quickBudgetDays').value) || 30,
+      notes: cleanLongText((($('#quickBudgetNotes') && $('#quickBudgetNotes').value) || ''),1200),
       created_by: effectiveUserId()
     };
     let created;
@@ -1725,31 +2041,24 @@
     }
     const row = Array.isArray(created) ? created[0] : created;
     state.budgetProjectId = row && row.id;
-    await afterSave('Orçamento criado. Agora adicione os móveis.');
+    await afterSave(initialItems.length ? 'Orçamento e projeto automático criados com móvel vinculado ao cliente.' : 'Orçamento e projeto automático criados. Agora adicione os móveis ou imagens no projeto.');
   }
 
   async function addBudgetItem(){
-    const pid = $('#budgetProject').value; const p = getProject(pid); if(!p.id){ alert('Selecione um projeto.'); return; }
-    const code = $('#iCatalog').value; const cat = CATALOG.find(c=>String(c.code)===String(code)); if(!cat) return;
-    const item = { id:uid(), code:cat.code, desc:cat.name, qty:num($('#iQty').value)||1, width:num($('#iWidth').value)||0, height:num($('#iHeight').value)||0, factor:num($('#iFactor').value)||cat.factor, color:$('#iColor').value, payment:$('#iPayment').value, note:$('#iNote').value.trim() };
-    const items = (p.budget_items||[]).concat([item]); const fake = Object.assign({}, p, {budget_items:items, budget_discount:p.budget_discount||0, entry_pct:p.entry_pct||state.company.entry_pct, delivery_pct:p.delivery_pct||state.company.delivery_pct}); const total = projectTotal(fake).final;
-    await update('projects','id=eq.'+pid,{ budget_items:items, budget_value:total }); state.budgetProjectId=pid; await afterSave('Item adicionado ao orçamento.');
+    const pid = ($('#budgetProject') && $('#budgetProject').value) || state.budgetProjectId || '';
+    const p = getProject(pid);
+    if(!p.id){ alert('Selecione um projeto antes de adicionar móveis ao orçamento.'); return; }
+    const code = $('#iCatalog') ? $('#iCatalog').value : '';
+    const cat = CATALOG.find(c=>String(c.code)===String(code)) || CATALOG[0];
+    if(!cat){ toast('Tabela de móveis não carregada.', 'red'); return; }
+    const item = { id:uid(), code:cat.code, desc:cat.name, name:cat.name, qty:num($('#iQty')&&$('#iQty').value)||1, width:num($('#iWidth')&&$('#iWidth').value)||0, height:num($('#iHeight')&&$('#iHeight').value)||0, factor:num($('#iFactor')&&$('#iFactor').value)||cat.factor, color:($('#iColor')&&$('#iColor').value)||'branco', payment:($('#iPayment')&&$('#iPayment').value)||'dinheiro', note:cleanLongText(($('#iNote')&&$('#iNote').value)||'',600) };
+    const items = (p.budget_items||[]).concat([item]);
+    const fake = Object.assign({}, p, {budget_items:items, budget_discount:p.budget_discount||0, entry_pct:p.entry_pct||state.company.entry_pct, delivery_pct:p.delivery_pct||state.company.delivery_pct});
+    await update('projects','id=eq.'+p.id,{ budget_items:items, budget_value:projectTotal(fake).final });
+    state.budgetProjectId=p.id;
+    await afterSave('Item adicionado ao orçamento do projeto.');
   }
-  async function removeBudgetItem(pid,itemId){
-    const p=getProject(pid); if(!p.id){ alert('Projeto não encontrado.'); return; }
-    const before=Array.isArray(p.budget_items)?p.budget_items:[];
-    const items=before.filter(x=>String(x.id)!==String(itemId));
-    if(items.length===before.length){ alert('Item não encontrado para remover.'); return; }
-    const fake=Object.assign({},p,{budget_items:items});
-    const budget_value=projectTotal(fake).final;
-    const idx=state.projects.findIndex(x=>x.id===pid);
-    if(idx>=0) state.projects[idx]=Object.assign({},state.projects[idx],{budget_items:items,budget_value});
-    try{ await update('projects','id=eq.'+pid,{ budget_items:items, budget_value }); }
-    catch(err){ console.error(err); alert('Não consegui remover no banco. Erro: '+(err.message||err)); return; }
-    state.budgetProjectId=pid;
-    await loadAll(); render(); toast('Item removido.');
-  }
-  function budgetItemDomId(itemId){ return String(itemId||'').replace(/[^a-zA-Z0-9_-]/g,'_'); }
+
   async function saveBudgetItems(pid,items,msg){
     const p=getProject(pid); if(!p.id) return;
     const fake=Object.assign({},p,{budget_items:items});
@@ -1783,6 +2092,14 @@
     const copy=Object.assign({},found,{id:uid(), desc:(found.desc||found.name||'Item')+' (cópia)'});
     await saveBudgetItems(pid,(p.budget_items||[]).concat([copy]),'Item duplicado.');
   }
+  async function removeBudgetItem(pid,itemId){
+    const p=getProject(pid); if(!p.id) return;
+    const items=p.budget_items||[];
+    const found=items.find(it=>String(it.id)===String(itemId));
+    if(!found){ alert('Item não encontrado.'); return; }
+    const next=items.filter(it=>String(it.id)!==String(itemId));
+    await saveBudgetItems(pid,next,'Item removido do orçamento.');
+  }
   async function updateBudgetItemFactor(pid,itemId,value){
     const p=getProject(pid); if(!p.id) return;
     const factor=Math.max(0, num(value)||0);
@@ -1802,9 +2119,14 @@
     state.budgetProjectId=pid;
     await afterSave('Orçamento aprovado. Produção e serviço foram preparados.');
   }
-  async function saveBudgetFields(e){ e.preventDefault(); const pid=$('#budgetProject').value; const p=getProject(pid); if(!p.id)return; const budgetStatus=normalizeStatus('budget', ($('#budgetStatus')&&$('#budgetStatus').value)||p.status||'rascunho'); const fake=Object.assign({},p,{ budget_discount:num($('#bDiscount').value), entry_pct:num($('#bEntry').value), delivery_pct:num($('#bDelivery').value), status:budgetStatus }); const obj={ status:budgetStatus, budget_discount:num($('#bDiscount').value), entry_pct:num($('#bEntry').value), delivery_pct:num($('#bDelivery').value), budget_payment_note:($('#bPaymentNote')?$('#bPaymentNote').value.trim():''), contract_start:$('#bStart').value || today(), delivery_days:num($('#bDays').value)||30, budget_value:projectTotal(fake).final }; await update('projects','id=eq.'+pid,obj); state.budgetProjectId=pid; await afterSave('Orçamento atualizado.'); }
-  function setPaymentSplit(entry,delivery){ if($('#bEntry')) $('#bEntry').value=entry; if($('#bDelivery')) $('#bDelivery').value=delivery; toast('Forma de pagamento ajustada. Clique em Atualizar orçamento.'); }
-  function setSupplierSplit(){ if($('#bEntry')) $('#bEntry').value=50; if($('#bDelivery')) $('#bDelivery').value=50; if($('#bPaymentNote')) $('#bPaymentNote').value='Forma de pagamento: 50% da entrada no fornecedor/loja e 50% na entrega do serviço. Valores e condições sujeitos à confirmação no fechamento.'; toast('Modelo fornecedor/entrega aplicado. Clique em Atualizar orçamento.'); }
+  let budgetSaveTimer=null;
+  function queueBudgetFieldsAutosave(){
+    if(budgetSaveTimer) clearTimeout(budgetSaveTimer);
+    budgetSaveTimer=setTimeout(()=>{ const form=$('#budgetFieldsForm'); if(form) saveBudgetFields({preventDefault(){}}); }, 350);
+  }
+  async function saveBudgetFields(e){ e.preventDefault(); const pid=$('#budgetProject').value; const p=getProject(pid); if(!p.id)return; const budgetStatus=normalizeStatus('budget', ($('#budgetStatus')&&$('#budgetStatus').value)||p.status||'rascunho'); const fake=Object.assign({},p,{ budget_discount:num($('#bDiscount').value), entry_pct:num($('#bEntry').value), delivery_pct:num($('#bDelivery').value), status:budgetStatus }); const obj={ status:budgetStatus, budget_discount:num($('#bDiscount').value), entry_pct:num($('#bEntry').value), delivery_pct:num($('#bDelivery').value), budget_payment_note:cleanLongText(($('#bPaymentNote')?$('#bPaymentNote').value:''),1200), contract_start:$('#bStart').value || today(), delivery_days:num($('#bDays').value)||30, budget_value:projectTotal(fake).final }; await update('projects','id=eq.'+pid,obj); state.budgetProjectId=pid; await afterSave('Orçamento atualizado.'); }
+  function setPaymentSplit(entry,delivery,note){ if($('#bEntry')) $('#bEntry').value=entry; if($('#bDelivery')) $('#bDelivery').value=delivery; if(note && $('#bPaymentNote')) $('#bPaymentNote').value=note; toast('Forma de pagamento ajustada e salvando.'); queueBudgetFieldsAutosave(); }
+  function setSupplierSplit(){ if($('#bEntry')) $('#bEntry').value=50; if($('#bDelivery')) $('#bDelivery').value=50; if($('#bPaymentNote')) $('#bPaymentNote').value=supplierSplitText(); toast('Modelo 50% fornecedor/loja + 50% entrega aplicado e salvando.'); queueBudgetFieldsAutosave(); }
   function bindDesignerEvents(){
     if($('#designProject')) $('#designProject').addEventListener('change', e=>{ state.designer.projectId=e.target.value; state.designer.selectedId=''; render(); });
     ['wallColor','floorColor','bgColor'].forEach(id=>{ const el=$('#'+id); if(el) el.addEventListener('input',()=>{ const d=currentDesign(); if($('#wallColor')) d.wallColor=$('#wallColor').value; if($('#floorColor')) d.floorColor=$('#floorColor').value; if($('#bgColor')) d.bgColor=$('#bgColor').value; const st=$('#designerStage'); if(st && st.classList.contains('designerStageSvgHost')){ refreshDesignerSvg(d); } }); });
@@ -2008,15 +2330,8 @@
   }
   function quoteBudgetAnnexHtml(p,c){
     const imgs=projectImages(p);
-    if(imgs.length){
-      return `<div class="quoteAnnexBox"><h2>ANEXOS DE PROJETOS</h2><div class="annexGrid">${imgs.map((src,i)=>`<div><img class="annexProjectImage" src="${html(src)}" alt="Imagem do projeto ${i+1}"><p class="small">Imagem ${i+1}</p></div>`).join('')}</div></div>`;
-    }
-    const design = Object.assign(emptyDesign(p), parseJsonish(p.design_data,null)||{});
-    const hasDesign=(design.modules||[]).length>0;
-    if(!hasDesign) return `<div class="quoteAnnexBox"><h2>ANEXOS DE PROJETOS</h2><p>Inclua imagens do projeto aprovado, renderizações ou fotos de referência.</p></div>`;
-    const oldMode=state.designer.mode, oldProject=state.designer.projectId; state.designer.mode='2d'; state.designer.projectId=p.id;
-    const svg=designerSvgMarkup(design,0.22,'2d'); state.designer.mode=oldMode; state.designer.projectId=oldProject;
-    return `<div class="quoteAnnexBox"><h2>ANEXOS DE PROJETOS</h2>${svg||'<p>Projeto salvo sem imagem técnica.</p>'}</div>`;
+    if(!imgs.length) return '';
+    return `<div class="quoteAnnexBox"><h2>ANEXOS DO PROJETO</h2><div class="annexGrid">${imgs.map((src,i)=>`<div><img class="annexProjectImage" src="${html(src)}" alt="Imagem do projeto ${i+1}"><p class="small">Imagem ${i+1}</p></div>`).join('')}</div></div>`;
   }
   function quoteItemRows(p){
     const items=p.budget_items||[];
@@ -2024,8 +2339,9 @@
     return items.map((it,i)=>`<tr><td>${i+1}</td><td>${html(it.desc||'Item')}</td><td>${it.qty||1}</td><td>${Math.round(num(it.width)||0)} x ${Math.round(num(it.height)||0)} mm</td><td>${html(colorName(it.color))}</td><td class="right">${money(itemTotal(it))}</td></tr>`).join('');
   }
   function budgetPaymentText(p, tt){
+    const pay = budgetPaymentPlainText(p);
     const entry = money(tt.entry), delivery=money(tt.delivery), entryPct=tt.entryPct, deliveryPct=tt.deliveryPct;
-    return `Forma de pagamento: ${entryPct}% na entrada do serviço (${entry}) e ${deliveryPct}% na entrega (${delivery}). Para pagamento à vista, desconto pode ser combinado. Prazo estimado de entrega: ${num(p.delivery_days)||30} dias úteis após aprovação e confirmação da entrada.`;
+    return `Forma de pagamento: ${html(pay)}<br>Entrada/sinal: ${entryPct}% (${entry}) • Saldo na entrega: ${deliveryPct}% (${delivery}).<br>Prazo estimado de entrega: ${num(p.delivery_days)||30} dias úteis após aprovação e confirmação da entrada.`;
   }
   function exportBudgetHtml(){
     const chosenPid = ($('#budgetProject') && $('#budgetProject').value) || state.budgetProjectId;
@@ -2035,12 +2351,12 @@
     const primary=comp.quote_primary_color||'#111827', secondary=comp.quote_secondary_color||'#e5e7eb', accent=comp.quote_accent_color||'#111827', textColor=comp.quote_text_color||'#1f2937';
     const logo = comp.logo_url ? `<img class="logo" src="${html(comp.logo_url)}">` : `<div class="logoFallback"><b>TOP</b><span>PLANEJADOS</span></div>`;
     const items=(p.budget_items||[]).slice(); if(!items.length && num(p.budget_value)>0){ items.push({desc:p.name||'Serviço de móveis planejados', qty:1, total:num(p.budget_value), value:num(p.budget_value)}); } const rows=items.map((it,i)=>{ const total=itemTotal(it); return `<tr><td>${i+1}</td><td>${html(it.desc||it.name||'-')}</td><td>${num(it.qty)||1}</td><td>${money(total/(num(it.qty)||1))}</td><td>${money(total)}</td></tr>`; }).join('');
-    const obs = [budgetPaymentText(p,tt), p.notes ? 'Obs.: '+p.notes : '', comp.quote_footer_note||''].filter(Boolean).join('<br>');
+    const docNote=cleanDocNote(p.notes); const obs = [budgetPaymentText(p,tt), docNote ? 'Obs.: '+html(docNote) : '', comp.quote_footer_note||''].filter(Boolean).join('<br>');
     const annex = quoteBudgetAnnexHtml(p,c);
     const win=window.open('','_blank');
     win.document.write(`<html><head><title>Orçamento ${html(p.name||'')}</title><style>
-      @page{size:A4;margin:10mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:${textColor};margin:0;background:#f3f4f6}.page{width:190mm;min-height:277mm;margin:0 auto 10px;background:#fff;padding:8mm;position:relative}.topBox{border:1px solid ${secondary};display:grid;grid-template-columns:34mm 1fr 70mm;align-items:center;gap:7mm;padding:4mm}.logo{width:31mm;height:31mm;object-fit:contain}.logoFallback{width:31mm;height:31mm;background:${primary};color:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;border-radius:4px}.logoFallback b{font-size:20px}.logoFallback span{font-size:8px}.companyName{font-size:15px;font-weight:800;color:${primary};line-height:1.35}.companyRight{text-align:right;font-size:13px;line-height:1.45}.meta{width:100%;border-collapse:collapse;margin-top:7mm;font-size:13px}.meta td{border:1px solid ${secondary};padding:4mm;text-align:center}.meta b{color:${primary}}.box{width:100%;border-collapse:collapse;margin-top:7mm;font-size:13px}.box th{border:1px solid ${secondary};padding:4mm;text-align:center;background:#fff;font-size:14px}.box td{border:1px solid ${secondary};padding:3mm}.items{width:100%;border-collapse:collapse;margin-top:7mm;font-size:12.5px}.items th{border:1px solid ${secondary};padding:3.5mm;background:#fff;color:${primary};text-align:left}.items td{border:1px solid ${secondary};padding:3mm}.right{text-align:right}.totalLine{margin-top:6mm;border:1px solid ${secondary};padding:4mm;text-align:right;font-size:15px}.totalLine b{font-size:18px;color:${accent}}.obs{border:1px solid ${secondary};margin-top:7mm}.obs h3{text-align:center;margin:0;padding:3.5mm;border-bottom:1px solid ${secondary};font-size:14px}.obs div{padding:4mm;font-size:13px;line-height:1.45}.sigs{display:grid;grid-template-columns:1fr 1fr;gap:10mm;margin-top:18mm}.sig{text-align:center;border-top:1px solid ${secondary};padding-top:4mm;font-size:13px}.pageBreak{page-break-before:always}.annex h2{text-align:center;margin:0 0 10mm}.annex img,.annex svg{max-width:100%;max-height:235mm;object-fit:contain;border:1px solid ${secondary}}.printBtn{position:fixed;right:18px;bottom:18px;z-index:99}@media print{body{background:#fff}.page{margin:0}.printBtn{display:none}}
-      </style></head><body><button class="printBtn" onclick="window.print()">Imprimir / salvar PDF</button><section class="page"><div class="topBox">${logo}<div><div class="companyName">${html(comp.company_name||'TOP PLANEJADOS')}</div><div>CNPJ ${html(comp.document_number||'')}</div><div>${html(comp.address||'')}</div></div><div class="companyRight"><div>${html(comp.phone||comp.whatsapp||'')}</div><div>${html(comp.email||'')}</div><div>${html(comp.instagram||'')}</div></div></div><table class="meta"><tr><td><b>Orçamento:</b> ${String(p.id||'').slice(0,8).toUpperCase()}</td><td><b>Data:</b> ${dateFmt.format(new Date())}</td><td><b>Validade:</b> ${dateFmt.format(valid)}</td></tr></table><table class="box"><tr><th colspan="2">Dados do serviço</th></tr><tr><td><b>Cliente</b></td><td>${html(c.name||'-')}</td></tr><tr><td><b>Projeto/Ambiente</b></td><td>${html(p.name||'-')} ${p.environment? ' - '+html(p.environment):''}</td></tr><tr><td><b>Serviço prestado</b></td><td>${html(p.notes||'Móveis planejados conforme medidas e projeto apresentado.')}</td></tr></table><table class="items"><thead><tr><th>#</th><th>Nome</th><th>Qtd.</th><th>Valor</th><th>Subtotal</th></tr></thead><tbody>${rows||'<tr><td colspan="5">Nenhum item cadastrado.</td></tr>'}</tbody></table><div class="totalLine">Total: <b>${money(tt.final)}</b></div><div class="obs"><h3>Observações</h3><div>${obs}</div></div><div class="sigs"><div class="sig">${html(comp.company_name||'TOP PLANEJADOS')}</div><div class="sig">${html(c.name||'Cliente')}</div></div></section>${annex?`<section class="page pageBreak annex"><h2>Anexos do projeto</h2>${annex}</section>`:''}<script>setTimeout(()=>window.print(),450)<\/script></body></html>`);
+      @page{size:A4;margin:10mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:${textColor};margin:0;background:#f3f4f6}.page{width:190mm;min-height:277mm;margin:0 auto 10px;background:#fff;padding:8mm;position:relative}.topBox{border:1px solid ${secondary};display:grid;grid-template-columns:34mm 1fr 70mm;align-items:center;gap:7mm;padding:4mm}.logo{width:31mm;height:31mm;object-fit:contain}.logoFallback{width:31mm;height:31mm;background:${primary};color:#fff;display:flex;align-items:center;justify-content:center;flex-direction:column;border-radius:4px}.logoFallback b{font-size:20px}.logoFallback span{font-size:8px}.companyName{font-size:15px;font-weight:800;color:${primary};line-height:1.35}.companyRight{text-align:right;font-size:13px;line-height:1.45}.meta{width:100%;border-collapse:collapse;margin-top:7mm;font-size:13px}.meta td{border:1px solid ${secondary};padding:4mm;text-align:center}.meta b{color:${primary}}.box{width:100%;border-collapse:collapse;margin-top:7mm;font-size:13px}.box th{border:1px solid ${secondary};padding:4mm;text-align:center;background:#fff;font-size:14px}.box td{border:1px solid ${secondary};padding:3mm}.items{width:100%;border-collapse:collapse;margin-top:7mm;font-size:12.5px}.items th{border:1px solid ${secondary};padding:3.5mm;background:#fff;color:${primary};text-align:left}.items td{border:1px solid ${secondary};padding:3mm}.right{text-align:right}.totalLine{margin-top:6mm;border:1px solid ${secondary};padding:4mm;text-align:left;font-size:15px}.totalLine b{font-size:18px;color:${accent}}.obs{border:1px solid ${secondary};margin-top:7mm}.obs h3{text-align:center;margin:0;padding:3.5mm;border-bottom:1px solid ${secondary};font-size:14px}.obs div{padding:4mm;font-size:13px;line-height:1.45}.sigs{display:grid;grid-template-columns:1fr 1fr;gap:10mm;margin-top:18mm}.sig{text-align:center;border-top:1px solid ${secondary};padding-top:4mm;font-size:13px}.pageBreak{page-break-before:always}.annex h2{text-align:center;margin:0 0 10mm}.annex img,.annex svg{max-width:100%;max-height:235mm;object-fit:contain;border:1px solid ${secondary}}.printBtn{position:fixed;right:18px;bottom:18px;z-index:99}@media print{body{background:#fff}.page{margin:0}.printBtn{display:none}}
+      </style></head><body><button class="printBtn" onclick="window.print()">Imprimir / salvar PDF</button><section class="page"><div class="topBox">${logo}<div><div class="companyName">${html(comp.company_name||'TOP PLANEJADOS')}</div><div>CNPJ ${html(comp.document_number||'')}</div><div>${html(comp.address||'')}</div></div><div class="companyRight"><div>${html(comp.phone||comp.whatsapp||'')}</div><div>${html(comp.email||'')}</div><div>${html(comp.instagram||'')}</div></div></div><table class="meta"><tr><td><b>Orçamento:</b> ${String(p.id||'').slice(0,8).toUpperCase()}</td><td><b>Data:</b> ${dateFmt.format(new Date())}</td><td><b>Validade:</b> ${dateFmt.format(valid)}</td></tr></table><table class="box"><tr><th colspan="2">Dados do serviço</th></tr><tr><td><b>Cliente</b></td><td>${html(c.name||'-')}</td></tr><tr><td><b>Projeto/Ambiente</b></td><td>${html(p.name||'-')} ${p.environment? ' - '+html(p.environment):''}</td></tr><tr><td><b>Serviço prestado</b></td><td>${html(cleanDocNote(p.notes)||'Móveis planejados conforme itens do orçamento aprovado.')}</td></tr></table><table class="items"><thead><tr><th>#</th><th>Nome</th><th>Qtd.</th><th>Valor</th><th>Subtotal</th></tr></thead><tbody>${rows||'<tr><td colspan="5">Nenhum item cadastrado.</td></tr>'}</tbody></table><div class="totalLine">Total: <b>${money(tt.final)}</b></div><div class="obs"><h3>Observações</h3><div>${obs}</div></div><div class="sigs"><div class="sig">${html(comp.company_name||'TOP PLANEJADOS')}</div><div class="sig">${html(c.name||'Cliente')}</div></div></section>${annex?`<section class="page pageBreak annex"><h2>Anexos do projeto</h2>${annex}</section>`:''}<script>setTimeout(()=>window.print(),450)<\/script></body></html>`);
     win.document.close();
   }
   function openTabKey(key){ saveCurrentTabDraft(); state.current=key; render(); }
@@ -2111,20 +2427,23 @@
     if(shouldReload){ await loadAll(); render(); toast('Você voltou para sua própria conta.'); }
   }
 
-  function setContractSplit(a,b){ const ea=$('#contractEntryPct'), eb=$('#contractDeliveryPct'); if(ea) ea.value=a; if(eb) eb.value=b; }
-  function setContractSupplierSplit(){ setContractSplit(50,50); const pay=$('#contractPayment'); if(pay) pay.value='50% da entrada no fornecedor/loja e 50% na entrega do serviço'; toast('Forma fornecedor/entrega aplicada ao contrato.'); }
+  function setContractSplit(entry,delivery,note){ const ea=$('#contractEntryPct'), eb=$('#contractDeliveryPct'); if(ea) ea.value=entry; if(eb) eb.value=delivery; if(note && $('#contractPayment')) $('#contractPayment').value=note; syncReceiptPaymentFromContract(true); }
+  function setContractSupplierSplit(){ setContractSplit(50,50,supplierSplitText()); toast('Forma 50% fornecedor/loja + 50% entrega aplicada ao contrato.'); }
   function printContractPdf(){ const out=$('#contractOutput'); if(!out || !out.innerHTML.trim()){ alert('Gere o contrato primeiro.'); return; } printDocument('Contrato', out.innerHTML); }
-  function printDocument(title, htmlContent){ const win=window.open('','_blank'); win.document.write(`<html><head><title>${html(title)}</title><style>body{font-family:Arial;padding:20px;color:#111;background:#f3f4f6}.contract{max-width:850px;margin:auto;background:#fff;padding:24px;line-height:1.55}.contract h1{font-size:22px;margin:0}.contract h2{font-size:16px;margin-top:18px;border-bottom:1px solid #ddd;padding-bottom:5px}.contract table{width:100%;border-collapse:collapse}.contract td,.contract th{border:1px solid #ddd;padding:7px}.contractHeader{display:flex;gap:18px;align-items:center;border:1px solid #ddd;padding:14px;margin-bottom:14px}.contractLogo{width:84px;height:84px;object-fit:contain}.contractLogoFallback{width:84px;height:84px;background:#111;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:26px}.contractMeta{display:grid;grid-template-columns:1fr 1fr;gap:12px}.contractMeta>div{border:1px solid #ddd;padding:12px}.contractSigs{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:40px;text-align:center}.annexProjectImage{max-width:100%;max-height:260px;object-fit:contain}.annexGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.receiptValue{font-size:26px;font-weight:900;margin:18px 0}.printBtn{position:fixed;right:18px;top:18px;padding:10px 14px}@media print{body{background:#fff;padding:0}.printBtn{display:none}.contract{padding:0}}</style></head><body><button class="printBtn" onclick="window.print()">Imprimir / salvar PDF</button><div class="contract">${htmlContent}</div><script>setTimeout(()=>window.print(),350)<\/script></body></html>`); win.document.close(); }
+  function printDocument(title, htmlContent){ const win=window.open('','_blank'); win.document.write(`<html><head><title>${html(title)}</title><style>${contractPrintCss()}</style></head><body><button class="printBtn" onclick="window.print()">Imprimir / salvar PDF</button><div class="contract">${htmlContent}</div><script>setTimeout(()=>window.print(),350)<\/script></body></html>`); win.document.close(); }
+
   function generateReceipt(){
-    const c = getClient($('#contractClient').value), p = getProject($('#contractProject').value), s = getService($('#contractService').value), comp = state.company || {};
+    const c = getClient($('#contractClient').value), p = getProject($('#contractProject').value), s = getService($('#contractService').value), comp = state.company || defaultCompany();
     const amount = num($('#receiptAmount') && $('#receiptAmount').value) || num($('#contractValue') && $('#contractValue').value) || num(s.value) || num(p.budget_value) || projectTotal(p).final;
     const serviceName = ($('#receiptReference') && $('#receiptReference').value.trim()) || ($('#contractProjectName') && $('#contractProjectName').value.trim()) || s.title || p.name || 'serviço de móveis planejados';
-    const payment = ($('#receiptPayment') && $('#receiptPayment').value.trim()) || ($('#contractPayment') && $('#contractPayment').value.trim()) || 'Conforme combinado';
+    const payment = ($('#receiptPayment') && $('#receiptPayment').value.trim()) || ($('#contractPayment') && $('#contractPayment').value.trim()) || budgetPaymentPlainText(p) || 'Conforme combinado';
     const date = $('#contractStart') && $('#contractStart').value ? new Date($('#contractStart').value+'T00:00:00') : new Date();
-    const logo = comp.logo_url ? `<img class="contractLogo" src="${html(comp.logo_url)}">` : `<div class="contractLogoFallback">TP</div>`;
-    $('#contractOutput').innerHTML = `<div class="contractDoc receiptDoc"><div class="contractHeader">${logo}<div><h1>RECIBO</h1><b>${html(comp.company_name||'Top Planejados')}</b><br><span>${html(comp.phone||comp.whatsapp||'')} ${comp.instagram?'• '+html(comp.instagram):''}</span></div></div><div class="contractMeta"><div><b>Recebedor</b><br>${html(comp.company_name||'Top Planejados')}<br>CPF/CNPJ: ${html(comp.document_number||'-')}<br>Responsável: ${html(comp.responsible_name||'-')}<br>Endereço: ${html(comp.address||'-')}</div><div><b>Pagador</b><br>${html(c.name||'Cliente selecionado')}<br>CPF/CNPJ: ${html(c.document_number||'-')}<br>Telefone: ${html(c.phone||'-')}<br>Endereço: ${html(c.address||'-')} ${c.city?' - '+html(c.city):''}</div></div><h2>Declaração de recebimento</h2><p>Recebemos de <b>${html(c.name||'Cliente selecionado')}</b> a importância de:</p><div class="receiptValue">${money(amount)}</div><p>Referente a: <b>${html(serviceName)}</b>.</p><p><b>Forma de pagamento:</b> ${html(payment)}</p><p><b>Data:</b> ${dateFmt.format(date)}</p><p class="contractCity">${html(comp.contract_city||'Porto Velho - RO')}, ${dateFmt.format(date)}.</p><div class="contractSigs"><div>_____________________________________<br>${html(comp.company_name||'Recebedor')}</div><div>_____________________________________<br>${html(c.name||'Pagador')}</div></div></div>`;
-    toast('Recibo gerado.');
+    const items = (p.budget_items||[]).length ? (p.budget_items||[]).map((i,idx)=>`<tr><td>${idx+1}</td><td>${html(i.desc||i.name||'-')}</td><td>${num(i.qty)||1}</td><td>${Math.round(num(i.width)||0)} x ${Math.round(num(i.height)||0)} mm</td><td>${money(itemTotal(i))}</td></tr>`).join('') : `<tr><td colspan="5">${html(serviceName)}</td></tr>`;
+    const logo = comp.logo_url ? `<img class="receiptLogo" src="${html(comp.logo_url)}" alt="Logo">` : `<div class="receiptLogoFallback">${html((comp.company_name||'TP').split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'TP')}</div>`;
+    $('#contractOutput').innerHTML = `<div class="receiptSheet" ${contractStyleAttr(comp)}><div class="receiptTop">${logo}<div><h1>Recibo de Prestação de Serviços</h1><p>Emitido em: ${dateFmt.format(date)} às ${new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}</p></div><div class="receiptAmountBox">${money(amount)}</div></div><table class="receiptTable"><tr><th colspan="2">Empresa responsável</th></tr><tr><td><b>Nome</b><br>${html(comp.company_name||'Top Planejados')}</td><td><b>Contato</b><br>${html(comp.phone||comp.whatsapp||'-')}<br>${html(comp.instagram||'')}</td></tr><tr><td><b>CPF/CNPJ</b><br>${html(comp.document_number||'-')}</td><td><b>Endereço</b><br>${html(comp.address||'-')}</td></tr><tr><th colspan="2">Cliente</th></tr><tr><td><b>Nome</b><br>${html(c.name||'Cliente selecionado')}</td><td><b>Contato</b><br>${html(c.phone||'-')}</td></tr><tr><td><b>CPF/CNPJ</b><br>${html(c.document_number||'-')}</td><td><b>Endereço</b><br>${html(c.address||'-')} ${c.city?' - '+html(c.city):''}</td></tr><tr><th colspan="2">Informações do serviço</th></tr><tr><td><b>Referente</b><br>${html(serviceName)}</td><td><b>Forma de pagamento</b><br>${html(payment)}</td></tr><tr><td><b>Valor recebido</b><br><span class="receiptStrong">${money(amount)}</span></td><td><b>Data</b><br>${dateFmt.format(date)}</td></tr></table><table class="receiptTable receiptItems"><tr><th>Cód.</th><th>Serviço / item</th><th>Qtd.</th><th>Medida</th><th>Valor</th></tr>${items}</table><div class="receiptDeclaration">Declaramos para os devidos fins que recebemos de <b>${html(c.name||'Cliente selecionado')}</b> o valor de <b>${money(amount)}</b>, referente a <b>${html(serviceName)}</b>, na forma de pagamento informada acima.</div><div class="receiptSigs"><div>Assinatura da empresa/responsável<br><br>_____________________________________<br>${html(comp.company_name||'Top Planejados')}</div><div>Assinatura do cliente/responsável<br><br>_____________________________________<br>${html(c.name||'Cliente')}</div></div></div>`;
+    toast('Recibo gerado com forma de pagamento atualizada.');
   }
+
   function printReceiptPdf(){ const out=$('#contractOutput'); if(!out || !out.innerHTML.trim() || !out.innerHTML.includes('RECIBO')) generateReceipt(); const out2=$('#contractOutput'); printDocument('Recibo', out2.innerHTML); }
   function syncContractFromProject(){
     const p = getProject($('#contractProject') ? $('#contractProject').value : '');
@@ -2132,20 +2451,23 @@
     const c = getClient(p.client_id);
     if(c.id && $('#contractClient')) $('#contractClient').value = c.id;
     const tt = projectTotal(p);
-    if($('#contractValue')) $('#contractValue').value = (tt.final || p.budget_value || 0).toFixed ? (tt.final || p.budget_value || 0).toFixed(2) : (tt.final || p.budget_value || 0);
+    const val = tt.final || p.budget_value || 0;
+    if($('#contractValue')) $('#contractValue').value = num(val).toFixed(2);
     if($('#contractProjectName')) $('#contractProjectName').value = p.name || '';
     if($('#contractEnvironments')) $('#contractEnvironments').value = p.environment || '';
-    if($('#contractPayment')) $('#contractPayment').value = p.budget_payment_note || $('#contractPayment').value;
+    if($('#contractPayment')) $('#contractPayment').value = budgetPaymentPlainText(p);
     if($('#contractDiscount')) $('#contractDiscount').value = num(p.budget_discount || 0);
     if($('#contractEntryPct')) $('#contractEntryPct').value = num(p.entry_pct || state.company.entry_pct || 50);
     if($('#contractDeliveryPct')) $('#contractDeliveryPct').value = num(p.delivery_pct || state.company.delivery_pct || 50);
-    if($('#contractStart')) $('#contractStart').value = p.contract_start || today();
     if($('#contractDays')) $('#contractDays').value = num(p.delivery_days || 30);
     if($('#receiptAmount')) $('#receiptAmount').value = num(projectTotal(p).final || p.budget_value || 0).toFixed(2);
     if($('#receiptReference')) $('#receiptReference').value = p.name || 'Serviço de móveis planejados';
+    syncReceiptPaymentFromContract(true);
+    toast('Dados do orçamento/projeto puxados para contrato e recibo.');
   }
+
   function syncContractFromService(){
-    const s = getService($('#contractService') ? $('#contractService').value : '');
+    const s=getService($('#contractService') ? $('#contractService').value : '');
     if(!s || !s.id) return;
     if(s.client_id && $('#contractClient')) $('#contractClient').value = s.client_id;
     if(s.project_id && $('#contractProject')) $('#contractProject').value = s.project_id;
@@ -2153,9 +2475,11 @@
     if($('#contractDays')) $('#contractDays').value = num(getProject(s.project_id).delivery_days || $('#contractDays').value || 30);
     if($('#receiptAmount') && num(s.value)>0) $('#receiptAmount').value = num(s.value).toFixed(2);
     if($('#receiptReference')) $('#receiptReference').value = s.title || getProject(s.project_id).name || 'Serviço de móveis planejados';
+    syncReceiptPaymentFromContract(true);
   }
+
   function generateContract(){
-    const c = getClient($('#contractClient').value), p = getProject($('#contractProject').value), s = getService($('#contractService').value), comp = state.company || {};
+    const c = getClient($('#contractClient').value), p = getProject($('#contractProject').value), s = getService($('#contractService').value), comp = state.company || defaultCompany();
     if(p.id && normalizeStatus('budget',p.status)!=='aprovado'){ toast('Contrato só deve ser gerado depois que o orçamento estiver aprovado.', 'red'); return; }
     const projectVal = p.id ? projectTotal(p).final : 0;
     const rawValue = num($('#contractValue').value) || num(s.value) || num(p.budget_value) || projectVal;
@@ -2170,16 +2494,31 @@
     const serviceName = ($('#contractProjectName')&&$('#contractProjectName').value.trim()) || s.title || p.name || 'móveis planejados sob medida';
     const envText = ($('#contractEnvironments')&&$('#contractEnvironments').value.trim()) || p.environment || 'conforme projeto aprovado';
     const paymentText = ($('#contractPayment')&&$('#contractPayment').value.trim()) || 'Conforme combinado';
-    const supplierClause = /fornecedor|loja|entrada/i.test(paymentText) ? `<p><b>Entrada no fornecedor:</b> quando informado que parte do pagamento será destinado ao fornecedor/loja, esse valor será usado para compra de materiais e início da produção, ficando registrado como condição comercial do fechamento.</p>` : '';
-    const itemRows = (p.budget_items||[]).length ? `<h2>Itens aprovados</h2>${table(['Item','Qtd','Medida','Valor'], (p.budget_items||[]).map(i=>[html(i.desc||i.name||'-'), num(i.qty)||1, `${Math.round(num(i.width)||0)} x ${Math.round(num(i.height)||0)} mm`, money(itemTotal(i))]))}` : '';
-    const logo = comp.logo_url ? `<img class="contractLogo" src="${html(comp.logo_url)}">` : `<div class="contractLogoFallback">TP</div>`;
+    const supplierClause = /fornecedor|loja/i.test(paymentText) ? sectionHtml('Pagamento no fornecedor/loja',`<p>${html(supplierSplitText())}</p>`) : '';
+    const itemRows = (p.budget_items||[]).length ? sectionHtml('Itens aprovados', table(['Item','Qtd','Medida','Valor'], (p.budget_items||[]).map(i=>[html(i.desc||i.name||'-'), num(i.qty)||1, `${Math.round(num(i.width)||0)} x ${Math.round(num(i.height)||0)} mm`, money(itemTotal(i))]))) : '';
     const annex = p.id ? quoteBudgetAnnexHtml(p,c) : '';
-    $('#contractOutput').innerHTML = `<div class="contractDoc"><div class="contractHeader">${logo}<div><h1>CONTRATO DE SERVIÇO</h1><b>${html(comp.company_name||'Top Planejados')}</b><br><span>${html(comp.phone||comp.whatsapp||'')} ${comp.instagram?'• '+html(comp.instagram):''}</span></div></div><div class="contractMeta"><div><b>Contratada</b><br>${html(comp.company_name||'Top Planejados')}<br>CPF/CNPJ: ${html(comp.document_number||'-')}<br>Responsável: ${html(comp.responsible_name||'-')}<br>Endereço: ${html(comp.address||'-')}</div><div><b>Contratante</b><br>${html(c.name||'Cliente selecionado')}<br>CPF/CNPJ: ${html(c.document_number||'-')}<br>Telefone: ${html(c.phone||'-')}<br>Endereço: ${html(c.address||'-')} ${c.city?' - '+html(c.city):''}</div></div><h2>1. Objeto</h2><p>A CONTRATADA realizará fabricação, montagem e/ou instalação de <b>${html(serviceName)}</b>, contemplando os ambientes: <b>${html(envText).replace(/\n/g,'<br>')}</b>, conforme orçamento aprovado, medidas, materiais, imagens e observações anexas.</p>${itemRows}<h2>2. Valor e pagamento</h2><p>Valor total do serviço: <b>${money(baseValue)}</b>${discount?` após desconto de <b>${money(discount)}</b>`:''}. Entrada/sinal: <b>${money(entry)}</b> (${entryPct}%). Saldo na entrega: <b>${money(remaining)}</b> (${deliveryPct}%).</p><p><b>Forma de pagamento:</b> ${html(paymentText)}</p>${supplierClause}<h2>3. Prazo de entrega</h2><p>Prazo estimado: <b>${days} dias úteis</b>, contado da assinatura e confirmação do pagamento inicial, com previsão até <b>${dateFmt.format(end)}</b>.</p><h2>4. Garantia</h2><p>${html(comp.quote_warranty || defaultCompany().quote_warranty)}</p><h2>5. Observações</h2><p>${html($('#contractNotes').value || p.notes || s.notes || 'Sem observações adicionais.').replace(/\n/g,'<br>')}</p>${annex}<p class="contractCity">${html(comp.contract_city||'Porto Velho - RO')}, ${dateFmt.format(startDate)}.</p><div class="contractSigs"><div>_____________________________________<br>${html(comp.company_name||'Contratada')}</div><div>_____________________________________<br>${html(c.name||'Contratante')}</div></div></div>`;
+    const annexPhrase = annex ? 'O serviço seguirá orçamento aprovado, medidas, materiais, imagens anexas e observações registradas.' : 'O serviço seguirá orçamento aprovado, medidas, materiais e observações registradas.';
+    const contractNote = cleanDocNote($('#contractNotes').value || p.notes || s.notes || '');
+    const model = comp.contract_model || 'comercial';
+    const objectSec = sectionHtml('1. Objeto',`<p>A CONTRATADA realizará fabricação, montagem e/ou instalação de <b>${html(serviceName)}</b>, contemplando os ambientes:</p><p><b>${html(envText).replace(/\n/g,'<br>')}</b></p><p>${annexPhrase}</p>`);
+    const paySec = sectionHtml('2. Valor e pagamento',`<div class="paymentCards"><div><b>Valor total</b><br><span class="moneyStrong">${money(baseValue)}</span></div><div><b>Forma de pagamento</b><br>${html(paymentText).replace(/\n/g,'<br>')}</div><div><b>Entrada/sinal</b><br>${money(entry)} (${entryPct}%)</div><div><b>Saldo na entrega</b><br>${money(remaining)} (${deliveryPct}%)</div></div>${discount?`<p>Desconto aplicado: <b>${money(discount)}</b>.</p>`:''}`);
+    const deadlineSec = sectionHtml('3. Prazo de entrega',`<p>Prazo estimado: <b>${days} dias úteis</b>, contado da assinatura e confirmação do pagamento inicial, com previsão até <b>${dateFmt.format(end)}</b>.</p>`);
+    const warrantySec = sectionHtml('4. Garantia',`<p>${html(comp.quote_warranty || defaultCompany().quote_warranty)}</p>`);
+    const obsSec = contractNote ? sectionHtml('5. Observações',`<p>${html(contractNote).replace(/\n/g,'<br>')}</p>`) : '';
+    const clausesSec = contractClausesHtml();
+    let body = objectSec + itemRows + paySec + supplierClause + deadlineSec + warrantySec + obsSec + clausesSec + annex;
+    if(model==='compacto') body = objectSec + paySec + deadlineSec + clausesSec + annex;
+    if(model==='formal') body = contractPartiesHtml(comp,c) + body;
+    const header = contractHeaderHtml(comp, model==='compacto'?'CONTRATO RESUMIDO DE SERVIÇO':'CONTRATO DE SERVIÇO','Móveis planejados');
+    const parties = model==='formal' ? '' : contractPartiesHtml(comp,c);
+    $('#contractOutput').innerHTML = `<div class="contractDoc model-${html(model)}" ${contractStyleAttr(comp)}>${header}${parties}${body}<p class="contractCity">${html(comp.contract_city||'Porto Velho - RO')}, ${dateFmt.format(startDate)}.</p><div class="contractSigs"><div>_____________________________________<br>${html(comp.company_name||'Contratada')}</div><div>_____________________________________<br>${html(c.name||'Contratante')}</div></div></div>`;
+    syncReceiptPaymentFromContract(false);
   }
-  function readRenderFile(e){ const file = e.target.files && e.target.files[0]; if(!file) return; state.imageName = file.name; const reader = new FileReader(); reader.onload = () => { state.imageBase64 = String(reader.result||''); $('#renderPreview').innerHTML = `<img alt="Prévia" src="${state.imageBase64}">`; }; reader.readAsDataURL(file); }
+
+  async function readRenderFile(e){ const file = e.target.files && e.target.files[0]; if(!file) return; try{ assertSafeFile(file, 14); state.imageName = cleanText(file.name,120); const val = await imageFileToDataUrl(file,{maxWidth:2200,maxHeight:2200,quality:.9,type:'image/webp',maxMb:14}); state.imageBase64 = val; $('#renderPreview').innerHTML = `<img loading="lazy" decoding="async" alt="Prévia" src="${html(val)}">`; }catch(err){ toast(err.message || 'Não foi possível ler a imagem.', 'red'); } finally{ if(e.target) e.target.value=''; } }
   function buildRenderPrompt(){ return `Transforme a imagem enviada em uma renderização extremamente realista de móveis planejados, mas mantenha 100% fiel ao projeto original.\n\nRegras obrigatórias:\n- Não alterar layout, medidas, proporções, posição dos móveis, bancada, nichos, gavetas, portas, puxadores, perfil gola ou cava.\n- Não inventar módulos novos e não remover elementos do projeto.\n- Manter as cores e materiais principais: ${$('#renderMaterials') ? $('#renderMaterials').value : ''}.\n- Ambiente: ${$('#renderEnvironment') ? $('#renderEnvironment').value : ''}.\n- Qualidade visual: ${$('#renderQuality') ? $('#renderQuality').value : ''}.\n- Iluminação: ${$('#renderLight') ? $('#renderLight').value : ''}.\n- Fidelidade: ${$('#renderFidelity') ? $('#renderFidelity').value : ''}.\n- Resultado com aparência de foto real, catálogo profissional, sombras naturais, textura de MDF realista, reflexos moderados e escala correta.\n\nInstruções extras: ${$('#renderExtra') ? $('#renderExtra').value : ''}`; }
   function generateRenderPrompt(){ const p = buildRenderPrompt(); $('#renderPrompt').value = p; navigator.clipboard && navigator.clipboard.writeText(p).catch(()=>{}); toast('Prompt técnico gerado e copiado.'); }
-  async function callRenderApi(){ generateRenderPrompt(); const rs = state.renderSettings || {}; if(!rs.ready){ toast('A API de render ainda não foi marcada como pronta na aba Admin.', 'red'); return; } if(!rs.public_endpoint){ toast('Nenhum endpoint público/proxy configurado na aba Admin.', 'red'); return; } if(!state.imageBase64){ toast('Envie uma imagem antes de testar a API.', 'red'); return; } $('#renderPreview').innerHTML = '<div>Enviando para API...</div>'; try{ const data = await rawFetch(rs.public_endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ image:state.imageBase64, file_name:state.imageName, prompt:$('#renderPrompt').value, provider:rs.provider||'myarchitectai-proxy', plan:null, source:'top-planejados-v103' }) }); await trackRenderUsage(); await loadAll(); const img = data && (data.image_url || data.output_url || data.url || data.image_base64); $('#renderPreview').innerHTML = img ? `<img alt="Render" src="${html(img)}">` : `<pre class="copyarea">${html(JSON.stringify(data,null,2))}</pre>`; toast('Resposta da API recebida.'); }catch(e){ $('#renderPreview').innerHTML = '<div class="red">Erro na API: '+html(e.message)+'</div>'; } }
+  async function callRenderApi(){ generateRenderPrompt(); const rs = state.renderSettings || {}; if(!rs.ready){ toast('A API de render ainda não foi marcada como pronta na aba Admin.', 'red'); return; } if(!rs.public_endpoint){ toast('Nenhum endpoint público/proxy configurado na aba Admin.', 'red'); return; } if(!state.imageBase64){ toast('Envie uma imagem antes de testar a API.', 'red'); return; } $('#renderPreview').innerHTML = '<div>Enviando para API...</div>'; try{ const data = await rawFetch(rs.public_endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ image:state.imageBase64, file_name:state.imageName, prompt:$('#renderPrompt').value, provider:rs.provider||'myarchitectai-proxy', plan:null, source:'top-planejados-v111' }) }); await trackRenderUsage(); await loadAll(); const img = data && (data.image_url || data.output_url || data.url || data.image_base64); $('#renderPreview').innerHTML = img ? `<img alt="Render" src="${html(img)}">` : `<pre class="copyarea">${html(JSON.stringify(data,null,2))}</pre>`; toast('Resposta da API recebida.'); }catch(e){ $('#renderPreview').innerHTML = '<div class="red">Erro na API: '+html(e.message)+'</div>'; } }
 
   function openProjectBudget(id){ state.budgetProjectId=id; state.current='budget'; render(); }
   function openProjectDesigner(id){ state.designer.projectId=id; state.designer.selectedId=''; state.current='designer'; render(); }
@@ -2215,7 +2554,7 @@
     }
   }
 
-  window.TP = { toggleTheme, editClient, deleteClient, clearClientForm, editProject, deleteProject, clearProjectForm, editService, deleteService, clearServiceForm, markServiceDelivered, deleteTx, saveProviderPurchase, clearSupplierForm, editSupplier, saveSupplier, deleteSupplier, setProductionStatus, seedDefaultInventory, prefillInventory, clearInventoryForm, editInventoryItem, deleteInventoryItem, clearPayrollForm, editPayroll, markPayrollPaid, markPayrollPending, deletePayroll, editPayrollEmployee, deletePayrollEmployee, markServicePayrollPaid, markServicePayrollPending, toggleTab, toggleUserTab, loadAdminUsers, updateUserRole, updateUserActive, makeUserAdmin, makeUserRegular, activateUser, deactivateUser, accessUserData, stopAccessUser, generateContract, setContractSplit, setContractSupplierSplit, printContractPdf, generateReceipt, printReceiptPdf, generateRenderPrompt, callRenderApi, requestRenderPlan, updatePlanStatus, createQuickBudget, addBudgetItem, removeBudgetItem, updateBudgetItemFactor, updateBudgetItem, duplicateBudgetItem, markBudgetApproved, saveBudgetFields, setPaymentSplit, setSupplierSplit, exportBudgetHtml, openProjectBudget, openProjectDesigner, openTabKey, saveDesignerEnvironment, applyDesignerModule, duplicateDesignerModule, deleteDesignerModule, moveDesigner, alignDesigner, clearDesignerEnvironment, setDesignerMode, setDesignerZoom, fitDesignerZoom, toggleDesignerOption, toggleDesignerOpen, changeDesignerCount, addKitchenPreset, generatePiecesForCurrentDesign, designerToBudget, exportDesignerSvg, exportDesignerPng, printDesignerProject };
+  window.TP = { toggleTheme, editClient, deleteClient, clearClientForm, editProject, deleteProject, clearProjectForm, editService, deleteService, clearServiceForm, markServiceDelivered, deleteTx, saveProviderPurchase, clearSupplierForm, editSupplier, saveSupplier, deleteSupplier, setProductionStatus, updateProjectStatus, updateBudgetStatus, seedDefaultInventory, prefillInventory, previewBudgetClient, openClientBudget, clearInventoryForm, editInventoryItem, deleteInventoryItem, clearAllInventory, clearPayrollForm, editPayroll, markPayrollPaid, markPayrollPending, deletePayroll, editPayrollEmployee, deletePayrollEmployee, markServicePayrollPaid, markServicePayrollPending, toggleTab, toggleUserTab, loadAdminUsers, updateUserRole, updateUserActive, makeUserAdmin, makeUserRegular, activateUser, deactivateUser, accessUserData, stopAccessUser, generateContract, setContractSplit, setContractSupplierSplit, syncReceiptPaymentFromContract, printContractPdf, generateReceipt, printReceiptPdf, addContractClause, removeContractClause, resetContractClauses, applyPaymentPreset, generateRenderPrompt, callRenderApi, requestRenderPlan, updatePlanStatus, createQuickBudget, addBudgetItem, removeBudgetItem, updateBudgetItemFactor, updateBudgetItem, duplicateBudgetItem, markBudgetApproved, saveBudgetFields, setPaymentSplit, setSupplierSplit, exportBudgetHtml, openProjectBudget, openProjectDesigner, openTabKey, saveDesignerEnvironment, applyDesignerModule, duplicateDesignerModule, deleteDesignerModule, moveDesigner, alignDesigner, clearDesignerEnvironment, setDesignerMode, setDesignerZoom, fitDesignerZoom, toggleDesignerOption, toggleDesignerOpen, changeDesignerCount, addKitchenPreset, generatePiecesForCurrentDesign, designerToBudget, exportDesignerSvg, exportDesignerPng, printDesignerProject };
   Object.keys(window.TP).forEach(key=>{
     const fn=window.TP[key];
     if(typeof fn!=='function') return;
@@ -2224,5 +2563,23 @@
       catch(err){ console.error(err); setCloud(false,'Erro na nuvem'); toast(friendlyDbError(err),'red'); return null; }
     };
   });
-  document.addEventListener('DOMContentLoaded', ()=>{ applyTheme(); bindAuth(); bindDesignerKeyboard(); bindTabSearch(); bootApp(); });
+
+
+  function hardenExternalLinks(){
+    $$('a[target="_blank"]').forEach(a=>{
+      const rel = String(a.getAttribute('rel') || '').split(/\s+/).filter(Boolean);
+      ['noopener','noreferrer'].forEach(v=>{ if(!rel.includes(v)) rel.push(v); });
+      a.setAttribute('rel', rel.join(' '));
+    });
+  }
+
+function bindPwaLifecycle(){
+  if(!('serviceWorker' in navigator)) return;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if(window.__tpPwaReloading) return;
+    window.__tpPwaReloading = true;
+    setTimeout(() => location.reload(), 250);
+  });
+}
+  document.addEventListener('DOMContentLoaded', ()=>{ applyTheme(); hardenExternalLinks(); bindPwaLifecycle(); bindAuth(); bindDesignerKeyboard(); bindTabSearch(); bootApp(); });
 })();
