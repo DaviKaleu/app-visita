@@ -1,4 +1,4 @@
-const TP_CACHE_VERSION = "top-planejados-v113-optimized-secure";
+const TP_CACHE_VERSION = "top-planejados-v114-company-roles-secure";
 const APP_SHELL = [
   "./",
   "./index.html",
@@ -8,6 +8,7 @@ const APP_SHELL = [
   "./src/pwa-register.js",
   "./assets/material-roble-catedral.jpg",
   "./assets/sink-stainless.png",
+  "./assets/logo-top-planejados.png",
   "./assets/icons/icon-192.png",
   "./assets/icons/icon-512.png",
   "./assets/icons/apple-touch-icon.png",

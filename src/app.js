@@ -23,6 +23,10 @@
     imageBase64: '',
     imageName: '',
     adminProfiles: [],
+    companyId: null,
+    companyContext: null,
+    companyRoles: [],
+    companyPermissions: [],
     adminActingUserId: localStorage.getItem('tp_admin_acting_user_id') || '',
     planRequests: [],
     renderUsage: [],
@@ -31,6 +35,24 @@
     tabDrafts: {},
     saving:false,
     lastDbError:null
+  };
+
+
+
+  const APP_VERSION = 'V114';
+  const COMPANY_TABLES = new Set(['clients','projects','services','transactions','inventory_items','payroll_employees','payroll_records','suppliers','user_company_settings','plan_requests','render_usage','security_logs']);
+  const TEAM_ROLES = [
+    {id:'owner', label:'Dono', desc:'Acesso total, configurações, equipe e dados sensíveis.'},
+    {id:'manager', label:'Gerente', desc:'Operação completa sem remover o dono.'},
+    {id:'seller', label:'Vendedor', desc:'Clientes, projetos, orçamentos, contratos e serviços.'},
+    {id:'finance', label:'Financeiro', desc:'Entradas, saídas, pagamentos e folha.'},
+    {id:'stock', label:'Estoque / compras', desc:'Estoque, fornecedores e compras.'},
+    {id:'installer', label:'Montagem', desc:'Serviços atribuídos, status e conclusão.'}
+  ];
+  const TAB_PERMISSIONS = {
+    leaderboard:'dashboard.read', clients:'clients.read', projects:'projects.read', budget:'budgets.read', contracts:'contracts.read',
+    production:'production.read', services:'services.read', finance:'finance.read', inventory:'inventory.read', suppliers:'suppliers.read',
+    payroll:'payroll.read', render:'render.use', company:'company.read', admin:'members.manage'
   };
 
   const CATALOG = [
@@ -230,7 +252,7 @@
   function safeImageSrc(v){
     const src = String(v == null ? '' : v).trim();
     if(!src) return '';
-    if(/^data:image\/(png|jpe?g|webp|gif|svg\+xml);base64,/i.test(src)) return src;
+    if(/^data:image\/(png|jpe?g|webp|gif);base64,/i.test(src)) return src;
     if(/^https:\/\//i.test(src) || /^assets\//i.test(src) || /^\.\/?assets\//i.test(src) || /^blob:/i.test(src)) return src;
     return '';
   }
@@ -298,11 +320,26 @@
   function getClient(id){ return state.clients.find(x=>x.id===id) || {}; }
   function getProject(id){ return state.projects.find(x=>x.id===id) || {}; }
   function getService(id){ return state.services.find(x=>x.id===id) || {}; }
-  function isAdmin(){ return state.profile && state.profile.role === 'admin' && state.profile.active; }
+  function normalizedTeamRoles(roles){
+    const allowed = new Set(TEAM_ROLES.map(r=>r.id));
+    const arr = Array.isArray(roles) ? roles : String(roles||'').split(',');
+    const clean = arr.map(r=>String(r||'').trim().toLowerCase()).filter(r=>allowed.has(r));
+    return Array.from(new Set(clean));
+  }
+  function roleLabel(role){ const found=TEAM_ROLES.find(r=>r.id===role); return found ? found.label : role; }
+  function rolesText(roles){ const clean=normalizedTeamRoles(roles); return clean.length ? clean.map(roleLabel).join(' + ') : 'Sem cargo'; }
+  function hasPerm(permission){
+    if(!permission) return true;
+    if(state.profile && state.profile.active && state.profile.role === 'admin' && !(state.companyPermissions||[]).length) return true;
+    return (state.companyPermissions||[]).includes(permission) || (state.companyRoles||[]).includes('owner');
+  }
+  function hasAnyPerm(list){ return (list||[]).some(hasPerm); }
+  function isAdmin(){ return !!(state.profile && state.profile.active && (state.profile.role === 'admin' || hasPerm('members.manage'))); }
   function isOwnerEmail(email){ return OWNER_ADMIN_EMAILS.includes(String(email||'').trim().toLowerCase()); }
   function effectiveUserId(){ return (isAdmin() && state.adminActingUserId) ? state.adminActingUserId : (state.user && state.user.id); }
   function effectiveProfile(){ return (state.adminProfiles||[]).find(u=>u.id===state.adminActingUserId) || {}; }
   function effectiveUserLabel(){ const p=effectiveProfile(); if(isAdmin() && state.adminActingUserId) return p.name || p.email || 'usuário selecionado'; return state.profile ? (state.profile.name || state.profile.email || 'usuário') : 'usuário'; }
+  function companySettingsFilter(){ return state.companyId && !state.adminActingUserId ? 'company_id=eq.' + encodeURIComponent(state.companyId) : 'user_id=eq.' + encodeURIComponent(effectiveUserId()); }
   function adminContextBanner(){
     if(!isAdmin() || !state.adminActingUserId) return '';
     const p=effectiveProfile();
@@ -378,7 +415,12 @@
   async function authFetch(path, body){ return rawFetch(authBase() + path, { method:'POST', headers:apiHeaders({Authorization:'Bearer '+CFG.SUPABASE_ANON_KEY}), body:JSON.stringify(body || {}) }); }
   async function rest(path, options){ return rawFetch(restBase() + path, Object.assign({ headers:apiHeaders() }, options || {})); }
   async function select(table, query){ return rest('/' + table + '?' + (query || 'select=*'), { method:'GET' }); }
-  async function insert(table, obj){ return rest('/' + table, { method:'POST', headers:apiHeaders({'Prefer':'return=representation'}), body:JSON.stringify(obj) }); }
+  function withCompanyScope(table, obj){
+    if(!state.companyId || !COMPANY_TABLES.has(table) || !obj) return obj;
+    const add = (row) => row && typeof row === 'object' && !Array.isArray(row) && row.company_id == null ? Object.assign({ company_id: state.companyId }, row) : row;
+    return Array.isArray(obj) ? obj.map(add) : add(obj);
+  }
+  async function insert(table, obj){ return rest('/' + table, { method:'POST', headers:apiHeaders({'Prefer':'return=representation'}), body:JSON.stringify(withCompanyScope(table,obj)) }); }
   async function update(table, filter, obj){ return rest('/' + table + '?' + filter, { method:'PATCH', headers:apiHeaders({'Prefer':'return=representation'}), body:JSON.stringify(obj) }); }
   async function removeRow(table, filter){ return rest('/' + table + '?' + filter, { method:'DELETE' }); }
   async function rpc(name, obj){ return rest('/rpc/' + name, { method:'POST', body:JSON.stringify(obj || {}) }); }
@@ -413,6 +455,28 @@
     }
   }
 
+
+
+  async function loadCompanyContext(){
+    state.companyId = null;
+    state.companyContext = null;
+    state.companyRoles = [];
+    state.companyPermissions = [];
+    try{
+      const data = await rpc('tp_my_company_context', {});
+      const ctx = Array.isArray(data) ? data[0] : data;
+      if(ctx && ctx.company_id){
+        state.companyContext = ctx;
+        state.companyId = ctx.company_id;
+        state.companyRoles = normalizedTeamRoles(ctx.roles || []);
+        state.companyPermissions = Array.isArray(ctx.permissions) ? ctx.permissions.map(String) : [];
+      }
+    }catch(err){
+      console.warn('Contexto de empresa V114 indisponível. Rode supabase/migration_v114_company_roles_permissions.sql.', err);
+    }
+    return state.companyContext;
+  }
+
   function defaultTabs(){
     return [
       {tab_key:'leaderboard',title:'Dashboard / Estatísticas',description:'Resumo simples da operação da empresa.',icon:'IN',enabled:true,admin_only:false,order_index:10},
@@ -427,8 +491,8 @@
       {tab_key:'suppliers',title:'Fornecedores',description:'Cadastro simples de lojas e fornecedores.',icon:'FO',enabled:true,admin_only:false,order_index:85},
       {tab_key:'payroll',title:'Funcionários',description:'Funcionários e valores por serviço.',icon:'FU',enabled:true,admin_only:false,order_index:90},
       {tab_key:'render',title:'Renderização',description:'Integração opcional e separada via API externa.',icon:'AI',enabled:false,admin_only:false,order_index:110},
-      {tab_key:'company',title:'Configurações',description:'Dados oficiais da empresa e documentos.',icon:'CF',enabled:true,admin_only:false,order_index:120},
-      {tab_key:'admin',title:'Admin',description:'Usuários, permissões e abas.',icon:'AD',enabled:true,admin_only:true,order_index:130}
+      {tab_key:'company',title:'Empresa',description:'Dados oficiais, documentos, preços e equipe de acesso.',icon:'EM',enabled:true,admin_only:false,order_index:120},
+      {tab_key:'admin',title:'Admin',description:'Área técnica: abas, integração e auditoria.',icon:'AD',enabled:true,admin_only:true,order_index:130}
     ];
   }
   function mergeTabs(dbTabs){
@@ -453,25 +517,28 @@
       await loadProfile().catch(()=>null);
     }
     if(!state.profile || !state.profile.active){ showOnly('pendingScreen'); return false; }
+    await loadCompanyContext();
     if(!isAdmin()) { state.adminActingUserId=''; localStorage.removeItem('tp_admin_acting_user_id'); }
     const dataUserId = effectiveUserId();
     const uidFilter = encodeURIComponent(dataUserId);
     const own = 'created_by=eq.' + uidFilter;
-    const planQuery = isAdmin() ? 'select=*&order=created_at.desc' : 'select=*&user_id=eq.' + uidFilter + '&order=created_at.desc';
-    const usageQuery = isAdmin() ? 'select=*&usage_date=eq.' + today() : 'select=*&user_id=eq.' + uidFilter + '&usage_date=eq.' + today();
+    const companyFilter = state.companyId && !state.adminActingUserId ? 'company_id=eq.' + encodeURIComponent(state.companyId) : own;
+    const companySettingsQuery = state.companyId && !state.adminActingUserId ? 'select=*&company_id=eq.' + encodeURIComponent(state.companyId) + '&limit=1' : 'select=*&user_id=eq.' + uidFilter;
+    const planQuery = isAdmin() ? 'select=*&order=created_at.desc' : (state.companyId ? 'select=*&company_id=eq.' + encodeURIComponent(state.companyId) + '&order=created_at.desc' : 'select=*&user_id=eq.' + uidFilter + '&order=created_at.desc');
+    const usageQuery = isAdmin() ? 'select=*&usage_date=eq.' + today() : (state.companyId ? 'select=*&company_id=eq.' + encodeURIComponent(state.companyId) + '&usage_date=eq.' + today() : 'select=*&user_id=eq.' + uidFilter + '&usage_date=eq.' + today());
     const [company, tabs, clients, projects, services, transactions, planRequests, renderUsage, inventory, payrollEmployees, payrollRecords, suppliers, materials] = await Promise.all([
-      safeSelect('user_company_settings', 'select=*&user_id=eq.' + uidFilter),
+      safeSelect('user_company_settings', companySettingsQuery),
       safeSelect('tab_settings', 'select=*&order=order_index.asc', defaultTabs()),
-      safeSelect('clients', 'select=*&' + own + '&order=created_at.desc'),
-      safeSelect('projects', 'select=*&' + own + '&order=created_at.desc'),
-      safeSelect('services', 'select=*&' + own + '&order=created_at.desc'),
-      safeSelect('transactions', 'select=*&' + own + '&order=transaction_date.desc,created_at.desc'),
+      safeSelect('clients', 'select=*&' + companyFilter + '&order=created_at.desc'),
+      safeSelect('projects', 'select=*&' + companyFilter + '&order=created_at.desc'),
+      safeSelect('services', 'select=*&' + companyFilter + '&order=created_at.desc'),
+      safeSelect('transactions', 'select=*&' + companyFilter + '&order=transaction_date.desc,created_at.desc'),
       safeSelect('plan_requests', planQuery),
       safeSelect('render_usage', usageQuery),
-      safeSelect('inventory_items', 'select=*&' + own + '&order=item_name.asc'),
-      safeSelect('payroll_employees', 'select=*&' + own + '&order=name.asc'),
-      safeSelect('payroll_records', 'select=*&' + own + '&order=period_start.desc,created_at.desc'),
-      safeSelect('suppliers', 'select=*&' + own + '&order=name.asc'),
+      safeSelect('inventory_items', 'select=*&' + companyFilter + '&order=item_name.asc'),
+      safeSelect('payroll_employees', 'select=*&' + companyFilter + '&order=name.asc'),
+      safeSelect('payroll_records', 'select=*&' + companyFilter + '&order=period_start.desc,created_at.desc'),
+      safeSelect('suppliers', 'select=*&' + companyFilter + '&order=name.asc'),
       safeSelect('material_catalog', 'select=*&order=category.asc,name.asc')
     ]);
     if(!company[0]){
@@ -503,7 +570,7 @@
     return true;
   }
 
-  function defaultCompany(){ return { company_name:'Top Planejados', document_number:'', responsible_name:'', phone:'', whatsapp:'', instagram:'', address:'', pix_key:'', contract_city:'Porto Velho - RO', price_white:850, price_white_wood:950, price_wood:1100, card_factor:1.30, default_discount:0, entry_pct:50, delivery_pct:50, logo_url:'', quote_primary_color:'#111111', quote_secondary_color:'#8b8b8b', quote_accent_color:'#dc2626', quote_text_color:'#111827', quote_title:'ORÇAMENTO DE SERVIÇO', quote_valid_days:7, quote_warranty:'Garantia de um ano. Garantia não válida para contato dos móveis com água. A garantia fica atrelada à inspeção técnica para avaliar defeito de fabricação ou mau uso.', quote_footer_note:'', contract_model:'comercial', receipt_model:'comercial' }; }
+  function defaultCompany(){ return { company_name:'Top Planejados', document_number:'', responsible_name:'', phone:'', whatsapp:'', instagram:'', address:'', pix_key:'', contract_city:'Porto Velho - RO', price_white:850, price_white_wood:950, price_wood:1100, card_factor:1.30, default_discount:0, entry_pct:50, delivery_pct:50, logo_url:'assets/logo-top-planejados.png', quote_primary_color:'#111111', quote_secondary_color:'#8b8b8b', quote_accent_color:'#dc2626', quote_text_color:'#111827', quote_title:'ORÇAMENTO DE SERVIÇO', quote_valid_days:7, quote_warranty:'Garantia de um ano. Garantia não válida para contato dos móveis com água. A garantia fica atrelada à inspeção técnica para avaliar defeito de fabricação ou mau uso.', quote_footer_note:'', contract_model:'comercial', receipt_model:'comercial' }; }
   function priceByColor(color){ color=String(color||'branco'); if(color==='branco_madeirado') return num(state.company.price_white_wood||950); if(color==='madeirado') return num(state.company.price_wood||1100); return num(state.company.price_white||850); }
   function colorName(color){ if(color==='branco_madeirado') return 'Branco com madeirado'; if(color==='madeirado') return 'Madeirado'; return 'Branco'; }
   function paymentName(p){
@@ -538,11 +605,11 @@
     return {company,client,project,service,items,totals,transactions:tx};
   }
   function tabClearTitle(key, fallback){
-    const map={leaderboard:'Dashboard / Estatísticas',clients:'Clientes',budget:'Orçamentos',projects:'Projetos',contracts:'Contratos',production:'Produção',services:'Serviços',finance:'Financeiro',inventory:'Estoque',suppliers:'Fornecedores',payroll:'Funcionários',render:'Renderização',company:'Configurações',admin:'Admin'};
+    const map={leaderboard:'Dashboard / Estatísticas',clients:'Clientes',budget:'Orçamentos',projects:'Projetos',contracts:'Contratos',production:'Produção',services:'Serviços',finance:'Financeiro',inventory:'Estoque',suppliers:'Fornecedores',payroll:'Funcionários',render:'Renderização',company:'Empresa',admin:'Admin'};
     return map[key]||fallback||key;
   }
   function tabClearDesc(key, fallback){
-    const map={leaderboard:'Resumo simples da operação: orçamentos, produção, serviços, financeiro e alertas.',clients:'Cadastro principal dos clientes da Top.',budget:'Monte orçamento com base em um projeto vinculado ao cliente.',projects:'Organize projetos, imagens e informações técnicas.',contracts:'Gere contratos somente após aprovação do orçamento.',production:'Acompanhe material, fabricação, finalização e entrega.',services:'Acompanhe execução, equipe e entrega.',finance:'Controle entradas, despesas, compras e fornecedor.',inventory:'Controle itens, variantes e alertas de estoque mínimo.',suppliers:'Cadastro simples de fornecedores e lojas.',payroll:'Funcionários e valores a receber por serviço fechado.',render:'Renderização opcional via API externa no futuro.',company:'Dados oficiais da empresa e configurações de documentos.',admin:'Usuários, permissões, abas e configurações internas.'};
+    const map={leaderboard:'Resumo simples da operação: orçamentos, produção, serviços, financeiro e alertas.',clients:'Cadastro principal dos clientes da Top.',budget:'Monte orçamento com base em um projeto vinculado ao cliente.',projects:'Organize projetos, imagens e informações técnicas.',contracts:'Gere contratos somente após aprovação do orçamento.',production:'Acompanhe material, fabricação, finalização e entrega.',services:'Acompanhe execução, equipe e entrega.',finance:'Controle entradas, despesas, compras e fornecedor.',inventory:'Controle itens, variantes e alertas de estoque mínimo.',suppliers:'Cadastro simples de fornecedores e lojas.',payroll:'Funcionários e valores a receber por serviço fechado.',render:'Renderização opcional via API externa no futuro.',company:'Dados oficiais, documentos, preços e equipe de acesso ao sistema.',admin:'Área técnica para abas, integração e auditoria.'};
     return map[key]||fallback||'';
   }
   function planInfo(id){ return RENDER_PLANS[id] || RENDER_PLANS.inicial; }
@@ -555,7 +622,8 @@
   function itemTotal(it){ const manual=num(it.total)||num(it.value)||num(it.subtotal); if(manual>0) return manual; return itemArea(it)*priceByColor(it.color)*payFactor(it.payment); }
   function projectSubtotal(p){ const items=(p.budget_items||[]); const sum=items.reduce((a,it)=>a+itemTotal(it),0); return sum || num(p.budget_value) || 0; }
   function projectM2(p){ return (p.budget_items||[]).reduce((a,it)=>a+itemArea(it),0); }
-  function projectTotal(p){ const sub = projectSubtotal(p); const discount = num(p.budget_discount || 0); const final = Math.max(0, sub-discount); const entryPct = num(p.entry_pct || state.company.entry_pct || 50); const deliveryPct = num(p.delivery_pct || state.company.delivery_pct || 50); return {subtotal:sub, discount, final, entry:final*(entryPct/100), delivery:final*(deliveryPct/100), entryPct, deliveryPct}; }
+  function pctValue(value, fallback){ return value === 0 || value === '0' || (value != null && String(value).trim() !== '') ? num(value) : num(fallback || 0); }
+  function projectTotal(p){ const sub = projectSubtotal(p); const discount = num(p.budget_discount || 0); const final = Math.max(0, sub-discount); const entryPct = pctValue(p.entry_pct, state.company.entry_pct || 50); const deliveryPct = pctValue(p.delivery_pct, state.company.delivery_pct || 50); return {subtotal:sub, discount, final, entry:final*(entryPct/100), delivery:final*(deliveryPct/100), entryPct, deliveryPct}; }
   function quoteProjectOptions(selected){ return '<option value="">Novo orçamento / sem projeto selecionado</option>' + state.projects.map(p=>`<option value="${p.id}" ${selected===p.id?'selected':''}>${html(p.name)} — ${html(getClient(p.client_id).name||'sem cliente')}</option>`).join(''); }
   function catalogOptions(selected){ return CATALOG.map(c=>`<option value="${c.code}" ${String(selected)===String(c.code)?'selected':''}>${c.code} - ${html(c.name)} | Fator ${c.factor}</option>`).join(''); }
   function materialOptions(selected){ return MATERIALS.map(m=>`<option ${selected===m?'selected':''}>${html(m)}</option>`).join(''); }
@@ -629,10 +697,15 @@
     return Math.round(sectionW*0.24);
   }
 
-  function isUserVisibleTab(t){ return !!t.enabled && t.tab_key !== 'admin'; }
+  function tabAllowedByPermission(key){
+    if(key === 'designer') return false;
+    const perm = TAB_PERMISSIONS[key];
+    return !perm || hasPerm(perm);
+  }
+  function isUserVisibleTab(t){ return !!t.enabled && t.tab_key !== 'admin' && tabAllowedByPermission(t.tab_key); }
   function availableTabs(){
     const clean=(state.tabs||[]).filter(t=>t.tab_key!=='designer');
-    if(isAdmin()) return clean.slice().sort((a,b)=>num(a.order_index)-num(b.order_index));
+    if(isAdmin()) return clean.filter(t=>tabAllowedByPermission(t.tab_key) || t.tab_key==='admin').sort((a,b)=>num(a.order_index)-num(b.order_index));
     return clean.filter(t => isUserVisibleTab(t)).sort((a,b)=>num(a.order_index)-num(b.order_index));
   }
   function tabByKey(key){ return state.tabs.find(t => t.tab_key === key) || {}; }
@@ -667,7 +740,7 @@
   function renderNav(){
     ensureCurrentTab();
     $('#sideName').textContent = state.profile.name || state.profile.email || 'Usuário';
-    $('#sideRole').textContent = isAdmin() ? (state.adminActingUserId ? 'Administrador • acesso assistido' : 'Administrador') : 'Usuário ativo';
+    $('#sideRole').textContent = state.adminActingUserId ? 'Administrador • acesso assistido' : (state.companyRoles && state.companyRoles.length ? rolesText(state.companyRoles) : (isAdmin() ? 'Administrador' : 'Usuário ativo'));
     const tabs=availableTabs().slice().sort((a,b)=>num(a.order_index)-num(b.order_index));
     const groupLabel=(key)=> ['leaderboard','clients','projects','budget','contracts','production','services','finance'].includes(key)?'Operação':(['inventory','suppliers','payroll'].includes(key)?'Controle interno':(['render'].includes(key)?'Ferramentas':(key==='company'?'Configurações':'Admin')));
     let last='';
@@ -819,11 +892,39 @@
   function sectionHtml(title,body){ return `<section class="contractSection"><h2>${html(title)}</h2>${body}</section>`; }
   function syncReceiptPaymentFromContract(force){ const cp=$('#contractPayment'), rp=$('#receiptPayment'); if(!cp||!rp) return; const cur=String(rp.value||'').trim().toLowerCase(); if(force || !state.receiptPaymentTouched || cur==='' || cur==='pix') rp.value=cp.value.trim() || 'PIX'; }
   function contractPrintCss(){ return `body{font-family:Arial;padding:20px;color:#111;background:#f3f4f6}.contract{max-width:900px;margin:auto;background:#fff;padding:0;line-height:1.55}.contractDoc{background:#fff;color:var(--doc-text,#111827);border-radius:14px;overflow:hidden;border:1px solid #e5e7eb}.contractHeader{position:relative;display:flex;gap:18px;align-items:center;padding:22px 24px;color:#fff;background:var(--doc-primary,#111)}.contractHeaderBg{position:absolute;left:0;right:0;bottom:-18px;height:42px;background:var(--doc-secondary,#999);opacity:.38;border-radius:0 0 50% 50%}.contractHeader>*:not(.contractHeaderBg){position:relative;z-index:2}.contractLogo{width:86px;height:86px;object-fit:contain;background:#fff;border-radius:12px;padding:8px}.contractLogoFallback{width:86px;height:86px;background:#fff;color:var(--doc-primary,#111);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:28px;border-radius:12px}.contractHeader h1{font-size:24px;margin:0;color:#fff}.contractHeader b{color:#fff}.contractMeta,.paymentCards,.contractSigs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 24px}.contractMeta>div,.paymentCards>div{border:1px solid #e5e7eb;border-radius:12px;padding:12px;background:#fff}.contractSection{margin:18px 24px}.contract h2{font-size:16px;margin:0 0 8px;color:var(--doc-primary,#111);border-bottom:2px solid var(--doc-accent,#dc2626);padding-bottom:5px}.contract table{width:100%;border-collapse:collapse}.contract td,.contract th{border:1px solid #ddd;padding:7px}.receiptValue{font-size:30px;font-weight:900;margin:18px 24px;padding:18px;border:2px solid var(--doc-accent,#dc2626);border-radius:14px;text-align:center;color:var(--doc-primary,#111);background:#f9fafb}.contractCity{margin:24px}.contractSigs{margin-top:42px;text-align:center}.annexProjectImage{max-width:100%;max-height:260px;object-fit:contain}.annexGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.model-formal .contractHeader{background:#fff;color:var(--doc-text,#111);border-bottom:4px solid var(--doc-primary,#111)}.model-formal .contractHeader h1,.model-formal .contractHeader b{color:var(--doc-primary,#111)}.model-formal .contractHeader span,.model-formal .contractHeader small{color:var(--doc-text,#111)}.model-formal .contractHeaderBg{display:none}.model-compacto .contractHeader{padding:14px;background:var(--doc-primary,#111)}.model-compacto .contractLogo,.model-compacto .contractLogoFallback{width:64px;height:64px}.printBtn{position:fixed;right:18px;top:18px;padding:10px 14px}.receiptSheet{background:#fff;color:var(--doc-text,#111827);border:1px solid #d1d5db;border-radius:14px;overflow:hidden;max-width:920px;margin:auto;font-family:Arial,sans-serif}.receiptTop{display:grid;grid-template-columns:90px 1fr 180px;gap:14px;align-items:center;padding:18px 22px;background:linear-gradient(135deg,var(--doc-primary,#111),var(--doc-secondary,#555));color:#fff}.receiptTop h1{margin:0;font-size:24px;color:#fff}.receiptTop p{margin:4px 0 0;color:#f8fafc}.receiptLogo{width:78px;height:78px;object-fit:contain;background:#fff;border-radius:12px;padding:8px}.receiptLogoFallback{width:78px;height:78px;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--doc-primary,#111);border-radius:12px;font-weight:900;font-size:26px}.receiptAmountBox{background:#fff;color:var(--doc-primary,#111);border-radius:12px;padding:14px;text-align:center;font-size:22px;font-weight:900}.receiptTable{width:calc(100% - 44px);margin:18px 22px;border-collapse:collapse;background:#fff}.receiptTable th{background:var(--doc-secondary,#777);color:#fff;text-align:left;padding:9px}.receiptTable td{border:1px solid #d1d5db;padding:8px;vertical-align:top}.receiptItems th{background:var(--doc-primary,#111)}.receiptStrong{font-size:18px;font-weight:900;color:var(--doc-primary,#111)}.receiptDeclaration{margin:18px 22px;border-left:4px solid var(--doc-accent,#dc2626);background:#f8fafc;padding:12px;line-height:1.5}.receiptSigs{display:grid;grid-template-columns:1fr 1fr;gap:22px;text-align:center;margin:42px 22px 24px}@media print{body{background:#fff;padding:0}.printBtn{display:none}.contract{padding:0}.contractDoc{border:0}}`; }
+
+  function domSafe(v){ return String(v||'').replace(/[^a-zA-Z0-9_-]/g,'_'); }
+  function roleBadges(roles){
+    const clean=normalizedTeamRoles(roles);
+    return clean.length ? clean.map(r=>`<span class="badge roleBadge">${html(roleLabel(r))}</span>`).join(' ') : '<span class="muted small">sem cargo</span>';
+  }
+  function teamRoleChecks(userId, roles){
+    const current=new Set(normalizedTeamRoles(roles));
+    const safe=domSafe(userId);
+    return `<div class="roleChecks">${TEAM_ROLES.map(r=>`<label class="check roleCheck" title="${html(r.desc)}"><input id="team_role_${safe}_${r.id}" type="checkbox" ${current.has(r.id)?'checked':''}> ${html(r.label)}</label>`).join('')}</div>`;
+  }
+  function renderCompanyTeamAccess(){
+    if(!hasPerm('members.manage')){
+      return `<div class="card" style="margin-top:14px"><h3>Equipe e acesso ao sistema</h3><div class="notice">Aqui ficam os acessos dos funcionários. Seu cargo atual não permite liberar pessoas nem alterar cargos.</div></div>`;
+    }
+    const users=(state.adminProfiles||[]);
+    const rows=users.map(u=>{
+      const owner=isOwnerEmail(u.email||'');
+      const roles=normalizedTeamRoles(u.roles || (u.role==='admin'?['owner']:['seller']));
+      const safe=domSafe(u.id);
+      const active = u.company_active == null ? !!u.active : !!u.company_active;
+      const status = active ? '<span class="status ativo">liberado</span>' : '<span class="status recusado">bloqueado</span>';
+      const controls = owner ? '<span class="badge adminKeep">conta principal protegida</span>' : `<label class="check"><input id="team_active_${safe}" type="checkbox" ${active?'checked':''}> acesso liberado</label>${teamRoleChecks(u.id,roles)}<button class="primary mini" onclick="TP.saveCompanyMemberRoles('${u.id}')">Salvar cargos</button>`;
+      return [html(u.name||'-'), html(u.email||'-'), status, roleBadges(roles), `<div class="teamControls">${controls}</div>`];
+    });
+    return `<div class="card" style="margin-top:14px"><div class="toolbar"><h3>Equipe e acesso ao sistema</h3><button class="ghost" onclick="TP.loadAdminUsers()">Recarregar usuários</button></div><div class="notice goldline"><b>Não confundir:</b> esta área libera acesso ao sistema e define cargos. A aba <b>Funcionários</b> continua sendo folha/valor por serviço. Para adicionar alguém novo, a pessoa cria acesso na tela de login e depois você libera aqui.</div>${table(['Nome','E-mail','Acesso','Cargos','Gerenciar'], rows)}</div>`;
+  }
+
   function renderCompany(){
     const c = state.company || defaultCompany();
     const model = c.contract_model || 'comercial';
     const receiptModel = c.receipt_model || 'comercial';
-    return `<div class="grid2"><div class="card form"><h3>Dados oficiais da empresa</h3><div class="notice goldline">Esses dados alimentam orçamento, contrato, recibo e documentos da operação.</div><form id="companyForm"><label>Nome da empresa</label><input id="companyName" value="${html(c.company_name)}"><label>CPF/CNPJ</label><input id="companyDoc" value="${html(c.document_number)}"><label>Responsável</label><input id="companyResponsible" value="${html(c.responsible_name)}"><label>Telefone</label><input id="companyPhone" value="${html(c.phone)}"><label>WhatsApp</label><input id="companyWhatsapp" value="${html(c.whatsapp)}"><label>Instagram</label><input id="companyInstagram" value="${html(c.instagram)}"><label>Endereço</label><input id="companyAddress" value="${html(c.address)}"><label>Chave PIX</label><input id="companyPix" value="${html(c.pix_key)}"><label>Cidade do contrato/orçamento</label><input id="companyCity" value="${html(c.contract_city)}"><button class="primary" type="submit">Salvar empresa</button></form></div><div class="card form"><h3>Documentos da empresa</h3><div class="notice">Escolha logo, cores e modelo. A prévia abaixo fica parecida com o contrato/recibo real.</div><label>Logo da empresa</label><input id="companyLogoFile" type="file" accept="image/*"><input id="companyLogo" value="${html(c.logo_url||'')}" placeholder="Cole uma URL/base64 ou envie uma imagem acima"><div class="form-grid"><div><label>Cor principal</label><input id="quotePrimary" type="color" value="${html(c.quote_primary_color||'#111111')}"></div><div><label>Cor secundária/onda</label><input id="quoteSecondary" type="color" value="${html(c.quote_secondary_color||'#8b8b8b')}"></div><div><label>Cor de destaque</label><input id="quoteAccent" type="color" value="${html(c.quote_accent_color||'#dc2626')}"></div><div><label>Cor do texto</label><input id="quoteText" type="color" value="${html(c.quote_text_color||'#111827')}"></div></div><div class="form-grid"><div><label>Modelo do contrato</label><select id="contractModel"><option value="comercial" ${model==='comercial'?'selected':''}>Comercial com cabeçalho</option><option value="formal" ${model==='formal'?'selected':''}>Formal limpo</option><option value="compacto" ${model==='compacto'?'selected':''}>Compacto simples</option></select></div><div><label>Modelo do recibo</label><select id="receiptModel"><option value="comercial" ${receiptModel==='comercial'?'selected':''}>Comercial com valor destacado</option><option value="formal" ${receiptModel==='formal'?'selected':''}>Formal limpo</option><option value="compacto" ${receiptModel==='compacto'?'selected':''}>Compacto simples</option></select></div></div><label>Título padrão do orçamento</label><input id="quoteTitle" value="${html(c.quote_title||'ORÇAMENTO DE SERVIÇO')}"><div class="form-grid"><div><label>Validade do orçamento em dias</label><input id="quoteValidDays" type="number" value="${html(c.quote_valid_days||7)}"></div><div><label>Cidade</label><input value="${html(c.contract_city||'')}" disabled></div></div><label>Texto de garantia</label><textarea id="quoteWarranty">${html(c.quote_warranty||defaultCompany().quote_warranty)}</textarea><label>Observação final personalizada</label><textarea id="quoteFooterNote" placeholder="Ex: orçamento sujeito a alteração após medição técnica...">${html(c.quote_footer_note||'')}</textarea>${documentModelPreviewHtml(c)}<p class="muted small">Depois de alterar, clique em <b>Salvar personalização</b> para gravar dados e layout.</p><button class="primary" type="button" onclick="document.getElementById('companyForm').requestSubmit()">Salvar personalização</button></div></div><div class="grid2" style="margin-top:14px"><div class="card form"><h3>Valores por metro da planilha</h3><div class="notice">Mesma lógica da planilha antiga: <b>quantidade × largura(mm) × altura(mm) convertido para m² × fator do móvel × valor por metro × forma de pagamento</b>.</div><form id="priceForm"><label>Branco</label><input id="priceWhite" type="number" step="0.01" value="${html(c.price_white)}"><label>Branco com madeirado</label><input id="priceWhiteWood" type="number" step="0.01" value="${html(c.price_white_wood)}"><label>Madeirado</label><input id="priceWood" type="number" step="0.01" value="${html(c.price_wood)}"><label>Multiplicador cartão</label><input id="cardFactor" type="number" step="0.01" value="${html(c.card_factor)}"><div class="form-grid"><div><label>% entrada padrão</label><input id="entryPct" type="number" value="${html(c.entry_pct)}"></div><div><label>% entrega padrão</label><input id="deliveryPct" type="number" value="${html(c.delivery_pct)}"></div></div><button class="primary" type="submit">Salvar preços</button></form></div><div class="card"><h3>Catálogo de fatores</h3><div class="table-wrap compact-table"><table class="table"><thead><tr><th>Cód.</th><th>Móvel</th><th>Fator</th></tr></thead><tbody>${CATALOG.map(ca=>`<tr><td>${ca.code}</td><td>${html(ca.name)}</td><td><b>${ca.factor}</b></td></tr>`).join('')}</tbody></table></div></div></div>`;
+    return `<div class="grid2"><div class="card form"><h3>Dados oficiais da empresa</h3><div class="notice goldline">Esses dados alimentam orçamento, contrato, recibo e documentos da operação.</div><form id="companyForm"><label>Nome da empresa</label><input id="companyName" value="${html(c.company_name)}"><label>CPF/CNPJ</label><input id="companyDoc" value="${html(c.document_number)}"><label>Responsável</label><input id="companyResponsible" value="${html(c.responsible_name)}"><label>Telefone</label><input id="companyPhone" value="${html(c.phone)}"><label>WhatsApp</label><input id="companyWhatsapp" value="${html(c.whatsapp)}"><label>Instagram</label><input id="companyInstagram" value="${html(c.instagram)}"><label>Endereço</label><input id="companyAddress" value="${html(c.address)}"><label>Chave PIX</label><input id="companyPix" value="${html(c.pix_key)}"><label>Cidade do contrato/orçamento</label><input id="companyCity" value="${html(c.contract_city)}"><button class="primary" type="submit">Salvar empresa</button></form></div><div class="card form"><h3>Documentos da empresa</h3><div class="notice">Escolha logo, cores e modelo. A prévia abaixo fica parecida com o contrato/recibo real.</div><label>Logo da empresa</label><input id="companyLogoFile" type="file" accept="image/*"><input id="companyLogo" value="${html(c.logo_url||'')}" placeholder="Cole uma URL/base64 ou envie uma imagem acima"><div class="form-grid"><div><label>Cor principal</label><input id="quotePrimary" type="color" value="${html(c.quote_primary_color||'#111111')}"></div><div><label>Cor secundária/onda</label><input id="quoteSecondary" type="color" value="${html(c.quote_secondary_color||'#8b8b8b')}"></div><div><label>Cor de destaque</label><input id="quoteAccent" type="color" value="${html(c.quote_accent_color||'#dc2626')}"></div><div><label>Cor do texto</label><input id="quoteText" type="color" value="${html(c.quote_text_color||'#111827')}"></div></div><div class="form-grid"><div><label>Modelo do contrato</label><select id="contractModel"><option value="comercial" ${model==='comercial'?'selected':''}>Comercial com cabeçalho</option><option value="formal" ${model==='formal'?'selected':''}>Formal limpo</option><option value="compacto" ${model==='compacto'?'selected':''}>Compacto simples</option></select></div><div><label>Modelo do recibo</label><select id="receiptModel"><option value="comercial" ${receiptModel==='comercial'?'selected':''}>Comercial com valor destacado</option><option value="formal" ${receiptModel==='formal'?'selected':''}>Formal limpo</option><option value="compacto" ${receiptModel==='compacto'?'selected':''}>Compacto simples</option></select></div></div><label>Título padrão do orçamento</label><input id="quoteTitle" value="${html(c.quote_title||'ORÇAMENTO DE SERVIÇO')}"><div class="form-grid"><div><label>Validade do orçamento em dias</label><input id="quoteValidDays" type="number" value="${html(c.quote_valid_days||7)}"></div><div><label>Cidade</label><input value="${html(c.contract_city||'')}" disabled></div></div><label>Texto de garantia</label><textarea id="quoteWarranty">${html(c.quote_warranty||defaultCompany().quote_warranty)}</textarea><label>Observação final personalizada</label><textarea id="quoteFooterNote" placeholder="Ex: orçamento sujeito a alteração após medição técnica...">${html(c.quote_footer_note||'')}</textarea>${documentModelPreviewHtml(c)}<p class="muted small">Depois de alterar, clique em <b>Salvar personalização</b> para gravar dados e layout.</p><button class="primary" type="button" onclick="document.getElementById('companyForm').requestSubmit()">Salvar personalização</button></div></div><div class="grid2" style="margin-top:14px"><div class="card form"><h3>Valores por metro da planilha</h3><div class="notice">Mesma lógica da planilha antiga: <b>quantidade × largura(mm) × altura(mm) convertido para m² × fator do móvel × valor por metro × forma de pagamento</b>.</div><form id="priceForm"><label>Branco</label><input id="priceWhite" type="number" step="0.01" value="${html(c.price_white)}"><label>Branco com madeirado</label><input id="priceWhiteWood" type="number" step="0.01" value="${html(c.price_white_wood)}"><label>Madeirado</label><input id="priceWood" type="number" step="0.01" value="${html(c.price_wood)}"><label>Multiplicador cartão</label><input id="cardFactor" type="number" step="0.01" value="${html(c.card_factor)}"><div class="form-grid"><div><label>% entrada padrão</label><input id="entryPct" type="number" value="${html(c.entry_pct)}"></div><div><label>% entrega padrão</label><input id="deliveryPct" type="number" value="${html(c.delivery_pct)}"></div></div><button class="primary" type="submit">Salvar preços</button></form></div><div class="card"><h3>Catálogo de fatores</h3><div class="table-wrap compact-table"><table class="table"><thead><tr><th>Cód.</th><th>Móvel</th><th>Fator</th></tr></thead><tbody>${CATALOG.map(ca=>`<tr><td>${ca.code}</td><td>${html(ca.name)}</td><td><b>${ca.factor}</b></td></tr>`).join('')}</tbody></table></div></div></div>${renderCompanyTeamAccess()}`;
   }
 
   function renderClients(){
@@ -900,7 +1001,7 @@
     const data=operationData(pid); const p=data.project, c=data.client, tt=data.totals, items=data.items;
     return `<div class="clearFlow card"><div><span class="badge">Fluxo da ${html((state.company&&state.company.company_name)||'Top Planejados')}</span><h3>Cliente → Projeto → Orçamento → Aprovação → Contrato</h3><p class="muted">O orçamento volta a ser gerado com base em um projeto. Crie ou selecione o projeto primeiro para puxar cliente, ambiente, imagens e dados técnicos corretamente.</p></div><div class="row-actions"><button class="ghost" onclick="TP.openTabKey('projects')">Criar/abrir projeto</button><button class="ghost" onclick="TP.openTabKey('contracts')">Contratos</button></div></div>
     <div class="card form" style="margin-top:14px"><h3>1. Selecione o projeto do orçamento</h3><div class="form-grid"><div><label>Projeto / orçamento base</label><select id="budgetProject">${quoteProjectOptions(pid)}</select><p class="muted small">Obrigatório. O orçamento puxa os dados do cliente e do ambiente pelo projeto selecionado.</p></div><div><label>Cliente vinculado</label><div id="budgetClientDetails">${p.id ? clientBudgetDetailsHtml(c.id) : '<div class="notice redline">Selecione um projeto para carregar o cliente.</div>'}</div></div><div><label>Total atual</label><div class="notice greenline"><b>${money(tt.final)}</b><br><span class="muted small">Subtotal ${money(tt.subtotal)} • Entrada ${money(tt.entry)} • Entrega ${money(tt.delivery)}</span></div></div></div></div>
-    ${!p.id ? `<div class="card" style="margin-top:14px"><h3>Orçamento precisa de projeto</h3><div class="notice goldline">Para evitar dados soltos e contrato errado, crie um projeto primeiro. Depois volte aqui e monte o orçamento com os móveis.</div><button class="primary" onclick="TP.openTabKey('projects')">Ir para Projetos</button></div>` : `<div class="grid2" style="margin-top:14px"><div class="card form"><h3>2. Adicionar item</h3><div class="notice">Móvel vinculado ao projeto <b>${html(p.name||'-')}</b> e ao cliente <b>${html(c.name||'-')}</b>.</div><label>Móvel da tabela</label><select id="iCatalog">${catalogOptions('')}</select><div class="form-grid compactInputs"><div><label>Qtd.</label><input id="iQty" type="number" value="1"></div><div><label>Largura mm</label><input id="iWidth" type="number" step="1" value="1000"></div><div><label>Altura mm</label><input id="iHeight" type="number" step="1" value="1000"></div><div><label>Fator</label><input id="iFactor" type="number" step="0.01" value="${CATALOG[0].factor}"></div><div><label>Cor / tipo</label><select id="iColor"><option value="branco">Branco</option><option value="branco_madeirado">Branco com madeirado</option><option value="madeirado">Madeirado</option></select></div><div><label>Pagamento do item</label><select id="iPayment">${budgetPaymentSelectOptions('dinheiro')}</select></div></div><label>Observação do item</label><input id="iNote" placeholder="Ex: puxador perfil, sem pedra/cuba..."><button class="primary" onclick="TP.addBudgetItem()">Adicionar item ao orçamento</button></div><div class="card form"><h3>3. Status, pagamento e prazo</h3><form id="budgetFieldsForm"><label>Status do orçamento</label><select id="budgetStatus">${statusOptions('budget',p.status||'rascunho')}</select><div class="form-grid compactInputs"><div><label>Desconto R$</label><input id="bDiscount" type="number" step="0.01" value="${html(p.budget_discount||0)}"></div><div><label>% entrada</label><input id="bEntry" type="number" value="${html(p.entry_pct || state.company.entry_pct || 50)}"></div><div><label>% entrega</label><input id="bDelivery" type="number" value="${html(p.delivery_pct || state.company.delivery_pct || 50)}"></div><div><label>Início do prazo</label><input id="bStart" type="date" value="${html(p.contract_start || today())}"></div><div><label>Prazo em dias</label><input id="bDays" type="number" value="${html(p.delivery_days || 30)}"></div></div><label>Modelos rápidos de pagamento</label><select id="budgetPaymentPreset" onchange="TP.applyPaymentPreset('budget')">${paymentPresetOptions(paymentPresetFromProject(p))}</select><div class="row-actions" style="margin:8px 0"><button type="button" class="ghost" onclick="TP.setPaymentSplit(100,0,'100% à vista no fechamento.')">100% no fechamento</button><button type="button" class="ghost" onclick="TP.setPaymentSplit(50,50,'50% à vista no fechamento + 50% à vista na entrega.')">50/50</button><button type="button" class="ghost" onclick="TP.setSupplierSplit()">50% fornecedor/loja + entrega</button><button type="button" class="ghost" onclick="TP.setPaymentSplit(0,100,'100% à vista na entrega.')">Na entrega</button></div><label>Forma/observação de pagamento</label><textarea id="bPaymentNote" placeholder="Condição comercial do orçamento">${html(p.budget_payment_note||'')}</textarea><div class="row-actions"><button class="primary" type="submit">Salvar orçamento</button><button class="success" type="button" onclick="TP.markBudgetApproved('${p.id}')">Marcar aprovado</button><button class="ghost" type="button" onclick="TP.exportBudgetHtml()">Gerar PDF</button></div></form></div></div><div class="card" style="margin-top:14px"><div class="toolbar"><h3>4. Itens editáveis do orçamento</h3><span class="badge">edite direto na tabela e clique salvar</span></div>${budgetItemsTable(p, items)}</div>`}`;
+    ${!p.id ? `<div class="card" style="margin-top:14px"><h3>Orçamento precisa de projeto</h3><div class="notice goldline">Para evitar dados soltos e contrato errado, crie um projeto primeiro. Depois volte aqui e monte o orçamento com os móveis.</div><button class="primary" onclick="TP.openTabKey('projects')">Ir para Projetos</button></div>` : `<div class="grid2" style="margin-top:14px"><div class="card form"><h3>2. Adicionar item</h3><div class="notice">Móvel vinculado ao projeto <b>${html(p.name||'-')}</b> e ao cliente <b>${html(c.name||'-')}</b>.</div><label>Móvel da tabela</label><select id="iCatalog">${catalogOptions('')}</select><div class="form-grid compactInputs"><div><label>Qtd.</label><input id="iQty" type="number" value="1"></div><div><label>Largura mm</label><input id="iWidth" type="number" step="1" value="1000"></div><div><label>Altura mm</label><input id="iHeight" type="number" step="1" value="1000"></div><div><label>Fator</label><input id="iFactor" type="number" step="0.01" value="${CATALOG[0].factor}"></div><div><label>Cor / tipo</label><select id="iColor"><option value="branco">Branco</option><option value="branco_madeirado">Branco com madeirado</option><option value="madeirado">Madeirado</option></select></div><div><label>Pagamento do item</label><select id="iPayment">${budgetPaymentSelectOptions('dinheiro')}</select></div></div><label>Observação do item</label><input id="iNote" placeholder="Ex: puxador perfil, sem pedra/cuba..."><button class="primary" onclick="TP.addBudgetItem()">Adicionar item ao orçamento</button></div><div class="card form"><h3>3. Status, pagamento e prazo</h3><form id="budgetFieldsForm"><label>Status do orçamento</label><select id="budgetStatus">${statusOptions('budget',p.status||'rascunho')}</select><div class="form-grid compactInputs"><div><label>Desconto R$</label><input id="bDiscount" type="number" step="0.01" value="${html(p.budget_discount||0)}"></div><div><label>% entrada</label><input id="bEntry" type="number" value="${html(pctValue(p.entry_pct, state.company.entry_pct || 50))}"></div><div><label>% entrega</label><input id="bDelivery" type="number" value="${html(pctValue(p.delivery_pct, state.company.delivery_pct || 50))}"></div><div><label>Início do prazo</label><input id="bStart" type="date" value="${html(p.contract_start || today())}"></div><div><label>Prazo em dias</label><input id="bDays" type="number" value="${html(p.delivery_days || 30)}"></div></div><label>Modelos rápidos de pagamento</label><select id="budgetPaymentPreset" onchange="TP.applyPaymentPreset('budget')">${paymentPresetOptions(paymentPresetFromProject(p))}</select><div class="row-actions" style="margin:8px 0"><button type="button" class="ghost" onclick="TP.setPaymentSplit(100,0,'100% à vista no fechamento.')">100% no fechamento</button><button type="button" class="ghost" onclick="TP.setPaymentSplit(50,50,'50% à vista no fechamento + 50% à vista na entrega.')">50/50</button><button type="button" class="ghost" onclick="TP.setSupplierSplit()">50% fornecedor/loja + entrega</button><button type="button" class="ghost" onclick="TP.setPaymentSplit(0,100,'100% à vista na entrega.')">Na entrega</button></div><label>Forma/observação de pagamento</label><textarea id="bPaymentNote" placeholder="Condição comercial do orçamento">${html(p.budget_payment_note||'')}</textarea><div class="row-actions"><button class="primary" type="submit">Salvar orçamento</button><button class="success" type="button" onclick="TP.markBudgetApproved('${p.id}')">Marcar aprovado</button><button class="ghost" type="button" onclick="TP.exportBudgetHtml()">Gerar PDF</button></div></form></div></div><div class="card" style="margin-top:14px"><div class="toolbar"><h3>4. Itens editáveis do orçamento</h3><span class="badge">edite direto na tabela e clique salvar</span></div>${budgetItemsTable(p, items)}</div>`}`;
   }
   function budgetItemsTable(p, items){
     if(!items.length) return '<div class="empty">Nenhum item no orçamento ainda.</div>';
@@ -1518,8 +1619,8 @@
   function renderDesigner(){
     const pid = state.designer.projectId || (state.projects[0] && state.projects[0].id) || ''; state.designer.projectId = pid;
     const p = getProject(pid); const design = currentDesign();
-    return `${designerFlowHtml()}<div class="designerTop card form"><div class="designerHeaderPro"><div><h3>Projetista 3D Pro</h3><p class="muted small">Fluxo inspirado em softwares profissionais: ambiente → itens fixos → módulos → cotas → peças → orçamento. Não copia código proprietário.</p></div><div class="modeChip">${designerModeLabel()}</div></div><div class="form-grid"><div><label>Cliente/projeto</label><select id="designProject">${quoteProjectOptions(pid)}</select></div><div><label>Nome do ambiente</label><input id="envName" value="${html(design.envName)}"></div><div><label>Tipo de ambiente</label><select id="roomType"><option ${design.roomType==='Cozinha'?'selected':''}>Cozinha</option><option ${design.roomType==='Quarto'?'selected':''}>Quarto</option><option ${design.roomType==='Banheiro'?'selected':''}>Banheiro</option><option ${design.roomType==='Sala'?'selected':''}>Sala</option><option ${design.roomType==='Escritório'?'selected':''}>Escritório</option><option ${design.roomType==='Área gourmet'?'selected':''}>Área gourmet</option><option ${design.roomType==='Lavanderia'?'selected':''}>Lavanderia</option></select></div><div><label>Medidas do ambiente em mm</label><div class="inline-trio"><input id="envW" type="number" value="${html(design.width)}" title="largura"><input id="envH" type="number" value="${html(design.height)}" title="altura"><input id="envD" type="number" value="${html(design.depth)}" title="profundidade"></div></div><div><label>Pintar parede</label><input id="wallColor" type="color" value="${html(design.wallColor)}" title="Pintar parede"></div><div><label>Pintar piso</label><input id="floorColor" type="color" value="${html(design.floorColor)}" title="Pintar piso"></div><div><label>Cor de fundo</label><input id="bgColor" type="color" value="${html(design.bgColor)}" title="Cor de fundo"></div><div><label>Opções</label><div class="row-actions"><label class="check"><input id="showGrid" type="checkbox" ${design.showGrid?'checked':''}> grade técnica</label><label class="check"><input id="showMeasures" type="checkbox" ${design.showMeasures?'checked':''}> medidas</label><label class="check"><input id="snapGrid" type="checkbox" ${design.snap?'checked':''}> encaixe</label></div></div></div>${designerRibbonHtml(design)}<div class="row-actions" style="margin-top:10px"><button class="primary" onclick="TP.saveDesignerEnvironment()">Salvar ambiente</button><button class="ghost" onclick="TP.addKitchenPreset()">Montar cozinha exemplo</button><button class="ghost" onclick="TP.generatePiecesForCurrentDesign()">Gerar lista de peças</button><button class="ghost" onclick="TP.designerToBudget()">Gerar orçamento deste projeto</button><button class="ghost" onclick="TP.exportDesignerPng()">Salvar imagem PNG</button><button class="ghost" onclick="TP.exportDesignerSvg()">Exportar SVG</button><button class="ghost" onclick="TP.printDesignerProject()">Exportar PDF</button><button class="danger" onclick="TP.clearDesignerEnvironment()">Limpar ambiente</button></div></div>
-    <div class="designerShell"><div class="card catalogPanel"><h3>Biblioteca de móveis</h3><p class="muted small">Arraste para o ambiente ou clique para adicionar.</p>${libraryHtml()}</div><div class="designerWorkspace"><div class="card"><h3>${html(p.name || 'Projetista 3D')}</h3>${p.id ? designerStageHtml(design) : '<div class="empty">Crie um projeto primeiro.</div>'}</div><div class="card" style="margin-top:14px"><h3>Lista de peças</h3>${piecesTableHtml(generatePiecesFromDesign(design))}</div></div>${designerPropertiesHtml(design)}</div>`;
+    return `${designerFlowHtml()}<div class="designerTop card form"><div class="designerHeaderPro"><div><h3>Projeto 3D Pro</h3><p class="muted small">Fluxo inspirado em softwares profissionais: ambiente → itens fixos → módulos → cotas → peças → orçamento. Não copia código proprietário.</p></div><div class="modeChip">${designerModeLabel()}</div></div><div class="form-grid"><div><label>Cliente/projeto</label><select id="designProject">${quoteProjectOptions(pid)}</select></div><div><label>Nome do ambiente</label><input id="envName" value="${html(design.envName)}"></div><div><label>Tipo de ambiente</label><select id="roomType"><option ${design.roomType==='Cozinha'?'selected':''}>Cozinha</option><option ${design.roomType==='Quarto'?'selected':''}>Quarto</option><option ${design.roomType==='Banheiro'?'selected':''}>Banheiro</option><option ${design.roomType==='Sala'?'selected':''}>Sala</option><option ${design.roomType==='Escritório'?'selected':''}>Escritório</option><option ${design.roomType==='Área gourmet'?'selected':''}>Área gourmet</option><option ${design.roomType==='Lavanderia'?'selected':''}>Lavanderia</option></select></div><div><label>Medidas do ambiente em mm</label><div class="inline-trio"><input id="envW" type="number" value="${html(design.width)}" title="largura"><input id="envH" type="number" value="${html(design.height)}" title="altura"><input id="envD" type="number" value="${html(design.depth)}" title="profundidade"></div></div><div><label>Pintar parede</label><input id="wallColor" type="color" value="${html(design.wallColor)}" title="Pintar parede"></div><div><label>Pintar piso</label><input id="floorColor" type="color" value="${html(design.floorColor)}" title="Pintar piso"></div><div><label>Cor de fundo</label><input id="bgColor" type="color" value="${html(design.bgColor)}" title="Cor de fundo"></div><div><label>Opções</label><div class="row-actions"><label class="check"><input id="showGrid" type="checkbox" ${design.showGrid?'checked':''}> grade técnica</label><label class="check"><input id="showMeasures" type="checkbox" ${design.showMeasures?'checked':''}> medidas</label><label class="check"><input id="snapGrid" type="checkbox" ${design.snap?'checked':''}> encaixe</label></div></div></div>${designerRibbonHtml(design)}<div class="row-actions" style="margin-top:10px"><button class="primary" onclick="TP.saveDesignerEnvironment()">Salvar ambiente</button><button class="ghost" onclick="TP.addKitchenPreset()">Montar cozinha exemplo</button><button class="ghost" onclick="TP.generatePiecesForCurrentDesign()">Gerar lista de peças</button><button class="ghost" onclick="TP.designerToBudget()">Gerar orçamento deste projeto</button><button class="ghost" onclick="TP.exportDesignerPng()">Salvar imagem PNG</button><button class="ghost" onclick="TP.exportDesignerSvg()">Exportar SVG</button><button class="ghost" onclick="TP.printDesignerProject()">Exportar PDF</button><button class="danger" onclick="TP.clearDesignerEnvironment()">Limpar ambiente</button></div></div>
+    <div class="designerShell"><div class="card catalogPanel"><h3>Biblioteca de móveis</h3><p class="muted small">Arraste para o ambiente ou clique para adicionar.</p>${libraryHtml()}</div><div class="designerWorkspace"><div class="card"><h3>${html(p.name || 'Projeto 3D')}</h3>${p.id ? designerStageHtml(design) : '<div class="empty">Crie um projeto primeiro.</div>'}</div><div class="card" style="margin-top:14px"><h3>Lista de peças</h3>${piecesTableHtml(generatePiecesFromDesign(design))}</div></div>${designerPropertiesHtml(design)}</div>`;
   }
 
 
@@ -1559,7 +1660,7 @@
     if(!isAdmin()) return '<div class="notice redline">Somente administradores podem acessar esta aba.</div>';
     const usersRows = (state.adminProfiles||[]).map(u=>{
       const owner = isOwnerEmail(u.email||'');
-      const roleBadge = `<span class="status ${u.role==='admin'?'ativo':'rascunho'}">${u.role==='admin'?'admin':'usuário'}</span>`;
+      const roleBadge = roleBadges(u.roles || (u.role==='admin'?['owner']:['seller']));
       const activeBadge = `<span class="status ${u.active?'ativo':'recusado'}">${u.active?'liberado':'bloqueado'}</span>`;
       const profileBadge = u.has_profile===false?'<span class="status recusado">sem perfil</span>':'<span class="status ativo">perfil ok</span>';
       const isCurrentAccess = state.adminActingUserId === u.id;
@@ -1580,7 +1681,7 @@
       return `<div class="${rowCls}"><div><b>${html(tabClearTitle(t.tab_key,t.title))}</b><div class="muted small">${html(tabClearDesc(t.tab_key,t.description))}</div><span class="badge">${html(t.tab_key)}</span> ${badge}</div><div class="row-actions">${control}</div></div>`;
     }).join('');
     const rs = state.renderSettings || {};
-    return `<div class="grid2"><div class="card"><h3>Abas e permissões</h3><div class="notice">Controle quais áreas aparecem para a equipe. O objetivo da V111 Layout e Estoque é manter o fluxo principal simples: cliente, orçamento, contrato, serviço e financeiro.</div>${tabs}</div><div class="card"><h3>Usuários</h3><div class="notice goldline">Novo usuário criado em qualquer computador aparece aqui para o administrador ativar. Se aparecer como “sem perfil”, ao liberar o app cria o perfil automaticamente.</div><button class="ghost" onclick="TP.loadAdminUsers()">Recarregar usuários</button><div id="usersTable" style="margin-top:12px">${table(['Nome','E-mail','Cargo','Acesso','Perfil','Criado em','Ações'], usersRows)}</div></div></div><div class="grid2" style="margin-top:14px"><div class="card"><h3>Dados da operação</h3><p>Use a aba <b>Configurações</b> para manter os dados oficiais da empresa, valores por metro e padrões dos documentos.</p><div class="badge-list"><span class="badge">Preço branco: ${money(state.company.price_white)}</span><span class="badge">Cartão: ${state.company.card_factor}</span><span class="badge">Fatores: ${CATALOG.length}</span></div></div><div class="card form"><h3>Render API interna</h3><form id="renderSettingsForm"><label>Fornecedor / modo</label><input id="renderProvider" value="${html(rs.provider||'proxy-interno') }"><label>Endpoint público/proxy</label><input id="renderEndpoint" value="${html(rs.public_endpoint||'')}" placeholder="https://seu-endpoint/render"><label>Referência da API Key</label><input id="renderKeyRef" value="${html(rs.api_key_reference||'')}" placeholder="Chave salva no backend/proxy"><label>Pronto para uso?</label><select id="renderReady"><option value="false" ${!rs.ready?'selected':''}>Não</option><option value="true" ${rs.ready?'selected':''}>Sim</option></select><label>Notas internas</label><textarea id="renderNotes">${html(rs.admin_notes||'')}</textarea><button class="primary" type="submit">Salvar integração</button></form></div></div>`;
+    return `<div class="grid2"><div class="card"><h3>Abas visíveis</h3><div class="notice">Controle visual das abas. A segurança real dos cargos fica na aba <b>Empresa</b> e nas policies do Supabase.</div>${tabs}</div><div class="card"><h3>Usuários</h3><div class="notice goldline">Área técnica. Para liberar funcionários e definir múltiplos cargos, use <b>Empresa → Equipe e acesso ao sistema</b>.</div><button class="ghost" onclick="TP.loadAdminUsers()">Recarregar usuários</button><div id="usersTable" style="margin-top:12px">${table(['Nome','E-mail','Cargo','Acesso','Perfil','Criado em','Ações'], usersRows)}</div></div></div><div class="grid2" style="margin-top:14px"><div class="card"><h3>Dados da operação</h3><p>Use a aba <b>Configurações</b> para manter os dados oficiais da empresa, valores por metro e padrões dos documentos.</p><div class="badge-list"><span class="badge">Preço branco: ${money(state.company.price_white)}</span><span class="badge">Cartão: ${state.company.card_factor}</span><span class="badge">Fatores: ${CATALOG.length}</span></div></div><div class="card form"><h3>Render API interna</h3><form id="renderSettingsForm"><label>Fornecedor / modo</label><input id="renderProvider" value="${html(rs.provider||'proxy-interno') }"><label>Endpoint público/proxy</label><input id="renderEndpoint" value="${html(rs.public_endpoint||'')}" placeholder="https://seu-endpoint/render"><label>Referência da API Key</label><input id="renderKeyRef" value="${html(rs.api_key_reference||'')}" placeholder="Chave salva no backend/proxy"><label>Pronto para uso?</label><select id="renderReady"><option value="false" ${!rs.ready?'selected':''}>Não</option><option value="true" ${rs.ready?'selected':''}>Sim</option></select><label>Notas internas</label><textarea id="renderNotes">${html(rs.admin_notes||'')}</textarea><button class="primary" type="submit">Salvar integração</button></form></div></div>`;
   }
 
 
@@ -1660,11 +1761,11 @@
   let syncTimer=null;
   async function afterSave(msg){
     toast(msg || 'Salvo com sucesso.');
-    setCloud(true,'Salvo. Sincronizando em segundo plano...');
+    setCloud(true,'Salvo. Atualizando tela...');
     if(syncTimer) clearTimeout(syncTimer);
     syncTimer=setTimeout(()=>{
-      loadAll().then(()=>{ if(document.activeElement && ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) return; render(); }).catch(err=>{ console.error(err); setCloud(false,'Erro na nuvem'); toast('Salvo, mas a atualização da tela falhou. Aperte Atualizar.', 'red'); });
-    },750);
+      loadAll().then(()=>{ if(document.activeElement && ['INPUT','TEXTAREA','SELECT'].includes(document.activeElement.tagName)) { setCloud(true,'Nuvem conectada'); return; } render(); }).catch(err=>{ console.error(err); setCloud(false,'Erro na nuvem'); toast('Salvo, mas a atualização da tela falhou. Aperte Atualizar.', 'red'); });
+    },300);
   }
 
   async function saveClient(e){
@@ -1875,11 +1976,11 @@ async function clearAllInventory(){
   async function markPayrollPaid(id){ const s=getService(id); return markServicePayrollPaid(id, serviceEmployeeIds(s)[0]); }
   async function markPayrollPending(id){ const s=getService(id); return markServicePayrollPending(id, serviceEmployeeIds(s)[0]); }
   async function deletePayroll(id){ return deletePayrollEmployee(id); }
-  async function saveCompany(e){ e.preventDefault(); const obj = { company_name:cleanText($('#companyName').value,140), document_number:cleanText($('#companyDoc').value,40), responsible_name:cleanText($('#companyResponsible').value,120), phone:cleanPhone($('#companyPhone').value), whatsapp:cleanPhone($('#companyWhatsapp').value), instagram:cleanText($('#companyInstagram').value,80), address:cleanText($('#companyAddress').value,180), pix_key:cleanText($('#companyPix').value,140), contract_city:cleanText($('#companyCity').value,80), logo_url:safeImageSrc(($('#companyLogo')?$('#companyLogo').value:'')), quote_primary_color:($('#quotePrimary')?$('#quotePrimary').value:'#111111'), quote_secondary_color:($('#quoteSecondary')?$('#quoteSecondary').value:'#8b8b8b'), quote_accent_color:($('#quoteAccent')?$('#quoteAccent').value:'#dc2626'), quote_text_color:($('#quoteText')?$('#quoteText').value:'#111827'), quote_title:cleanText(($('#quoteTitle')?$('#quoteTitle').value:'ORÇAMENTO DE SERVIÇO'),120), quote_valid_days:num($('#quoteValidDays')?$('#quoteValidDays').value:7)||7, quote_warranty:cleanLongText(($('#quoteWarranty')?$('#quoteWarranty').value:''),1200), quote_footer_note:cleanLongText(($('#quoteFooterNote')?$('#quoteFooterNote').value:''),1200), contract_model:cleanText(($('#contractModel')?$('#contractModel').value:'comercial'),40), receipt_model:cleanText(($('#receiptModel')?$('#receiptModel').value:'comercial'),40) }; await update('user_company_settings','user_id=eq.'+effectiveUserId(),obj); await logAction('empresa_atualizada',{}); await afterSave('Dados da empresa, modelo de contrato e recibo salvos.'); }
-  async function readCompanyLogoFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; try{ const val=await imageFileToDataUrl(file,{maxWidth:700,maxHeight:700,quality:.86,type:'image/webp',maxMb:5}); const img=$('#companyLogo'); if(img) img.value=val; toast('Logo otimizada. Clique em Salvar empresa.'); }catch(err){ toast(err.message || 'Não foi possível importar a logo.', 'red'); } finally{ if(e.target) e.target.value=''; } }
+  async function saveCompany(e){ e.preventDefault(); const obj = { company_name:cleanText($('#companyName').value,140), document_number:cleanText($('#companyDoc').value,40), responsible_name:cleanText($('#companyResponsible').value,120), phone:cleanPhone($('#companyPhone').value), whatsapp:cleanPhone($('#companyWhatsapp').value), instagram:cleanText($('#companyInstagram').value,80), address:cleanText($('#companyAddress').value,180), pix_key:cleanText($('#companyPix').value,140), contract_city:cleanText($('#companyCity').value,80), logo_url:safeImageSrc(($('#companyLogo')?$('#companyLogo').value:'')), quote_primary_color:($('#quotePrimary')?$('#quotePrimary').value:'#111111'), quote_secondary_color:($('#quoteSecondary')?$('#quoteSecondary').value:'#8b8b8b'), quote_accent_color:($('#quoteAccent')?$('#quoteAccent').value:'#dc2626'), quote_text_color:($('#quoteText')?$('#quoteText').value:'#111827'), quote_title:cleanText(($('#quoteTitle')?$('#quoteTitle').value:'ORÇAMENTO DE SERVIÇO'),120), quote_valid_days:num($('#quoteValidDays')?$('#quoteValidDays').value:7)||7, quote_warranty:cleanLongText(($('#quoteWarranty')?$('#quoteWarranty').value:''),1200), quote_footer_note:cleanLongText(($('#quoteFooterNote')?$('#quoteFooterNote').value:''),1200), contract_model:cleanText(($('#contractModel')?$('#contractModel').value:'comercial'),40), receipt_model:cleanText(($('#receiptModel')?$('#receiptModel').value:'comercial'),40) }; await update('user_company_settings',companySettingsFilter(),obj); await logAction('empresa_atualizada',{}); await afterSave('Dados da empresa, modelo de contrato e recibo salvos.'); }
+  async function readCompanyLogoFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; try{ const val=await imageFileToDataUrl(file,{maxWidth:1400,maxHeight:1400,quality:.96,type:'image/png',maxMb:8}); const img=$('#companyLogo'); if(img) img.value=val; toast('Logo importada em PNG com melhor qualidade. Clique em Salvar empresa.'); }catch(err){ toast(err.message || 'Não foi possível importar a logo.', 'red'); } finally{ if(e.target) e.target.value=''; } }
   function updateProjectImagePreview(value){ const box=$('#projectImagePreview'); if(!box) return; const imgs=String(value||'').split(/\n|\|\|/).map(safeImageSrc).filter(Boolean); box.innerHTML=imgs.map((src,i)=>`<figure><img loading="lazy" decoding="async" src="${html(src)}" alt="Imagem ${i+1}"><figcaption>Imagem ${i+1}</figcaption></figure>`).join(''); }
   async function readProjectImageFile(e){ const file=e.target.files && e.target.files[0]; if(!file) return; try{ const val=await imageFileToDataUrl(file,{maxWidth:1600,maxHeight:1200,quality:.82,type:'image/webp',maxMb:10}); const input=$('#projectImageUrl'); if(input){ const cur=input.value.trim(); input.value=cur ? cur+'\n'+val : val; updateProjectImagePreview(input.value); } else updateProjectImagePreview(val); toast('Imagem otimizada e adicionada. Clique em Salvar projeto.'); }catch(err){ toast(err.message || 'Não foi possível importar a imagem.', 'red'); } finally{ if(e.target) e.target.value=''; } }
-  async function savePrices(e){ e.preventDefault(); const obj = { price_white:num($('#priceWhite').value)||850, price_white_wood:num($('#priceWhiteWood').value)||950, price_wood:num($('#priceWood').value)||1100, card_factor:num($('#cardFactor').value)||1.3, entry_pct:num($('#entryPct').value)||50, delivery_pct:num($('#deliveryPct').value)||50 }; await update('user_company_settings','user_id=eq.'+effectiveUserId(),obj); await logAction('precos_orcamento_atualizados',obj); await afterSave('Preços do orçamento salvos.'); }
+  async function savePrices(e){ e.preventDefault(); const obj = { price_white:num($('#priceWhite').value)||850, price_white_wood:num($('#priceWhiteWood').value)||950, price_wood:num($('#priceWood').value)||1100, card_factor:num($('#cardFactor').value)||1.3, entry_pct:num($('#entryPct').value)||50, delivery_pct:num($('#deliveryPct').value)||50 }; await update('user_company_settings',companySettingsFilter(),obj); await logAction('precos_orcamento_atualizados',obj); await afterSave('Preços do orçamento salvos.'); }
   async function saveRenderSettings(e){ e.preventDefault(); const endpoint=safeExternalUrl($('#renderEndpoint').value); if($('#renderEndpoint').value.trim() && !endpoint){ toast('Endpoint de render bloqueado: use uma URL HTTPS válida.', 'red'); return; } const obj = { provider:cleanText($('#renderProvider').value,80), public_endpoint:endpoint, api_key_reference:cleanText($('#renderKeyRef').value,120), ready:$('#renderReady').value==='true', admin_notes:cleanLongText($('#renderNotes').value,1200) }; await update('render_settings','id=eq.true',obj); await logAction('render_settings_atualizado',{}); await afterSave('Integração de render salva.'); }
 
   function fill(fields, obj){ Object.keys(fields).forEach(id => { const el = $('#'+id); if(el) el.value = obj[fields[id]] == null ? '' : obj[fields[id]]; }); }
@@ -1916,17 +2017,32 @@ async function clearAllInventory(){
     await afterSave('Fornecedor salvo.');
   }
   async function deleteSupplier(id){ if(!confirm('Excluir fornecedor?')) return; await removeRow('suppliers','id=eq.'+id); await afterSave('Fornecedor excluído.'); }
+
+  function patchProjectLocal(projectId, patch){
+    const idx=(state.projects||[]).findIndex(p=>String(p.id)===String(projectId));
+    if(idx<0) return;
+    const next=Object.assign({}, state.projects[idx], patch||{});
+    next.status=normalizeStatus('budget', next.status);
+    next.project_status=normalizeStatus('project', next.project_status || next.status);
+    next.production_status=normalizeStatus('production', next.production_status || 'nao_iniciado');
+    if(Array.isArray(next.budget_items)===false) next.budget_items=parseJsonish(next.budget_items,[]);
+    state.projects[idx]=next;
+  }
+
   async function setProductionStatus(projectId,status){
     const p=getProject(projectId); if(!p.id) return;
     const prod=normalizeStatus('production',status);
     const patch={production_status:prod};
     if(prod==='entregue') patch.delivery_deadline = p.delivery_deadline || today();
     await update('projects','id=eq.'+projectId,patch);
+    patchProjectLocal(projectId, patch);
     await afterSave('Status de produção atualizado.');
   }
   async function updateProjectStatus(projectId,status){
     const p=getProject(projectId); if(!p.id) return;
-    await update('projects','id=eq.'+projectId,{ project_status: normalizeStatus('project',status) });
+    const patch={ project_status: normalizeStatus('project',status) };
+    await update('projects','id=eq.'+projectId,patch);
+    patchProjectLocal(projectId, patch);
     await afterSave('Status do projeto atualizado.');
   }
   async function updateBudgetStatus(projectId,status){
@@ -1939,6 +2055,7 @@ async function clearAllInventory(){
       patch.budget_value=projectTotal(p).final || p.budget_value || 0;
     }
     await update('projects','id=eq.'+projectId,patch);
+    patchProjectLocal(projectId, patch);
     await afterSave('Status do orçamento atualizado.');
   }
 
@@ -2053,8 +2170,10 @@ async function clearAllInventory(){
     if(!cat){ toast('Tabela de móveis não carregada.', 'red'); return; }
     const item = { id:uid(), code:cat.code, desc:cat.name, name:cat.name, qty:num($('#iQty')&&$('#iQty').value)||1, width:num($('#iWidth')&&$('#iWidth').value)||0, height:num($('#iHeight')&&$('#iHeight').value)||0, factor:num($('#iFactor')&&$('#iFactor').value)||cat.factor, color:($('#iColor')&&$('#iColor').value)||'branco', payment:($('#iPayment')&&$('#iPayment').value)||'dinheiro', note:cleanLongText(($('#iNote')&&$('#iNote').value)||'',600) };
     const items = (p.budget_items||[]).concat([item]);
-    const fake = Object.assign({}, p, {budget_items:items, budget_discount:p.budget_discount||0, entry_pct:p.entry_pct||state.company.entry_pct, delivery_pct:p.delivery_pct||state.company.delivery_pct});
-    await update('projects','id=eq.'+p.id,{ budget_items:items, budget_value:projectTotal(fake).final });
+    const fake = Object.assign({}, p, {budget_items:items, budget_discount:p.budget_discount||0, entry_pct:pctValue(p.entry_pct,state.company.entry_pct), delivery_pct:pctValue(p.delivery_pct,state.company.delivery_pct)});
+    const patch={ budget_items:items, budget_value:projectTotal(fake).final };
+    await update('projects','id=eq.'+p.id,patch);
+    patchProjectLocal(p.id, patch);
     state.budgetProjectId=p.id;
     await afterSave('Item adicionado ao orçamento do projeto.');
   }
@@ -2110,8 +2229,8 @@ async function clearAllInventory(){
     const p=getProject(pid); if(!p.id) return;
     const total=projectTotal(p).final || p.budget_value || 0;
     const patch={status:'aprovado', project_status:'aprovado', production_status:'nao_iniciado', budget_value:total};
-    try{ await update('projects','id=eq.'+pid,patch); }
-    catch(err){ const fallback={status:'aprovado', budget_value:total}; await update('projects','id=eq.'+pid,fallback); toast('Aprovado. Rode migration_v103.sql para separar projeto/produção.', 'red'); }
+    try{ await update('projects','id=eq.'+pid,patch); patchProjectLocal(pid, patch); }
+    catch(err){ const fallback={status:'aprovado', budget_value:total}; await update('projects','id=eq.'+pid,fallback); patchProjectLocal(pid, fallback); toast('Aprovado. Rode migration_v103.sql para separar projeto/produção.', 'red'); }
     const existing=(state.services||[]).find(s=>s.project_id===pid);
     if(!existing){
       try{ await insert('services',{client_id:p.client_id||null, project_id:p.id, title:p.name||'Serviço aprovado', status:'aguardando_inicio', value:total, cost:num(p.cost_value||0), started_at:today(), notes:'Criado automaticamente ao aprovar orçamento.', created_by:effectiveUserId()}); }catch(err){ console.warn('Não criou serviço automático',err); }
@@ -2120,13 +2239,13 @@ async function clearAllInventory(){
     await afterSave('Orçamento aprovado. Produção e serviço foram preparados.');
   }
   let budgetSaveTimer=null;
-  function queueBudgetFieldsAutosave(){
+  function queueBudgetFieldsAutosave(fast){
     if(budgetSaveTimer) clearTimeout(budgetSaveTimer);
-    budgetSaveTimer=setTimeout(()=>{ const form=$('#budgetFieldsForm'); if(form) saveBudgetFields({preventDefault(){}}); }, 350);
+    budgetSaveTimer=setTimeout(()=>{ const form=$('#budgetFieldsForm'); if(form) saveBudgetFields({preventDefault(){}}); }, fast ? 80 : 250);
   }
-  async function saveBudgetFields(e){ e.preventDefault(); const pid=$('#budgetProject').value; const p=getProject(pid); if(!p.id)return; const budgetStatus=normalizeStatus('budget', ($('#budgetStatus')&&$('#budgetStatus').value)||p.status||'rascunho'); const fake=Object.assign({},p,{ budget_discount:num($('#bDiscount').value), entry_pct:num($('#bEntry').value), delivery_pct:num($('#bDelivery').value), status:budgetStatus }); const obj={ status:budgetStatus, budget_discount:num($('#bDiscount').value), entry_pct:num($('#bEntry').value), delivery_pct:num($('#bDelivery').value), budget_payment_note:cleanLongText(($('#bPaymentNote')?$('#bPaymentNote').value:''),1200), contract_start:$('#bStart').value || today(), delivery_days:num($('#bDays').value)||30, budget_value:projectTotal(fake).final }; await update('projects','id=eq.'+pid,obj); state.budgetProjectId=pid; await afterSave('Orçamento atualizado.'); }
-  function setPaymentSplit(entry,delivery,note){ if($('#bEntry')) $('#bEntry').value=entry; if($('#bDelivery')) $('#bDelivery').value=delivery; if(note && $('#bPaymentNote')) $('#bPaymentNote').value=note; toast('Forma de pagamento ajustada e salvando.'); queueBudgetFieldsAutosave(); }
-  function setSupplierSplit(){ if($('#bEntry')) $('#bEntry').value=50; if($('#bDelivery')) $('#bDelivery').value=50; if($('#bPaymentNote')) $('#bPaymentNote').value=supplierSplitText(); toast('Modelo 50% fornecedor/loja + 50% entrega aplicado e salvando.'); queueBudgetFieldsAutosave(); }
+  async function saveBudgetFields(e){ e.preventDefault(); const pid=$('#budgetProject').value; const p=getProject(pid); if(!p.id)return; const budgetStatus=normalizeStatus('budget', ($('#budgetStatus')&&$('#budgetStatus').value)||p.status||'rascunho'); const entryPct=num($('#bEntry').value), deliveryPct=num($('#bDelivery').value); const fake=Object.assign({},p,{ budget_discount:num($('#bDiscount').value), entry_pct:entryPct, delivery_pct:deliveryPct, status:budgetStatus }); const obj={ status:budgetStatus, budget_discount:num($('#bDiscount').value), entry_pct:entryPct, delivery_pct:deliveryPct, budget_payment_note:cleanLongText(($('#bPaymentNote')?$('#bPaymentNote').value:''),1200), contract_start:$('#bStart').value || today(), delivery_days:num($('#bDays').value)||30, budget_value:projectTotal(fake).final }; await update('projects','id=eq.'+pid,obj); patchProjectLocal(pid,obj); state.budgetProjectId=pid; await afterSave('Orçamento atualizado.'); }
+  function setPaymentSplit(entry,delivery,note){ if($('#bEntry')) $('#bEntry').value=entry; if($('#bDelivery')) $('#bDelivery').value=delivery; if(note && $('#bPaymentNote')) $('#bPaymentNote').value=note; toast('Forma de pagamento ajustada e salvando.'); queueBudgetFieldsAutosave(true); }
+  function setSupplierSplit(){ if($('#bEntry')) $('#bEntry').value=50; if($('#bDelivery')) $('#bDelivery').value=50; if($('#bPaymentNote')) $('#bPaymentNote').value=supplierSplitText(); toast('Modelo 50% fornecedor/loja + 50% entrega aplicado e salvando.'); queueBudgetFieldsAutosave(true); }
   function bindDesignerEvents(){
     if($('#designProject')) $('#designProject').addEventListener('change', e=>{ state.designer.projectId=e.target.value; state.designer.selectedId=''; render(); });
     ['wallColor','floorColor','bgColor'].forEach(id=>{ const el=$('#'+id); if(el) el.addEventListener('input',()=>{ const d=currentDesign(); if($('#wallColor')) d.wallColor=$('#wallColor').value; if($('#floorColor')) d.floorColor=$('#floorColor').value; if($('#bgColor')) d.bgColor=$('#bgColor').value; const st=$('#designerStage'); if(st && st.classList.contains('designerStageSvgHost')){ refreshDesignerSvg(d); } }); });
@@ -2260,7 +2379,7 @@ async function clearAllInventory(){
     state.designer.mode='3d';
     await saveCurrentDesignObject(design); await afterSave('Cozinha profissional montada. Use Planta/Frontal/3D para revisar, alinhar e orçar.'); }
   async function generatePiecesForCurrentDesign(){ const design=currentDesign(); const pieces=generatePiecesFromDesign(design); design.pieces=pieces; await saveCurrentDesignObject(design); toast('Lista de peças gerada.'); render(); }
-  async function designerToBudget(){ const p=getProject(state.designer.projectId); if(!p.id){alert('Selecione um projeto.');return;} const design=currentDesign(); const validModules=(design.modules||[]).filter(m=>!isEnvironmentModule(m)); if(!validModules.length){alert('Adicione móveis primeiro.');return;} const addItems=validModules.map(m=>({ id:uid(), code:'3D', desc:m.name, qty:1, width:num(m.w), height:num(m.h), factor:1, color:budgetColorFromMaterial(m.ext), payment:'dinheiro', note:'Gerado no Projetista 3D | Prof. '+m.d+' mm | Ext. '+m.ext+' | Int. '+m.inner })); const items=(p.budget_items||[]).concat(addItems); const fake=Object.assign({},p,{budget_items:items}); await update('projects','id=eq.'+p.id,{ budget_items:items, budget_value:projectTotal(fake).final, pieces_data:generatePiecesFromDesign(design) }); state.budgetProjectId=p.id; state.current='budget'; await loadAll(); render(); toast('Itens do Projetista enviados para o orçamento.'); }
+  async function designerToBudget(){ const p=getProject(state.designer.projectId); if(!p.id){alert('Selecione um projeto.');return;} const design=currentDesign(); const validModules=(design.modules||[]).filter(m=>!isEnvironmentModule(m)); if(!validModules.length){alert('Adicione móveis primeiro.');return;} const addItems=validModules.map(m=>({ id:uid(), code:'3D', desc:m.name, qty:1, width:num(m.w), height:num(m.h), factor:1, color:budgetColorFromMaterial(m.ext), payment:'dinheiro', note:'Gerado no Projeto 3D | Prof. '+m.d+' mm | Ext. '+m.ext+' | Int. '+m.inner })); const items=(p.budget_items||[]).concat(addItems); const fake=Object.assign({},p,{budget_items:items}); await update('projects','id=eq.'+p.id,{ budget_items:items, budget_value:projectTotal(fake).final, pieces_data:generatePiecesFromDesign(design) }); state.budgetProjectId=p.id; state.current='budget'; await loadAll(); render(); toast('Itens do Projeto 3D enviados para o orçamento.'); }
   function designerSvgMarkup(design, scale, forcedMode){
     scale=scale||0.22;
     const mode=forcedMode || state.designer.mode || '3d';
@@ -2376,11 +2495,15 @@ async function clearAllInventory(){
   }
   async function loadAdminUsers(shouldRender=true){
     if(!isAdmin()) return;
-    try{ state.adminProfiles = await rpc('tp_admin_list_users_v2', {}); }
-    catch(errV2){
-      console.warn('RPC admin v2 indisponível, tentando lista antiga. Rode migration_v103.sql.', errV2);
-      try{ state.adminProfiles = await rpc('tp_admin_list_users', {}); }
-      catch(err){ console.warn('RPC admin indisponível, usando profiles direto.', err); state.adminProfiles = await select('profiles','select=*&order=created_at.desc'); }
+    try{ state.adminProfiles = await rpc('tp_admin_list_users_v3', {}); }
+    catch(errV3){
+      console.warn('RPC admin v3 indisponível, tentando v2. Rode migration_v114_company_roles_permissions.sql.', errV3);
+      try{ state.adminProfiles = await rpc('tp_admin_list_users_v2', {}); }
+      catch(errV2){
+        console.warn('RPC admin v2 indisponível, tentando lista antiga. Rode migration_v103.sql.', errV2);
+        try{ state.adminProfiles = await rpc('tp_admin_list_users', {}); }
+        catch(err){ console.warn('RPC admin indisponível, usando profiles direto.', err); state.adminProfiles = await select('profiles','select=*&order=created_at.desc'); }
+      }
     }
     if(shouldRender) render();
   }
@@ -2403,6 +2526,28 @@ async function clearAllInventory(){
     setTimeout(()=>loadAdminUsers(true).catch(err=>console.warn('Falha ao recarregar usuários após alteração.', err)), 600);
     return true;
   }
+
+  async function saveCompanyMemberRoles(id){
+    if(!hasPerm('members.manage')){ toast('Sem permissão para gerenciar equipe.', 'red'); return; }
+    const safe=domSafe(id);
+    const roles=TEAM_ROLES.filter(r=>{ const el=$('#team_role_'+safe+'_'+r.id); return el && el.checked; }).map(r=>r.id);
+    const activeEl=$('#team_active_'+safe);
+    const active=activeEl ? !!activeEl.checked : true;
+    if(!roles.length){ toast('Selecione pelo menos um cargo para este funcionário.', 'red'); return; }
+    const current=(state.adminProfiles||[]).find(u=>u.id===id)||{};
+    if(isOwnerEmail(current.email||'')){ toast('A conta principal não pode ser alterada por segurança.', 'red'); return; }
+    try{
+      await rpc('tp_company_set_member_roles', { p_target_user:id, p_roles:roles, p_active:active });
+    }catch(err){
+      console.warn('RPC de cargos V114 indisponível, usando liberação antiga.', err);
+      await adminSetUserAccess(id,{ role:roles.includes('owner') || roles.includes('manager') ? 'admin' : 'user', active });
+    }
+    state.adminProfiles=(state.adminProfiles||[]).map(u=>u.id===id?Object.assign({},u,{roles,active,company_active:active,role:roles.includes('owner')||roles.includes('manager')?'admin':'user'}):u);
+    await logAction('empresa_cargos_usuario',{id,roles,active});
+    await afterSave('Cargos do funcionário salvos.');
+    setTimeout(()=>loadAdminUsers(true).catch(err=>console.warn('Falha ao recarregar equipe.',err)),500);
+  }
+
   async function updateUserRole(id, role){ if(!await adminSetUserAccess(id,{role})) return; await logAction('usuario_role',{id,role}); toast(role==='admin'?'Usuário virou administrador.':'Usuário voltou para acesso comum.'); }
   async function updateUserActive(id, active){ if(!await adminSetUserAccess(id,{active})) return; await logAction('usuario_active',{id,active}); toast(active?'Usuário liberado.':'Usuário bloqueado.'); }
   async function makeUserAdmin(id){ if(!await adminSetUserAccess(id,{role:'admin',active:true})) return; await logAction('usuario_admin_liberado',{id}); toast('Usuário liberado como administrador.'); }
@@ -2518,7 +2663,7 @@ async function clearAllInventory(){
   async function readRenderFile(e){ const file = e.target.files && e.target.files[0]; if(!file) return; try{ assertSafeFile(file, 14); state.imageName = cleanText(file.name,120); const val = await imageFileToDataUrl(file,{maxWidth:2200,maxHeight:2200,quality:.9,type:'image/webp',maxMb:14}); state.imageBase64 = val; $('#renderPreview').innerHTML = `<img loading="lazy" decoding="async" alt="Prévia" src="${html(val)}">`; }catch(err){ toast(err.message || 'Não foi possível ler a imagem.', 'red'); } finally{ if(e.target) e.target.value=''; } }
   function buildRenderPrompt(){ return `Transforme a imagem enviada em uma renderização extremamente realista de móveis planejados, mas mantenha 100% fiel ao projeto original.\n\nRegras obrigatórias:\n- Não alterar layout, medidas, proporções, posição dos móveis, bancada, nichos, gavetas, portas, puxadores, perfil gola ou cava.\n- Não inventar módulos novos e não remover elementos do projeto.\n- Manter as cores e materiais principais: ${$('#renderMaterials') ? $('#renderMaterials').value : ''}.\n- Ambiente: ${$('#renderEnvironment') ? $('#renderEnvironment').value : ''}.\n- Qualidade visual: ${$('#renderQuality') ? $('#renderQuality').value : ''}.\n- Iluminação: ${$('#renderLight') ? $('#renderLight').value : ''}.\n- Fidelidade: ${$('#renderFidelity') ? $('#renderFidelity').value : ''}.\n- Resultado com aparência de foto real, catálogo profissional, sombras naturais, textura de MDF realista, reflexos moderados e escala correta.\n\nInstruções extras: ${$('#renderExtra') ? $('#renderExtra').value : ''}`; }
   function generateRenderPrompt(){ const p = buildRenderPrompt(); $('#renderPrompt').value = p; navigator.clipboard && navigator.clipboard.writeText(p).catch(()=>{}); toast('Prompt técnico gerado e copiado.'); }
-  async function callRenderApi(){ generateRenderPrompt(); const rs = state.renderSettings || {}; if(!rs.ready){ toast('A API de render ainda não foi marcada como pronta na aba Admin.', 'red'); return; } if(!rs.public_endpoint){ toast('Nenhum endpoint público/proxy configurado na aba Admin.', 'red'); return; } if(!state.imageBase64){ toast('Envie uma imagem antes de testar a API.', 'red'); return; } $('#renderPreview').innerHTML = '<div>Enviando para API...</div>'; try{ const data = await rawFetch(rs.public_endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ image:state.imageBase64, file_name:state.imageName, prompt:$('#renderPrompt').value, provider:rs.provider||'myarchitectai-proxy', plan:null, source:'top-planejados-v111' }) }); await trackRenderUsage(); await loadAll(); const img = data && (data.image_url || data.output_url || data.url || data.image_base64); $('#renderPreview').innerHTML = img ? `<img alt="Render" src="${html(img)}">` : `<pre class="copyarea">${html(JSON.stringify(data,null,2))}</pre>`; toast('Resposta da API recebida.'); }catch(e){ $('#renderPreview').innerHTML = '<div class="red">Erro na API: '+html(e.message)+'</div>'; } }
+  async function callRenderApi(){ generateRenderPrompt(); const rs = state.renderSettings || {}; if(!rs.ready){ toast('A API de render ainda não foi marcada como pronta na aba Admin.', 'red'); return; } if(!rs.public_endpoint){ toast('Nenhum endpoint público/proxy configurado na aba Admin.', 'red'); return; } if(!state.imageBase64){ toast('Envie uma imagem antes de testar a API.', 'red'); return; } $('#renderPreview').innerHTML = '<div>Enviando para API...</div>'; try{ const data = await rawFetch(rs.public_endpoint, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ image:state.imageBase64, file_name:state.imageName, prompt:$('#renderPrompt').value, provider:rs.provider||'myarchitectai-proxy', plan:null, source:'top-planejados-v114' }) }); await trackRenderUsage(); await loadAll(); const img = data && (data.image_url || data.output_url || data.url || data.image_base64); $('#renderPreview').innerHTML = img ? `<img alt="Render" src="${html(img)}">` : `<pre class="copyarea">${html(JSON.stringify(data,null,2))}</pre>`; toast('Resposta da API recebida.'); }catch(e){ $('#renderPreview').innerHTML = '<div class="red">Erro na API: '+html(e.message)+'</div>'; } }
 
   function openProjectBudget(id){ state.budgetProjectId=id; state.current='budget'; render(); }
   function openProjectDesigner(id){ state.designer.projectId=id; state.designer.selectedId=''; state.current='designer'; render(); }
@@ -2554,7 +2699,7 @@ async function clearAllInventory(){
     }
   }
 
-  window.TP = { toggleTheme, editClient, deleteClient, clearClientForm, editProject, deleteProject, clearProjectForm, editService, deleteService, clearServiceForm, markServiceDelivered, deleteTx, saveProviderPurchase, clearSupplierForm, editSupplier, saveSupplier, deleteSupplier, setProductionStatus, updateProjectStatus, updateBudgetStatus, seedDefaultInventory, prefillInventory, previewBudgetClient, openClientBudget, clearInventoryForm, editInventoryItem, deleteInventoryItem, clearAllInventory, clearPayrollForm, editPayroll, markPayrollPaid, markPayrollPending, deletePayroll, editPayrollEmployee, deletePayrollEmployee, markServicePayrollPaid, markServicePayrollPending, toggleTab, toggleUserTab, loadAdminUsers, updateUserRole, updateUserActive, makeUserAdmin, makeUserRegular, activateUser, deactivateUser, accessUserData, stopAccessUser, generateContract, setContractSplit, setContractSupplierSplit, syncReceiptPaymentFromContract, printContractPdf, generateReceipt, printReceiptPdf, addContractClause, removeContractClause, resetContractClauses, applyPaymentPreset, generateRenderPrompt, callRenderApi, requestRenderPlan, updatePlanStatus, createQuickBudget, addBudgetItem, removeBudgetItem, updateBudgetItemFactor, updateBudgetItem, duplicateBudgetItem, markBudgetApproved, saveBudgetFields, setPaymentSplit, setSupplierSplit, exportBudgetHtml, openProjectBudget, openProjectDesigner, openTabKey, saveDesignerEnvironment, applyDesignerModule, duplicateDesignerModule, deleteDesignerModule, moveDesigner, alignDesigner, clearDesignerEnvironment, setDesignerMode, setDesignerZoom, fitDesignerZoom, toggleDesignerOption, toggleDesignerOpen, changeDesignerCount, addKitchenPreset, generatePiecesForCurrentDesign, designerToBudget, exportDesignerSvg, exportDesignerPng, printDesignerProject };
+  window.TP = { toggleTheme, editClient, deleteClient, clearClientForm, editProject, deleteProject, clearProjectForm, editService, deleteService, clearServiceForm, markServiceDelivered, deleteTx, saveProviderPurchase, clearSupplierForm, editSupplier, saveSupplier, deleteSupplier, setProductionStatus, updateProjectStatus, updateBudgetStatus, seedDefaultInventory, prefillInventory, previewBudgetClient, openClientBudget, clearInventoryForm, editInventoryItem, deleteInventoryItem, clearAllInventory, clearPayrollForm, editPayroll, markPayrollPaid, markPayrollPending, deletePayroll, editPayrollEmployee, deletePayrollEmployee, markServicePayrollPaid, markServicePayrollPending, toggleTab, toggleUserTab, loadAdminUsers, saveCompanyMemberRoles, updateUserRole, updateUserActive, makeUserAdmin, makeUserRegular, activateUser, deactivateUser, accessUserData, stopAccessUser, generateContract, setContractSplit, setContractSupplierSplit, syncReceiptPaymentFromContract, printContractPdf, generateReceipt, printReceiptPdf, addContractClause, removeContractClause, resetContractClauses, applyPaymentPreset, generateRenderPrompt, callRenderApi, requestRenderPlan, updatePlanStatus, createQuickBudget, addBudgetItem, removeBudgetItem, updateBudgetItemFactor, updateBudgetItem, duplicateBudgetItem, markBudgetApproved, saveBudgetFields, setPaymentSplit, setSupplierSplit, exportBudgetHtml, openProjectBudget, openProjectDesigner, openTabKey, saveDesignerEnvironment, applyDesignerModule, duplicateDesignerModule, deleteDesignerModule, moveDesigner, alignDesigner, clearDesignerEnvironment, setDesignerMode, setDesignerZoom, fitDesignerZoom, toggleDesignerOption, toggleDesignerOpen, changeDesignerCount, addKitchenPreset, generatePiecesForCurrentDesign, designerToBudget, exportDesignerSvg, exportDesignerPng, printDesignerProject };
   Object.keys(window.TP).forEach(key=>{
     const fn=window.TP[key];
     if(typeof fn!=='function') return;
